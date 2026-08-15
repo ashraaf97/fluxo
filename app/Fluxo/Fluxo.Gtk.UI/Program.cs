@@ -29,48 +29,7 @@ namespace Fluxo.GtkUI
             Environment.SetEnvironmentVariable("GTK_USE_PORTAL", "1");
             Gtk.Application.Init("fluxo-app", ref args);
             GLib.ExceptionManager.UnhandledException += ExceptionManager_UnhandledException;
-            var globalStyleSheet = @"
-                                    .large-font{ font-size: 16px; }
-                                    .medium-font{ font-size: 14px; }
-                                    ";
-
-            var screen = Gdk.Screen.Default;
-            var provider = new CssProvider();
-            provider.LoadFromData(globalStyleSheet);
-            Gtk.StyleContext.AddProviderForScreen(screen, provider, 800);
-            //var screen = Gdk.Screen.Default;
-            //var provider = new CssProvider();
-            //provider.LoadFromData(@".dark 
-            //                                    {
-            //                                        color: gray;
-            //                                        background: rgb(36,41,46);
-            //                                    }
-
-            //                                    treeview.view :selected 
-            //                                    {
-            //                                        background-color: rgb(10,106,182);
-            //                                        color: white;
-            //                                    }
-            //.listt
-            //{
-            //font-family: Segoe UI;
-            //}
-            //                                    .dark2
-            //                                    {
-            //                                        color: gray;
-            //                                        background: rgb(35,35,35);
-            //                                        /*background: rgb(36,41,46);*/
-            //                                    }
-            //                                    .toolbar-border-dark
-            //                                    {  
-            //                                        border-bottom: 1px solid rgb(20,20,20);
-            //                                    }
-            //                                    .toolbar-border-light
-            //                                    {  
-            //                                        border-bottom: 2px solid rgb(240,240,240);
-            //                                    }
-            //                                  ");
-            //Gtk.StyleContext.AddProviderForScreen(screen, provider, 800);
+            LoadStyleSheet();
 
             TlsHelper.ApplyDefaults();
 
@@ -82,9 +41,11 @@ namespace Fluxo.GtkUI
 
             LoadLanguageTexts();
 
+            // Only ask for the dark variant of whatever theme is in use. This used
+            // to also force ThemeName = "Adwaita", which overrode the user's chosen
+            // desktop theme outright.
             if (Config.Instance.AllowSystemDarkTheme)
             {
-                Gtk.Settings.Default.ThemeName = "Adwaita";
                 Gtk.Settings.Default.ApplicationPreferDarkTheme = true;
             }
 
@@ -119,6 +80,44 @@ namespace Fluxo.GtkUI
             PlatformHelper.EnableAutoStart(true);
         }
 
+        /// <summary>
+        /// Applies styles/fluxo.css on top of the user's GTK theme.
+        /// A missing or malformed stylesheet must never stop the app starting, so
+        /// failures are logged and swallowed - the app just renders unstyled.
+        /// </summary>
+        private static void LoadStyleSheet()
+        {
+            try
+            {
+                var cssFile = System.IO.Path.Combine(
+                    AppDomain.CurrentDomain.BaseDirectory, "styles", "fluxo.css");
+
+                if (!System.IO.File.Exists(cssFile))
+                {
+                    Log.Debug($"Stylesheet not found at {cssFile}, using theme defaults");
+                    return;
+                }
+
+                var provider = new CssProvider();
+                // ParsingErrorArgs.Error is a raw GError pointer in GtkSharp 3.24, so
+                // there is nothing safe to read off it here. GTK also writes the
+                // details to stderr, which is enough to diagnose a bad rule.
+                provider.ParsingError += (o, args) =>
+                    Log.Debug("CSS parse error in fluxo.css (see stderr for details)");
+
+                provider.LoadFromPath(cssFile);
+
+                // Priority 600 (APPLICATION) rather than 800 (USER): this is the
+                // app's own sheet, so a user override should still be able to win.
+                Gtk.StyleContext.AddProviderForScreen(Gdk.Screen.Default, provider, 600);
+                Log.Debug("Stylesheet loaded");
+            }
+            catch (Exception ex)
+            {
+                Log.Debug(ex, "Failed to load stylesheet");
+            }
+        }
+
         private static void ExceptionManager_UnhandledException(GLib.UnhandledExceptionArgs args)
         {
             Log.Debug("GLib ExceptionManager_UnhandledException: " + args.ExceptionObject);
@@ -130,7 +129,11 @@ namespace Fluxo.GtkUI
             Log.Debug("Language loading ...");
             try
             {
-                var indexFile = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Lang\index.txt");
+                // Path.Combine with a literal "Lang\index.txt" produced "Lang\index.txt"
+                // as a single segment on Linux, so the file was never found and the
+                // user's language selection silently fell back to English.
+                var indexFile = System.IO.Path.Combine(
+                    AppDomain.CurrentDomain.BaseDirectory, "Lang", "index.txt");
                 if (System.IO.File.Exists(indexFile))
                 {
                     var lines = System.IO.File.ReadAllLines(indexFile);

@@ -293,11 +293,29 @@ namespace Fluxo.GtkUI.Utils
             while (comboBox.Model.IterNext(ref iter));
         }
 
+        private static readonly Dictionary<(string Name, int Dimension), Gdk.Pixbuf> svgCache = new();
+
+        /// <summary>
+        /// Rasterises an SVG from svg-icons/ at the requested size.
+        ///
+        /// Results are cached. The per-row icon in the download lists is supplied by a
+        /// TreeView cell data func, which GTK calls on every single cell draw - without
+        /// a cache that re-read and re-decoded the file from disk on each of those
+        /// calls, for every visible row, on every scroll frame.
+        /// </summary>
         public static Gdk.Pixbuf LoadSvg(string name, int dimension = 16)
         {
-            return new Gdk.Pixbuf(
+            var key = (name, dimension);
+            if (svgCache.TryGetValue(key, out var cached))
+            {
+                return cached;
+            }
+
+            var pixbuf = new Gdk.Pixbuf(
                 Path.Combine(
                     AppDomain.CurrentDomain.BaseDirectory, "svg-icons", $"{name}.svg"), dimension, dimension, true);
+            svgCache[key] = pixbuf;
+            return pixbuf;
         }
 
         public static string? SelectFolder(Window parent)

@@ -12,7 +12,10 @@ namespace Fluxo.Core
             ["Music"] = new HashSet<string> { ".mp3", ".aac", ".ac3", ".wma", ".m4a", ".ogg", ".mka" },
             ["Video"] = new HashSet<string> { ".mp4", ".mkv", ".ts", ".webm", ".avi", ".divx", ".mov", ".m4v" },
             ["Document"] = new HashSet<string> { ".docx", ".doc", ".pdf", ".txt", ".xlsx", ".xls", ".html" },
-            ["ApplicationContext.Core"] = new HashSet<string> { ".exe", ".bin", ".appx", ".ApplicationContext.Core", ".msi", ".rpm", ".deb" }
+            // The odd-looking names here were "Application" and ".app" before an
+            // upstream global rename of the Application type rewrote both the
+            // category key and the file extension. ".app" could never match anything.
+            ["Application"] = new HashSet<string> { ".exe", ".bin", ".appx", ".app", ".msi", ".rpm", ".deb" }
         };
 
         private static string GetFileType(string ext)
@@ -38,7 +41,7 @@ namespace Fluxo.Core
                 "Music" => RemixIcon.GetFontIcon(RemixIcon.MusicIcon),
                 "Video" => RemixIcon.GetFontIcon(RemixIcon.VideoIcon),
                 "Document" => RemixIcon.GetFontIcon(RemixIcon.DocumentIcon),
-                "ApplicationContext.Core" => RemixIcon.GetFontIcon(RemixIcon.AppIcon),
+                "Application" => RemixIcon.GetFontIcon(RemixIcon.AppIcon),
                 _ => RemixIcon.GetFontIcon(RemixIcon.OtherFileIcon),
             };
         }
@@ -53,7 +56,7 @@ namespace Fluxo.Core
                 "Music" => "file-music-line",
                 "Video" => "movie-line",
                 "Document" => "file-text-line",
-                "ApplicationContext.Core" => "function-line",
+                "Application" => "function-line",
                 _ => "file-line",
             };
         }

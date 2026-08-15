@@ -387,8 +387,7 @@ namespace Fluxo.GtkUI
             hbox.Margin = 2;
             hbox.MarginStart = 5;
             hbox.MarginEnd = 5;
-            //var lblMonitoring = new Label { Text = TextResource.GetText("SETTINGS_MONITORING"), MarginBottom = 5 };
-            //hbox.PackStart(lblMonitoring, false, false, 0);
+            hbox.StyleContext.AddClass("fluxo-statusbar");
             btnMonitoring = new CheckButton { MarginStart = 5 };
             btnMonitoring.Clicked += BtnMonitoring_Clicked;
             hbox.PackStart(btnMonitoring, false, false, 0);
@@ -504,6 +503,10 @@ namespace Fluxo.GtkUI
 
             btnMenu.Clicked += BtnMenu_Clicked;
 
+            // Styled by styles/fluxo.css.
+            toolbar.StyleContext.AddClass("fluxo-toolbar");
+            btnNew.StyleContext.AddClass("suggested-action");
+
             return toolbar;
         }
 
@@ -539,7 +542,9 @@ namespace Fluxo.GtkUI
                 ShowExpanders = false,
                 LevelIndentation = 15
             };
-            categoryTree.StyleContext.AddClass("dark");
+            // Was AddClass("dark"), which referenced a class that had been commented
+            // out of the stylesheet years ago and so did nothing at all.
+            categoryTree.StyleContext.AddClass("fluxo-sidebar");
 
             var cols = new TreeViewColumn();
 
@@ -781,6 +786,7 @@ namespace Fluxo.GtkUI
             sortedStore.SetSortColumnId(1, SortType.Descending);
 
             swInProgress = new ScrolledWindow { OverlayScrolling = true, Margin = 5, MarginBottom = 0, MarginTop = 0, ShadowType = ShadowType.In };
+            swInProgress.StyleContext.AddClass("fluxo-list");
             swInProgress.SetPolicy(PolicyType.Automatic, PolicyType.Automatic);
             swInProgress.Add(lvInprogress);
             swInProgress.ShowAll();
@@ -914,6 +920,7 @@ namespace Fluxo.GtkUI
             sortedStore.SetSortColumnId(1, SortType.Descending);
 
             swFinished = new ScrolledWindow { OverlayScrolling = true, Margin = 5, MarginBottom = 0, MarginTop = 0, ShadowType = ShadowType.In };
+            swFinished.StyleContext.AddClass("fluxo-list");
             swFinished.SetPolicy(PolicyType.Automatic, PolicyType.Automatic);
             swFinished.Add(lvFinished);
             swFinished.ShowAll();

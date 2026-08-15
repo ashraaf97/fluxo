@@ -1,0 +1,134 @@
+/*
+ * Fluxo GTK stylesheet.
+ *
+ * Deliberately light-touch. It layers on top of whatever GTK theme the user
+ * runs rather than repainting everything, so Fluxo still looks native under
+ * Adwaita, Yaru, Breeze or anything else. What it does supply is the brand
+ * accent, a consistent corner radius, and the spacing/row rhythm that the
+ * hand-built widgets never had.
+ *
+ * Colours are expressed against GTK's own named colours (@theme_bg_color,
+ * @theme_fg_color, ...) so light and dark both work from this one file - there
+ * is no media query for dark mode in GTK3.
+ *
+ * Loaded by Program.cs. Before this existed the app's entire stylesheet was two
+ * font-size rules in a C# string literal.
+ */
+
+/* Brand accent. Redefining the theme's selection colour is the least invasive
+   way to accent the whole UI: selections, focus rings and check marks all
+   derive from it. */
+@define-color fluxo_accent #1177ff;
+@define-color theme_selected_bg_color @fluxo_accent;
+@define-color theme_selected_fg_color #ffffff;
+
+/* Kept for the labels that already reference them. */
+.large-font  { font-size: 16px; }
+.medium-font { font-size: 14px; }
+
+/* ---------------------------------------------------------------- toolbar */
+
+.fluxo-toolbar {
+    padding: 6px 8px;
+    border-bottom: 1px solid alpha(@theme_fg_color, 0.12);
+}
+
+.fluxo-toolbar button {
+    border-radius: 6px;
+    padding: 6px 10px;
+    margin: 0 2px;
+}
+
+/* The primary action. `suggested-action` is GTK's own class, so themes that
+   restyle it stay consistent. */
+.fluxo-toolbar button.suggested-action {
+    font-weight: 600;
+}
+
+/* ---------------------------------------------------------------- sidebar */
+
+.fluxo-sidebar {
+    background-color: shade(@theme_bg_color, 0.97);
+    border-right: 1px solid alpha(@theme_fg_color, 0.12);
+}
+
+.fluxo-sidebar treeview.view {
+    background-color: transparent;
+}
+
+/* Roomier rows than the GTK default, matching the WPF side. */
+.fluxo-sidebar treeview.view:selected {
+    background-color: alpha(@fluxo_accent, 0.18);
+    color: @theme_fg_color;
+}
+
+/* ------------------------------------------------------------------ lists */
+
+.fluxo-list treeview.view {
+    /* Row padding is set per-cell in code; this keeps the grid lines quiet. */
+    -GtkTreeView-grid-line-width: 0;
+    -GtkTreeView-vertical-separator: 6;
+}
+
+.fluxo-list treeview.view:selected {
+    background-color: alpha(@fluxo_accent, 0.20);
+    color: @theme_fg_color;
+}
+
+.fluxo-list treeview.view:selected:focus {
+    background-color: alpha(@fluxo_accent, 0.28);
+}
+
+.fluxo-list treeview.view header button {
+    padding: 6px 10px;
+    font-weight: 600;
+    border-radius: 0;
+    border-top: none;
+    border-left: none;
+    border-right: none;
+    border-bottom: 1px solid alpha(@theme_fg_color, 0.12);
+    background-image: none;
+    background-color: transparent;
+}
+
+/* --------------------------------------------------------------- controls */
+
+entry {
+    border-radius: 6px;
+    padding: 6px 10px;
+    min-height: 24px;
+}
+
+button {
+    border-radius: 6px;
+}
+
+.fluxo-search {
+    border-radius: 6px;
+}
+
+progressbar > trough,
+progressbar > trough > progress {
+    border-radius: 999px;
+    min-height: 6px;
+}
+
+progressbar > trough > progress {
+    background-image: linear-gradient(to right, #0b5fff, #00c6ff);
+}
+
+/* ---------------------------------------------------------- status / misc */
+
+.fluxo-statusbar {
+    padding: 6px 8px;
+    border-top: 1px solid alpha(@theme_fg_color, 0.12);
+}
+
+/* Centered placeholder shown when a category has no downloads. */
+.fluxo-empty-state {
+    color: alpha(@theme_fg_color, 0.55);
+}
+
+.fluxo-empty-state-title {
+    font-size: 14px;
+}
