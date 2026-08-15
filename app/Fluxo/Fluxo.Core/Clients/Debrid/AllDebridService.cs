@@ -32,7 +32,7 @@ namespace Fluxo.Core.Clients.Debrid
 
         public bool IsConfigured => !string.IsNullOrWhiteSpace(Config.Instance.AllDebridApiKey);
 
-        public IList<DebridFile> ResolveMagnet(string magnet, Action<string>? progress, CancelFlag cancelFlag)
+        public DebridTorrent ResolveMagnet(string magnet, Action<string>? progress, CancelFlag cancelFlag)
         {
             EnsureConfigured();
             if (string.IsNullOrWhiteSpace(magnet))
@@ -48,7 +48,7 @@ namespace Fluxo.Core.Clients.Debrid
             return WaitAndListFiles(id, progress, cancelFlag);
         }
 
-        public IList<DebridFile> ResolveTorrentFile(byte[] torrentFile, string fileName, Action<string>? progress, CancelFlag cancelFlag)
+        public DebridTorrent ResolveTorrentFile(byte[] torrentFile, string fileName, Action<string>? progress, CancelFlag cancelFlag)
         {
             EnsureConfigured();
             if (torrentFile == null || torrentFile.Length == 0)
@@ -136,9 +136,9 @@ namespace Fluxo.Core.Clients.Debrid
             return id.Value;
         }
 
-        private IList<DebridFile> WaitAndListFiles(long magnetId, Action<string>? progress, CancelFlag cancelFlag)
+        private DebridTorrent WaitAndListFiles(long magnetId, Action<string>? progress, CancelFlag cancelFlag)
         {
-            WaitUntilReady(magnetId, progress, cancelFlag);
+            var torrentName = WaitUntilReady(magnetId, progress, cancelFlag);
 
             progress?.Invoke("Fetching file list...");
             var data = Get($"{BaseUrl}/magnet/files?id[]={magnetId}", cancelFlag);
@@ -157,10 +157,18 @@ namespace Fluxo.Core.Clients.Debrid
             {
                 throw new DebridException("The torrent contains no downloadable files");
             }
-            return results;
+
+            return new DebridTorrent
+            {
+                Name = torrentName ?? string.Empty,
+                Files = results
+            };
         }
 
-        private void WaitUntilReady(long magnetId, Action<string>? progress, CancelFlag cancelFlag)
+        /// <summary>
+        /// Polls until the torrent is cached, returning the service's name for it.
+        /// </summary>
+        private string? WaitUntilReady(long magnetId, Action<string>? progress, CancelFlag cancelFlag)
         {
             var deadline = DateTime.UtcNow + PollTimeout;
             while (true)
@@ -178,7 +186,7 @@ namespace Fluxo.Core.Clients.Debrid
                 var statusCode = (int?)m["statusCode"] ?? -1;
                 if (statusCode == 4)
                 {
-                    return;
+                    return (string?)m["filename"];
                 }
                 if (statusCode < 0 || statusCode > 4)
                 {

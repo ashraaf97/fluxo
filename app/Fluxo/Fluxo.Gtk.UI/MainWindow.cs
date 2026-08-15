@@ -12,6 +12,7 @@ using MenuItem = Gtk.MenuItem;
 using Fluxo.GtkUI.Utils;
 using Fluxo.GtkUI.Dialogs.DeleteConfirm;
 using Fluxo.GtkUI.Dialogs.Language;
+using Fluxo.Core.Clients.Debrid;
 
 namespace Fluxo.GtkUI
 {
@@ -32,6 +33,7 @@ namespace Fluxo.GtkUI
         private IButton newButton, deleteButton, pauseButton, resumeButton, openFileButton, openFolderButton;
         private IMenuItem[] menuItems;
         private Menu newDownloadMenu;
+        private MenuItem menuAddTorrent;
         private Menu mainMenu;
         private WindowGroup windowGroup;
         private CheckButton btnMonitoring;
@@ -203,7 +205,7 @@ namespace Fluxo.GtkUI
             menuVideoDownload.Activated += MenuVideoDownload_Click;
             var menuBatchDownload = new MenuItem(TextResource.GetText("MENU_BATCH_DOWNLOAD"));
             menuBatchDownload.Activated += MenuBatchDownload_Click;
-            var menuAddTorrent = new MenuItem(TextResource.GetText("MENU_ADD_TORRENT"));
+            menuAddTorrent = new MenuItem(TextResource.GetText("MENU_ADD_TORRENT"));
             menuAddTorrent.Activated += MenuAddTorrent_Click;
             newDownloadMenu.Append(menuNewDownload);
             newDownloadMenu.Append(menuVideoDownload);
@@ -1161,6 +1163,14 @@ namespace Fluxo.GtkUI
 
         public void OpenNewDownloadMenu()
         {
+            // Torrents go through a debrid service, so without an API key there is
+            // nothing this entry can do. Checked on every open so adding a key in
+            // Settings takes effect immediately.
+            menuAddTorrent.Sensitive = DebridSupport.IsConfigured;
+            menuAddTorrent.TooltipText = menuAddTorrent.Sensitive
+                ? null
+                : TextResource.GetText("MSG_ALLDEBRID_NO_KEY");
+
             newDownloadMenu.PopupAtWidget(this.btnNew, Gdk.Gravity.SouthWest, Gdk.Gravity.NorthWest, null);
         }
 

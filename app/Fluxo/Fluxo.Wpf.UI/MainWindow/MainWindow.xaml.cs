@@ -19,6 +19,7 @@ using Fluxo.Core.UI;
 using Fluxo.Core;
 using Fluxo.Core.Downloader;
 using Fluxo.Core.Util;
+using Fluxo.Core.Clients.Debrid;
 using Fluxo.Wpf.UI.Dialogs.About;
 using Fluxo.Wpf.UI.Dialogs.BatchDownload;
 using Fluxo.Wpf.UI.Dialogs.CompletedDialog;
@@ -403,6 +404,16 @@ namespace Fluxo.Wpf.UI
         public void OpenNewDownloadMenu()
         {
             var nctx = (ContextMenu)FindResource("newDownloadContextMenu");
+
+            // Torrents go through a debrid service, so without an API key there is
+            // nothing this entry can do. Checked on every open so adding a key in
+            // Settings takes effect immediately.
+            var torrentItem = (MenuItem)nctx.Items[3];
+            torrentItem.IsEnabled = DebridSupport.IsConfigured;
+            torrentItem.ToolTip = torrentItem.IsEnabled
+                ? null
+                : TextResource.GetText("MSG_ALLDEBRID_NO_KEY");
+
             nctx.PlacementTarget = BtnNew;
             nctx.Placement = PlacementMode.Bottom;
             nctx.IsOpen = true;

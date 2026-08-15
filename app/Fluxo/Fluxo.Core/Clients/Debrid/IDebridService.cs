@@ -25,10 +25,10 @@ namespace Fluxo.Core.Clients.Debrid
         /// Called with a human readable status while waiting. May be null.
         /// </param>
         /// <param name="cancelFlag">Polled so the caller can abort a long wait.</param>
-        IList<DebridFile> ResolveMagnet(string magnet, Action<string>? progress, CancelFlag cancelFlag);
+        DebridTorrent ResolveMagnet(string magnet, Action<string>? progress, CancelFlag cancelFlag);
 
         /// <summary>As <see cref="ResolveMagnet"/>, for the contents of a .torrent file.</summary>
-        IList<DebridFile> ResolveTorrentFile(byte[] torrentFile, string fileName, Action<string>? progress, CancelFlag cancelFlag);
+        DebridTorrent ResolveTorrentFile(byte[] torrentFile, string fileName, Action<string>? progress, CancelFlag cancelFlag);
 
         /// <summary>
         /// Converts a restricted link into a direct, downloadable URL. Also accepts
