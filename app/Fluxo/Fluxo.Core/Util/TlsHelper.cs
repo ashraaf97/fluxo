@@ -12,6 +12,15 @@ namespace Fluxo.Core.Util
         /// normally unless the user has explicitly opted out via
         /// <see cref="Config.AllowInvalidCertificates"/>.
         /// </summary>
+        /// <remarks>
+        /// This hangs off ServicePointManager, which only gates HttpWebRequest.
+        /// That is what the clients under Clients/Http use, so the callback below
+        /// does run for them (verified on .NET 10). HttpClient ignores it entirely
+        /// and applies its own validation instead. If those clients are ever ported
+        /// to HttpClient to clear SYSLIB0014, the certificate check stays safe by
+        /// default but <see cref="Config.AllowInvalidCertificates"/> silently stops
+        /// working, and would need re-implementing on the handler.
+        /// </remarks>
         public static void ApplyDefaults()
         {
             ServicePointManager.ServerCertificateValidationCallback = ValidateServerCertificate;

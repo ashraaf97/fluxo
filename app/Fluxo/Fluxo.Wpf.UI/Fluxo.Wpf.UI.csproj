@@ -2,14 +2,17 @@
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <!--<TargetFrameworks>net4.6;net4.5</TargetFrameworks>-->
-    <TargetFramework>net4.7.2</TargetFramework>
-    <!--<TargetFramework>net3.5</TargetFramework>-->
+    <TargetFramework>net10.0-windows</TargetFramework>
     <UseWPF>true</UseWPF>
     <UseWindowsForms>true</UseWindowsForms>
     <Platforms>x86</Platforms>
-    <LangVersion>9.0</LangVersion>
+    <PlatformTarget>x86</PlatformTarget>
+    <LangVersion>latest</LangVersion>
     <Nullable>enable</Nullable>
+    <!-- Carried over from app.config, which only the .NET Framework read. These
+         emit the equivalent settings into runtimeconfig.json. -->
+    <ServerGarbageCollection>false</ServerGarbageCollection>
+    <ConcurrentGarbageCollection>false</ConcurrentGarbageCollection>
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <ApplicationIcon>fluxo-logo.ico</ApplicationIcon>
     <AssemblyName>fluxo-app</AssemblyName>
@@ -26,10 +29,6 @@
     <DebugType>none</DebugType>
     <DebugSymbols>false</DebugSymbols>
   </PropertyGroup>
-
-  <ItemGroup>
-    <Reference Include="PresentationFramework.Aero2" />
-  </ItemGroup>
 
   <ItemGroup>
     <Content Include="..\Lang\**" CopyToOutputDirectory="Always" LinkBase="Lang\" />
@@ -92,16 +91,6 @@
     <CleanSQLiteInteropFiles>false</CleanSQLiteInteropFiles>
     <CollectSQLiteInteropFiles>false</CollectSQLiteInteropFiles>
   </PropertyGroup>
-
-  <!--
-    Backports required by the net4.7.2 target. These become redundant once the
-    project moves to a modern .NET target.
-  -->
-  <ItemGroup>
-    <PackageReference Include="System.Buffers" Version="4.6.1" />
-    <PackageReference Include="System.ValueTuple" Version="4.6.2" />
-    <PackageReference Include="System.IO.Compression" Version="4.3.0" />
-  </ItemGroup>
 
   <Import Project="..\Fluxo.Core\Fluxo.Core.projitems" Label="Shared" />
 

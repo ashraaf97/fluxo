@@ -137,7 +137,7 @@ namespace Fluxo.Wpf.UI.Dialogs.AdvancedDownloadOption
             base.OnSourceInitialized(e);
 
             NativeMethods.DisableMinMaxButton(this);
-#if NET45_OR_GREATER
+#if NET45_OR_GREATER || NET5_0_OR_GREATER
             if (App.Skin == Skin.Dark)
             {
                 var helper = new WindowInteropHelper(this);

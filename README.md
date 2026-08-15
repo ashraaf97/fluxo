@@ -28,12 +28,15 @@ Fluxo seamlessly integrates with Google Chrome, Mozilla Firefox Quantum, Opera, 
 - Works with Windows ISA, auto proxy scripts, proxy servers, NTLM, Kerberos authentication.
 
 ## Building from source
-Fluxo is a .NET project. With the .NET 6+ SDK installed, build the solution:
+Fluxo targets **.NET 10**, so you need the [.NET 10 SDK](https://dotnet.microsoft.com/download/dotnet/10.0).
 <pre>
 cd app/Fluxo
 dotnet build Fluxo.sln
 </pre>
 Or open <code>app/Fluxo/Fluxo.sln</code> in Visual Studio.
+
+The Windows app (<code>Fluxo.Wpf.UI</code>) targets <code>net10.0-windows</code>; the GTK app
+(<code>Fluxo.Gtk.UI</code>) targets <code>net10.0</code> and builds on Linux.
 
 
 [//]: #ImageLinks

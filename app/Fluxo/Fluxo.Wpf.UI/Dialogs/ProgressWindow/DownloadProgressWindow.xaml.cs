@@ -26,7 +26,7 @@ namespace Fluxo.Wpf.UI.Dialogs.ProgressWindow
 
             ApplicationContext.ApplicationEvent += ApplicationContext_ApplicationEvent;
 
-#if NET45_OR_GREATER
+#if NET45_OR_GREATER || NET5_0_OR_GREATER
             this.TaskbarItemInfo = new System.Windows.Shell.TaskbarItemInfo
             {
                 Description = "",
@@ -40,7 +40,7 @@ namespace Fluxo.Wpf.UI.Dialogs.ProgressWindow
                 this.PrgProgress.Value = val;
                 var prg = value >= 0 && value <= 100 ? value + "% " : "";
                 this.Title = $"{prg}{FileNameText}";
-#if NET45_OR_GREATER
+#if NET45_OR_GREATER || NET5_0_OR_GREATER
                 this.TaskbarItemInfo.Description = this.Title;
                 this.TaskbarItemInfo.ProgressValue = val / 100.0;
 #endif
@@ -278,7 +278,7 @@ namespace Fluxo.Wpf.UI.Dialogs.ProgressWindow
             base.OnSourceInitialized(e);
 
             NativeMethods.DisableMaxButton(this);
-#if NET45_OR_GREATER
+#if NET45_OR_GREATER || NET5_0_OR_GREATER
             if (Fluxo.Wpf.UI.App.Skin == Skin.Dark)
             {
                 var helper = new WindowInteropHelper(this);

@@ -206,7 +206,7 @@ namespace Fluxo.Wpf.UI.Dialogs.VideoDownloader
             base.OnSourceInitialized(e);
             NativeMethods.DisableMinMaxButton(this);
 
-#if NET45_OR_GREATER
+#if NET45_OR_GREATER || NET5_0_OR_GREATER
             if (Fluxo.Wpf.UI.App.Skin == Skin.Dark)
             {
                 var helper = new WindowInteropHelper(this);

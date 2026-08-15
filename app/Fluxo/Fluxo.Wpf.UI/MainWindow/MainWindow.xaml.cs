@@ -435,7 +435,7 @@ namespace Fluxo.Wpf.UI
             base.OnSourceInitialized(e);
             var helper = new WindowInteropHelper(this);
 
-#if NET45_OR_GREATER
+#if NET45_OR_GREATER || NET5_0_OR_GREATER
             if (App.Skin == Skin.Dark)
             {
                 helper.EnsureHandle();

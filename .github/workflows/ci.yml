@@ -21,14 +21,14 @@ jobs:
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: 6.0.x
+          dotnet-version: 10.0.x
 
       - name: Restore
         run: dotnet restore app/Fluxo/Fluxo.Tests/Fluxo.Tests.csproj
 
       # Only Fluxo.Tests runs here. Fluxo_Tests (Fluxo.SystemTests) is deliberately
-      # excluded: it targets the EOL net5.0 runtime, reaches out to live streaming
-      # hosts, and hard codes local paths, so it cannot pass on a clean agent.
+      # excluded: it does not compile (it never referenced Fluxo.Core), reaches out
+      # to live streaming hosts, and hard codes local paths.
       - name: Test
         run: >
           dotnet test app/Fluxo/Fluxo.Tests/Fluxo.Tests.csproj
@@ -53,7 +53,7 @@ jobs:
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: 6.0.x
+          dotnet-version: 10.0.x
 
       - name: Restore
         run: dotnet restore app/Fluxo/Fluxo.Wpf.UI/Fluxo.Wpf.UI.csproj
@@ -70,7 +70,7 @@ jobs:
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: 6.0.x
+          dotnet-version: 10.0.x
 
       - name: Restore
         run: dotnet restore app/Fluxo/Fluxo.Gtk.UI/Fluxo.Gtk.UI.csproj

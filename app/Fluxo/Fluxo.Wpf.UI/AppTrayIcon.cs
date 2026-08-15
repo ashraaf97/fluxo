@@ -41,29 +41,31 @@ namespace Fluxo.Wpf.UI
         public static void AttachToSystemTray()
         {
 
-            var ctx = new ContextMenu();
+            // ContextMenu/MenuItem were dropped from WinForms in .NET Core and
+            // later; ContextMenuStrip/ToolStripMenuItem are the replacements.
+            var ctx = new ContextMenuStrip();
 
-            var menuExit = new MenuItem
+            var menuExit = new ToolStripMenuItem
             {
                 Text = TextResource.GetText("MENU_EXIT")
             };
             menuExit.Click += (_, _) => Environment.Exit(0);
 
-            var menuRestore = new MenuItem
+            var menuRestore = new ToolStripMenuItem
             {
                 Text = TextResource.GetText("MSG_RESTORE")
             };
             menuRestore.Click += (sender, e) => TrayClick?.Invoke(sender, e);
 
-            ctx.MenuItems.Add(menuRestore);
-            ctx.MenuItems.Add(menuExit);
+            ctx.Items.Add(menuRestore);
+            ctx.Items.Add(menuExit);
 
             notifyIcon = new NotifyIcon
             {
                 Text = "Fluxo",
                 Visible = true,
                 Icon = new Icon(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "fluxo-logo.ico")),
-                ContextMenu = ctx
+                ContextMenuStrip = ctx
             };
             notifyIcon.MouseClick += NotifyIcon_MouseClick;
 

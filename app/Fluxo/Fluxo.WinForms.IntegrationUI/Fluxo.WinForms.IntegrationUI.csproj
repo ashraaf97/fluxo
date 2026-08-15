@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <!--<TargetFrameworks>net4.6;net4.5</TargetFrameworks>-->
+    <!--<TargetFramework>net10.0-windows</TargetFramework>-->
     <TargetFramework>net4.7.2</TargetFramework>
     <UseWindowsForms>true</UseWindowsForms>
     <ApplicationManifest>app.manifest</ApplicationManifest>

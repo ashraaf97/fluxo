@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net4.7.2</TargetFramework>
+    <TargetFramework>net10.0-windows</TargetFramework>
     <AssemblyName>fluxo-launcher</AssemblyName>
   </PropertyGroup>
 
