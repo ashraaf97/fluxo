@@ -27,7 +27,7 @@
         </Grid.ColumnDefinitions>
         <CheckBox Name="ChkSelectAll" Content="{StaticResource VID_CHK}" Grid.ColumnSpan="5" Margin="5,0,0,10" />
         <ListBox Name="LvVideoList" Grid.Row="1" Grid.ColumnSpan="3" Margin="0,0,10,0" BorderThickness="1" 
-                  BorderBrush="{StaticResource ControlBordercolor}">
+                  BorderBrush="{DynamicResource ControlBordercolor}">
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <CheckBox IsChecked="{Binding IsSelected, NotifyOnSourceUpdated=True,Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Name="MycheckBox" Content="{Binding Name}"/>
@@ -35,7 +35,7 @@
             </ListBox.ItemTemplate>
         </ListBox>
         <!--<ListView Name="LvVideoList" Grid.Row="1" Grid.ColumnSpan="3" Margin="0,0,10,0" BorderThickness="1" 
-                  BorderBrush="{StaticResource ControlBordercolor}">
+                  BorderBrush="{DynamicResource ControlBordercolor}">
             <ListView.View>
                 <GridView>
                     <GridViewColumn Header="{StaticResource SORT_NAME}" Width="400">
@@ -65,7 +65,7 @@
             </Grid.RowDefinitions>
             <TextBlock Grid.Row="0" Text="{StaticResource O_VID_FMT}" Margin="0,0,0,5" Visibility="Collapsed"/>
             <ListBox Name="LbFormat" Grid.Row="1" MinWidth="60" BorderThickness="1" MinHeight="60"
-                  BorderBrush="{StaticResource ControlBordercolor}" Visibility="Collapsed">
+                  BorderBrush="{DynamicResource ControlBordercolor}" Visibility="Collapsed">
                 <ListBoxItem>
                     <TextBlock Text="{StaticResource CAT_VIDEOS}"/>
                 </ListBoxItem>
@@ -75,7 +75,7 @@
             </ListBox>
             <TextBlock Grid.Row="2" Text="{StaticResource MSG_QUALITY}" Margin="0,0,0,5" Visibility="Collapsed"/>
             <ListBox Name="LbQuality" Grid.Row="3" MinWidth="60" BorderThickness="1" 
-                  BorderBrush="{StaticResource ControlBordercolor}">
+                  BorderBrush="{DynamicResource ControlBordercolor}">
             </ListBox>
         </Grid>
     </Grid>

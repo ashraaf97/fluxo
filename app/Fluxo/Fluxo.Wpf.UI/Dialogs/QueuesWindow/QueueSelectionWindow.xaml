@@ -18,7 +18,7 @@
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <ListBox Name="LbQueues" Grid.Row="0" Grid.ColumnSpan="3" Margin="0,0,0,10" 
-                 BorderBrush="{StaticResource ControlBordercolor}" BorderThickness="1"></ListBox>
+                 BorderBrush="{DynamicResource ControlBordercolor}" BorderThickness="1"></ListBox>
         <Button Name="BtnOK" Content="{StaticResource MSG_OK}" Grid.Row="1" Grid.Column="1" Margin="0,0,5,0" Padding="15,3" Click="BtnOK_Click"/>
         <Button Name="BtnCancel" Content="{StaticResource ND_CANCEL}" Grid.Row="1" Margin="5,0,0,0" Grid.Column="2" Padding="5,3" Click="BtnCancel_Click"/>
 

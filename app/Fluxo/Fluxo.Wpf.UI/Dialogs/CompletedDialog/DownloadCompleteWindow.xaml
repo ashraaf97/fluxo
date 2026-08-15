@@ -20,11 +20,11 @@
                        Margin="10,0,0,0"
                        VerticalAlignment="Center"
                        Cursor="Hand" 
-                       Foreground="{StaticResource HyperlinkForecolor}"/>
+                       Foreground="{DynamicResource HyperlinkForecolor}"/>
             <Button Grid.Column="2" Padding="10,5" Margin="0,5,10,5" Name="BtnOpenFolder" Content="{StaticResource CTX_OPEN_FOLDER}" Click="BtnOpenFolder_Click"/>
             <Button Grid.Column="3" Padding="25,5" Margin="5,5,10,5" Name="BtnOpen" Content="{StaticResource CTX_OPEN_FILE}" Click="BtnOpen_Click"/>
         </Grid>
-        <Grid Background="{StaticResource ListViewBackcolor}">
+        <Grid Background="{DynamicResource ListViewBackcolor}">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="auto"/>
                 <ColumnDefinition Width="*"/>
@@ -41,25 +41,25 @@
                       Margin="20,10" 
                       StrokeThickness="0" 
                       Stretch="Uniform" 
-                      Fill="{StaticResource ToolButtonMouseDisabledForecolor}"
+                      Fill="{DynamicResource ToolButtonMouseDisabledForecolor}"
                       Width="32" Height="32"  
-                      Stroke="{StaticResource ToolButtonMouseDisabledForecolor}"
+                      Stroke="{DynamicResource ToolButtonMouseDisabledForecolor}"
                       Data="{StaticResource ri-file-download-line}"
                       SnapsToDevicePixels="True"/>
             <TextBlock Grid.Row="0" Grid.Column="1" x:Name="TxtFileName" 
                            Text="sdfsdf" Margin="0,20,10,0" 
                            FontSize="16" TextTrimming="CharacterEllipsis" />
             <TextBlock Grid.Row="1" Grid.Column="1" x:Name="TxtLocation" Text="" Margin="0,5,10,5"
-                           Foreground="{StaticResource ToolButtonMouseDisabledForecolor}" TextTrimming="CharacterEllipsis"/>
+                           Foreground="{DynamicResource ToolButtonMouseDisabledForecolor}" TextTrimming="CharacterEllipsis"/>
             <Path Grid.Column="0" Grid.Row="2" Grid.RowSpan="1" 
                       VerticalAlignment="Bottom" 
                       HorizontalAlignment="Center"
                       Margin="20,0" 
                       StrokeThickness="0" 
                       Stretch="Uniform" 
-                      Fill="{StaticResource ToolButtonMouseDisabledForecolor}"
+                      Fill="{DynamicResource ToolButtonMouseDisabledForecolor}"
                       Width="16" Height="16"  
-                      Stroke="{StaticResource ToolButtonMouseDisabledForecolor}"
+                      Stroke="{DynamicResource ToolButtonMouseDisabledForecolor}"
                       Data="{StaticResource ri-drag-drop-line}"
                       SnapsToDevicePixels="True"
                       Cursor="Hand"/>

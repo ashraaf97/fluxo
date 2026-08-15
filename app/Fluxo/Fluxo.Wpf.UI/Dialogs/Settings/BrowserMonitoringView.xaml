@@ -57,57 +57,57 @@
                         <RowDefinition/>
                     </Grid.RowDefinitions>
                     <Button Name="BtnChrome" Margin="5" Grid.Column="0" Grid.Row="0" Click="BtnChrome_Click"  
-                            Content="Google Chrome" FontSize="18" Foreground="{StaticResource ControlForecolor}" Padding="10">
-                        <!--<TextBlock Text="Google Chrome" Margin="10,0,0,0" Foreground="{StaticResource ControlForecolor}" 
+                            Content="Google Chrome" FontSize="18" Foreground="{DynamicResource ControlForecolor}" Padding="10">
+                        <!--<TextBlock Text="Google Chrome" Margin="10,0,0,0" Foreground="{DynamicResource ControlForecolor}" 
                                        VerticalAlignment="Center" FontSize="18"/>-->
                         <!--<StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,15" Orientation="Horizontal" >
                             <Path HorizontalAlignment="Center" VerticalAlignment="Bottom" Data="{StaticResource ri-chrome-fill}" 
-                          Fill="{StaticResource ControlForecolor}" Stretch="Fill" Height="32" Width="32"/>
+                          Fill="{DynamicResource ControlForecolor}" Stretch="Fill" Height="32" Width="32"/>
 
                         </StackPanel>-->
                     </Button>
                     <Button Name="BtnFirefox" Margin="5" Grid.Column="1" Grid.Row="0" Click="BtnFirefox_Click"
-                            Content="Mozilla Firefox" FontSize="18" Foreground="{StaticResource ControlForecolor}" Padding="10">
+                            Content="Mozilla Firefox" FontSize="18" Foreground="{DynamicResource ControlForecolor}" Padding="10">
                         <!--<StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,15" Orientation="Horizontal" >
                             <Path HorizontalAlignment="Center" VerticalAlignment="Bottom" Data="{StaticResource ri-firefox-fill}" 
-                          Fill="{StaticResource ControlForecolor}" Stretch="Fill" Height="32" Width="32" />
+                          Fill="{DynamicResource ControlForecolor}" Stretch="Fill" Height="32" Width="32" />
                             <TextBlock Text="Firefox" Margin="10,0,0,0" VerticalAlignment="Center" FontSize="16"
-                                       Foreground="{StaticResource ControlForecolor}"/>
+                                       Foreground="{DynamicResource ControlForecolor}"/>
                         </StackPanel>-->
                     </Button>
                     <Button Name="BtnEdge" Margin="5" Grid.Column="0" Grid.Row="1" Click="BtnEdge_Click" 
-                            Content="Microsoft Edge" FontSize="18" Foreground="{StaticResource ControlForecolor}" Padding="10">
+                            Content="Microsoft Edge" FontSize="18" Foreground="{DynamicResource ControlForecolor}" Padding="10">
                         <!--<StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,15" Orientation="Horizontal">
                             <Path HorizontalAlignment="Center" VerticalAlignment="Bottom" Data="{StaticResource ri-edge-fill}" 
-                          Fill="{StaticResource ControlForecolor}" Stretch="Fill" Height="32" Width="32"/>
-                            <TextBlock Text="Edge" Margin="10,0,0,0" VerticalAlignment="Center" FontSize="16" Foreground="{StaticResource ControlForecolor}"/>
+                          Fill="{DynamicResource ControlForecolor}" Stretch="Fill" Height="32" Width="32"/>
+                            <TextBlock Text="Edge" Margin="10,0,0,0" VerticalAlignment="Center" FontSize="16" Foreground="{DynamicResource ControlForecolor}"/>
                         </StackPanel>-->
                     </Button>
                     <Button Name="BtnOpera" Margin="5" Grid.Column="1" Grid.Row="1" Click="BtnOpera_Click"
-                            Content="Opera Browser" FontSize="18" Foreground="{StaticResource ControlForecolor}" Padding="10">
+                            Content="Opera Browser" FontSize="18" Foreground="{DynamicResource ControlForecolor}" Padding="10">
                         <!--<StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,15" Orientation="Horizontal">
                             <Path HorizontalAlignment="Center" VerticalAlignment="Bottom" Data="{StaticResource ri-opera-fill}" 
-                          Fill="{StaticResource ControlForecolor}" Stretch="Fill" Height="32" Width="32"/>
-                            <TextBlock Text="Opera" Margin="10,0,0,0" VerticalAlignment="Center" FontSize="16" Foreground="{StaticResource ControlForecolor}"/>
+                          Fill="{DynamicResource ControlForecolor}" Stretch="Fill" Height="32" Width="32"/>
+                            <TextBlock Text="Opera" Margin="10,0,0,0" VerticalAlignment="Center" FontSize="16" Foreground="{DynamicResource ControlForecolor}"/>
                         </StackPanel>-->
                     </Button>
                     <Button Name="BtnBrave" Margin="5" Grid.Column="0" Grid.Row="2" Click="BtnBrave_Click"
-                            Content="Brave Browser" FontSize="18" Foreground="{StaticResource ControlForecolor}" Padding="10"/>
+                            Content="Brave Browser" FontSize="18" Foreground="{DynamicResource ControlForecolor}" Padding="10"/>
                     <Button Name="BtnVivaldi" Margin="5" Grid.Column="1" Grid.Row="2" Click="BtnVivaldi_Click"
-                            Content="Vivaldi Browser" FontSize="18" Foreground="{StaticResource ControlForecolor}" Padding="10"/>
+                            Content="Vivaldi Browser" FontSize="18" Foreground="{DynamicResource ControlForecolor}" Padding="10"/>
 
                 </Grid>
                 <TextBlock Padding="10" TextWrapping="Wrap" Text="{StaticResource DESC_OTHER_BROWSERS}" Grid.Row="3" Grid.ColumnSpan="4" />
                 <TextBlock Padding="10" TextWrapping="Wrap" Text="{StaticResource DESC_CHROME}" Grid.Row="4" Grid.ColumnSpan="2" />
                 <TextBox IsReadOnly="True" Name="TxtChromeWebStoreUrl" Grid.Row="4" Grid.Column="2" Margin="5" VerticalContentAlignment="Center" AcceptsReturn="False" TextWrapping="NoWrap"/>
                 <Button Grid.Row="4" Grid.Column="3" Margin="5" Padding="3" Name="BtnCopy1" Click="BtnCopy1_Click">
-                    <Path Data="{StaticResource ri-file-copy-line}" Fill="{StaticResource ControlForecolor}" 
+                    <Path Data="{StaticResource ri-file-copy-line}" Fill="{DynamicResource ControlForecolor}" 
                   Width="16" Height="16" Stretch="Fill"/>
                 </Button>
                 <TextBlock Padding="10" TextWrapping="Wrap" Text="{StaticResource DESC_MOZ}" Grid.Row="5" Grid.ColumnSpan="2" />
                 <TextBox IsReadOnly="True" Name="TxtFirefoxAMOUrl" Grid.Row="5" Grid.Column="2" Margin="5" VerticalContentAlignment="Center" AcceptsReturn="False" TextWrapping="NoWrap"/>
                 <Button Grid.Row="5" Grid.Column="3" Margin="5" Padding="3" Name="BtnCopy2" Click="BtnCopy2_Click">
-                    <Path Data="{StaticResource ri-file-copy-line}" Fill="{StaticResource ControlForecolor}" 
+                    <Path Data="{StaticResource ri-file-copy-line}" Fill="{DynamicResource ControlForecolor}" 
                   Width="16" Height="16" Stretch="Fill"/>
                 </Button>
                 <TextBlock Margin="10,15,10,5" TextWrapping="Wrap" Text="{StaticResource DESC_FILETYPES}" Grid.Row="6" Grid.ColumnSpan="4" />

@@ -17,7 +17,7 @@
             <RowDefinition Height="*"/>
             <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
-        <Border Background="{StaticResource ListViewBackcolor}">
+        <Border Background="{DynamicResource ListViewBackcolor}">
             <Grid  Margin="20,20,10,10">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="auto"/>
@@ -45,7 +45,7 @@
                           Name="CmbLocation" SelectionChanged="CmbLocation_SelectionChanged">
                 </ComboBox>
                 <TextBlock Grid.Row="3" Grid.Column="1" Text="{StaticResource ND_IGNORE_URL}" Margin="5,15" 
-                           Cursor="Hand" MouseDown="TextBlock_MouseDown" Foreground="{StaticResource HyperlinkForecolor}"
+                           Cursor="Hand" MouseDown="TextBlock_MouseDown" Foreground="{DynamicResource HyperlinkForecolor}"
                            />
                 <Path Grid.Column="2" Grid.Row="0" Grid.RowSpan="2" 
                       VerticalAlignment="Bottom" 
@@ -53,18 +53,18 @@
                       Margin="20,10" 
                       StrokeThickness="0" 
                       Stretch="Uniform" 
-                      Fill="{StaticResource ToolButtonMouseDisabledForecolor}"
+                      Fill="{DynamicResource ToolButtonMouseDisabledForecolor}"
                       Width="32" Height="32"  
-                      Stroke="{StaticResource ToolButtonMouseDisabledForecolor}"
+                      Stroke="{DynamicResource ToolButtonMouseDisabledForecolor}"
                       Data="{StaticResource ri-file-download-line}"
                       SnapsToDevicePixels="True"/>
                 <TextBlock Grid.Row="2" Grid.Column="2" Text="---" Margin="10" Name="TxtFileSize" 
                            HorizontalAlignment="Center" VerticalAlignment="Top"/>
             </Grid>
         </Border>
-        <Border Grid.Row="1" Background="{StaticResource ControlBackcolor}" BorderBrush="{StaticResource ControlBordercolor}" 
+        <Border Grid.Row="1" Background="{DynamicResource ControlBackcolor}" BorderBrush="{DynamicResource ControlBordercolor}" 
                 BorderThickness="0,1,0,0" Padding="0,5">
-            <Grid  Background="{StaticResource ControlBackcolor}">
+            <Grid  Background="{DynamicResource ControlBackcolor}">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="auto"/>
                     <ColumnDefinition Width="*"/>

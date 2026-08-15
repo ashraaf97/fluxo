@@ -30,6 +30,17 @@ namespace Fluxo.Wpf.UI
             }
         }
 
+        /// <summary>
+        /// Re-reads <see cref="App.Skin"/> and swaps in the matching token file.
+        /// Assigning Source republishes the dictionary's contents, which is what
+        /// makes every DynamicResource reference re-resolve against the new palette.
+        /// Called by <see cref="ThemeManager"/> when the user changes theme.
+        /// </summary>
+        public void Refresh()
+        {
+            UpdateSource();
+        }
+
         private void UpdateSource()
         {
             var val = App.Skin == Skin.Dark ? DarkSource : LightSource;

@@ -14,7 +14,7 @@
     </Window.Resources>
     <DockPanel>
         <Border DockPanel.Dock="Bottom" Grid.Row="1" 
-                Background="{StaticResource ControlBackcolor}" BorderBrush="{StaticResource ControlBordercolor}" 
+                Background="{DynamicResource ControlBackcolor}" BorderBrush="{DynamicResource ControlBordercolor}" 
                 BorderThickness="0,1,0,0">
             <Grid Margin="10">
                 <Grid.ColumnDefinitions>
@@ -40,7 +40,7 @@
                         Click="btnDownload_Click"/>
             </Grid>
         </Border>
-        <Border Padding="10,20" Background="{StaticResource ListViewBackcolor}">
+        <Border Padding="10,20" Background="{DynamicResource ListViewBackcolor}">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
@@ -72,9 +72,9 @@
                       Margin="20,0,20,10" 
                       StrokeThickness="0" 
                       Stretch="Uniform" 
-                      Fill="{StaticResource ToolButtonMouseDisabledForecolor}"
+                      Fill="{DynamicResource ToolButtonMouseDisabledForecolor}"
                       Width="32" Height="32"  
-                      Stroke="{StaticResource ToolButtonMouseDisabledForecolor}"
+                      Stroke="{DynamicResource ToolButtonMouseDisabledForecolor}"
                       Data="{StaticResource ri-file-download-line}"
                       SnapsToDevicePixels="True"/>
                     <TextBlock Grid.Row="2" Grid.Column="2" Text="---" Margin="10,0,10,0" Name="TxtFileSize" 

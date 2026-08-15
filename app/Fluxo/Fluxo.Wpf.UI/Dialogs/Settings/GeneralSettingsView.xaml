@@ -72,7 +72,7 @@
                           Margin="10,5" Padding="3" Content="{StaticResource SETTINGS_ATUO_CAT}"/>
                 <TextBlock Margin="10,15,10,5" Text="{StaticResource SETTINGS_CAT}" Grid.Row="12" Grid.ColumnSpan="4" />
                 <ListView Margin="10,5" Name="LvCategories" Grid.ColumnSpan="4" Grid.Row="13" BorderThickness="1" 
-                          BorderBrush="{StaticResource ControlBordercolor}">
+                          BorderBrush="{DynamicResource ControlBordercolor}">
                     <ListView.View>
                         <GridView>
                             <GridViewColumn Header="{StaticResource SETTINGS_CAT_NAME}" Width="120" DisplayMemberBinding="{Binding DisplayName}" />

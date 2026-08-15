@@ -19,7 +19,7 @@
                 <RowDefinition/>
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
-            <ListBox Grid.ColumnSpan="2" MinWidth="150" Name="LbQueues" BorderBrush="{StaticResource ControlBordercolor}" BorderThickness="1">
+            <ListBox Grid.ColumnSpan="2" MinWidth="150" Name="LbQueues" BorderBrush="{DynamicResource ControlBordercolor}" BorderThickness="1">
                 <ListBox.ItemTemplate>
                     <DataTemplate>
                         <TextBlock Text="{Binding Name}" />

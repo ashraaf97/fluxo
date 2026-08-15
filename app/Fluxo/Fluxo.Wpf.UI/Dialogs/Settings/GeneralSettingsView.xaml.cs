@@ -70,6 +70,11 @@ namespace Fluxo.Wpf.UI.Dialogs.Settings
             Config.Instance.DefaultDownloadFolder = TxtDownloadFolder.Text;
             Config.Instance.AllowSystemDarkTheme = ChkDarkTheme.IsChecked ?? false;
             Config.Instance.DoubleClickOpenFile = CmbDblClickAction.SelectedIndex == 1;
+
+            // Repaint straight away rather than asking the user to restart. Control
+            // templates resolve their colours with DynamicResource, so swapping the
+            // token dictionary is enough - see ThemeManager.
+            ThemeManager.Apply(Config.Instance.AllowSystemDarkTheme ? Skin.Dark : Skin.Light);
         }
 
         private void CatAdd_Click(object sender, RoutedEventArgs e)

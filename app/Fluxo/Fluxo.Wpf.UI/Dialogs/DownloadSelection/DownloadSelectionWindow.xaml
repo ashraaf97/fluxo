@@ -31,7 +31,7 @@
         <CheckBox Name="ChkSelectAll" Content="{StaticResource VID_CHK}" Grid.ColumnSpan="5" Margin="5,0,0,10" 
                   Checked="ChkSelectAll_Checked" Unchecked="ChkSelectAll_Checked"/>
         <ListBox Name="LbDownloadList" Grid.Row="1" Grid.ColumnSpan="5" Margin="0,0,0,0" BorderThickness="1" 
-                  BorderBrush="{StaticResource ControlBordercolor}">
+                  BorderBrush="{DynamicResource ControlBordercolor}">
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <CheckBox IsChecked="{Binding IsSelected, NotifyOnSourceUpdated=True,Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Name="MycheckBox" Content="{Binding Name}"/>

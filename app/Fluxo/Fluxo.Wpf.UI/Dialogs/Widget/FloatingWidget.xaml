@@ -23,8 +23,8 @@
                                     VerticalAlignment="Center" 
                                     StrokeThickness="0"
                                     Stretch="Fill" 
-                                    Fill="{StaticResource StatusbarIconcolor}"
-                                    Stroke="{StaticResource StatusbarIconcolor}" 
+                                    Fill="{DynamicResource StatusbarIconcolor}"
+                                    Stroke="{DynamicResource StatusbarIconcolor}" 
                                     Data="{StaticResource ri-pushpin-2-fill}"
                                     SnapsToDevicePixels="True"
                                     Margin="10,5,0,5"/>-->
@@ -36,8 +36,8 @@
                                     VerticalAlignment="Center" 
                                     StrokeThickness="0"
                                     Stretch="Fill" 
-                                    Fill="{StaticResource StatusbarIconcolor}"
-                                    Stroke="{StaticResource StatusbarIconcolor}" 
+                                    Fill="{DynamicResource StatusbarIconcolor}"
+                                    Stroke="{DynamicResource StatusbarIconcolor}" 
                                     Data="{StaticResource ri-file-download-fill}"
                                     SnapsToDevicePixels="True" HorizontalAlignment="Center"/>
             <TextBlock Padding="5,2" Name="TxtDownloadCount" Text="0" 
@@ -55,8 +55,8 @@
                                     VerticalAlignment="Center" 
                                     StrokeThickness="0"
                                     Stretch="Fill" 
-                                    Fill="{StaticResource StatusbarIconcolor}"
-                                    Stroke="{StaticResource StatusbarIconcolor}" 
+                                    Fill="{DynamicResource StatusbarIconcolor}"
+                                    Stroke="{DynamicResource StatusbarIconcolor}" 
                                     Data="{StaticResource ri-file-download-fill}"
                                     SnapsToDevicePixels="True" HorizontalAlignment="Center"/>
             <TextBlock Padding="5,2" Name="TxtHelp" Text="0" 
@@ -71,8 +71,8 @@
                                     VerticalAlignment="Center" 
                                     StrokeThickness="0"
                                     Stretch="Fill" 
-                                    Fill="{StaticResource StatusbarIconcolor}"
-                                    Stroke="{StaticResource StatusbarIconcolor}" 
+                                    Fill="{DynamicResource StatusbarIconcolor}"
+                                    Stroke="{DynamicResource StatusbarIconcolor}" 
                                     Data="{StaticResource ri-close-fill}"
                                     SnapsToDevicePixels="True"
                                     Margin="0,5,10,5" Cursor="Hand"/>

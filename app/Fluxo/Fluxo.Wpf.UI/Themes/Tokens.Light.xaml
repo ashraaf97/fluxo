@@ -1,0 +1,137 @@
+<!--
+    Light colour tokens.
+
+    Mirrors Tokens.Dark.xaml key-for-key - see the header there for why this file
+    holds colours only. Every key defined in one theme MUST exist in the other,
+    otherwise swapping themes at runtime leaves dangling DynamicResource refs.
+
+    Note the sidebar is now genuinely light. The old light theme kept a dark
+    sidebar (#24292E) against a white body, which read as an accident.
+-->
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:core="clr-namespace:System;assembly=mscorlib"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!--#region Brand -->
+    <!-- Darker than the dark-theme accent so it clears 4.5:1 on white. -->
+    <Color x:Key="AccentColor">#0A6AE0</Color>
+    <SolidColorBrush x:Key="AccentBrush" Color="#0A6AE0"/>
+    <SolidColorBrush x:Key="AccentHoverBrush" Color="#2B82F0"/>
+    <SolidColorBrush x:Key="AccentPressedBrush" Color="#0850AE"/>
+    <SolidColorBrush x:Key="AccentSubtleBrush" Color="#DCE9FC"/>
+    <SolidColorBrush x:Key="AccentTextBrush" Color="#0A6AE0"/>
+    <SolidColorBrush x:Key="OnAccentBrush" Color="#FFFFFF"/>
+
+    <LinearGradientBrush x:Key="BrandGradientBrush" StartPoint="0,0" EndPoint="1,0">
+        <GradientStop Color="#0B5FFF" Offset="0"/>
+        <GradientStop Color="#00C6FF" Offset="1"/>
+    </LinearGradientBrush>
+    <!--#endregion-->
+
+    <!--#region Surfaces -->
+    <SolidColorBrush x:Key="SurfaceBase" Color="#FAFAFB"/>
+    <SolidColorBrush x:Key="SurfaceElevated" Color="#FFFFFF"/>
+    <SolidColorBrush x:Key="SurfaceInput" Color="#FFFFFF"/>
+    <SolidColorBrush x:Key="SurfaceHover" Color="#F0F1F4"/>
+    <SolidColorBrush x:Key="SurfacePressed" Color="#E5E7EB"/>
+    <!--#endregion-->
+
+    <!--#region Borders -->
+    <SolidColorBrush x:Key="BorderSubtle" Color="#E3E5E9"/>
+    <SolidColorBrush x:Key="BorderStrong" Color="#C9CDD4"/>
+    <!--#endregion-->
+
+    <!--#region Text -->
+    <SolidColorBrush x:Key="TextPrimary" Color="#1A1C20"/>
+    <SolidColorBrush x:Key="TextSecondary" Color="#5C6270"/>
+    <SolidColorBrush x:Key="TextTertiary" Color="#8A8F9A"/>
+    <!--#endregion-->
+
+    <!--#region Legacy keys
+         Retained under their original names because ~58 XAML files reference
+         them directly. Renaming would be a much larger diff for no visual gain.
+    -->
+
+    <!-- Category sidebar -->
+    <SolidColorBrush x:Key="CategoryForegroundNormal" Color="#5C6270"/>
+    <SolidColorBrush x:Key="CategoryForegroundSelected" Color="#0A3D8F"/>
+    <SolidColorBrush x:Key="CategoryHighlight" Color="#DCE9FC"/>
+    <SolidColorBrush x:Key="CategoryListBackground" Color="#F2F3F5"/>
+    <SolidColorBrush x:Key="CategoryMouseOverBackground" Color="#E8EAEE"/>
+
+    <!-- Buttons -->
+    <SolidColorBrush x:Key="ButtonBackcolor" Color="#FFFFFF"/>
+    <SolidColorBrush x:Key="ButtonForecolor" Color="#1A1C20"/>
+    <SolidColorBrush x:Key="ButtonMouseOverBackcolor" Color="#F0F1F4"/>
+    <SolidColorBrush x:Key="ButtonMousePressedBackcolor" Color="#E5E7EB"/>
+    <SolidColorBrush x:Key="ButtonDisabledBackcolor" Color="#F5F6F7"/>
+    <SolidColorBrush x:Key="ButtonBorder" Color="#C9CDD4"/>
+    <SolidColorBrush x:Key="ButtonFocusedBorder" Color="#0A6AE0"/>
+    <SolidColorBrush x:Key="ButtonOverBackcolor" Color="#F0F1F4"/>
+
+    <!-- Toolbar -->
+    <SolidColorBrush x:Key="ToolButtonForecolor" Color="#1A1C20"/>
+    <SolidColorBrush x:Key="ToolButtonMouseOverBackcolor" Color="#F0F1F4"/>
+    <SolidColorBrush x:Key="ToolButtonMousePressedBackcolor" Color="#E5E7EB"/>
+    <SolidColorBrush x:Key="ToolButtonMouseDisabledForecolor" Color="#A8ADB6"/>
+    <SolidColorBrush x:Key="ToolbarBordercolor" Color="#E3E5E9"/>
+
+    <!-- Search -->
+    <SolidColorBrush x:Key="SearchBorder" Color="#C9CDD4"/>
+    <SolidColorBrush x:Key="SearchBackcolor" Color="#FFFFFF"/>
+
+    <!-- Generic control chrome -->
+    <SolidColorBrush x:Key="ControlBackcolor" Color="#FAFAFB"/>
+    <SolidColorBrush x:Key="ControlBordercolor" Color="#E3E5E9"/>
+    <SolidColorBrush x:Key="ControlForecolor" Color="#1A1C20"/>
+    <SolidColorBrush x:Key="ControlDisabledBackcolor" Color="#F5F6F7"/>
+
+    <!-- Text input -->
+    <SolidColorBrush x:Key="TextBackcolor" Color="#FFFFFF"/>
+    <SolidColorBrush x:Key="TextForecolor" Color="#1A1C20"/>
+    <SolidColorBrush x:Key="DisabledTextBackcolor" Color="#F5F6F7"/>
+    <SolidColorBrush x:Key="TextMouseOverBorder" Color="#A8ADB6"/>
+    <SolidColorBrush x:Key="TextBorder" Color="#C9CDD4"/>
+    <SolidColorBrush x:Key="TextFocusedBorder" Color="#0A6AE0"/>
+    <SolidColorBrush x:Key="PlaceHolderForecolor" Color="#8A8F9A"/>
+    <SolidColorBrush x:Key="NewDownloadTextBoxBackground" Color="#FFFFFF"/>
+
+    <!-- Lists -->
+    <SolidColorBrush x:Key="ListViewBackcolor" Color="#FFFFFF"/>
+    <SolidColorBrush x:Key="ListViewForecolor" Color="#1A1C20"/>
+    <SolidColorBrush x:Key="ListViewSelectedForecolor" Color="#0A3D8F"/>
+    <SolidColorBrush x:Key="ListViewSelectedBackcolor" Color="#DCE9FC"/>
+    <SolidColorBrush x:Key="ListViewIconForecolor" Color="#5C6270"/>
+    <SolidColorBrush x:Key="ListViewMouseOverBackcolor" Color="#F0F1F4"/>
+    <SolidColorBrush x:Key="ListViewMouseOverForecolor" Color="#1A1C20"/>
+    <SolidColorBrush x:Key="ListViewHeaderForecolor" Color="#5C6270"/>
+
+    <!-- Status bar -->
+    <SolidColorBrush x:Key="StatusbarBackcolor" Color="#FAFAFB"/>
+    <SolidColorBrush x:Key="StatusbarIconcolor" Color="#0A6AE0"/>
+
+    <!-- Scrollbar -->
+    <SolidColorBrush x:Key="ScrollBarThumbColorNormal" Color="#C9CDD4"/>
+    <SolidColorBrush x:Key="ScrollBarThumbColorHot" Color="#A8ADB6"/>
+
+    <!-- Misc -->
+    <SolidColorBrush x:Key="HyperlinkForecolor" Color="#0A6AE0"/>
+    <SolidColorBrush x:Key="TabSelectionColor" Color="#0A6AE0"/>
+    <SolidColorBrush x:Key="ProgressBarBackcolor" Color="#E3E5E9"/>
+    <SolidColorBrush x:Key="ProgressBarForecolor" Color="#0A6AE0"/>
+
+    <Thickness x:Key="CategoryListBorderThickness">0,0,1,0</Thickness>
+    <Thickness x:Key="MainContentBorderThickness">0</Thickness>
+
+    <core:Double x:Key="ButtonDisabledOpacity">0.4</core:Double>
+    <!--#endregion-->
+
+    <!--#region WPF system brush overrides -->
+    <SolidColorBrush x:Key="{x:Static SystemColors.ControlTextBrushKey}" Color="#1A1C20"/>
+    <SolidColorBrush x:Key="{x:Static SystemColors.WindowTextBrushKey}" Color="#1A1C20"/>
+    <SolidColorBrush x:Key="{x:Static SystemColors.WindowBrushKey}" Color="#FAFAFB"/>
+    <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="#0A6AE0"/>
+    <SolidColorBrush x:Key="{x:Static SystemColors.ControlTextColorKey}" Color="#1A1C20"/>
+    <!--#endregion-->
+
+</ResourceDictionary>

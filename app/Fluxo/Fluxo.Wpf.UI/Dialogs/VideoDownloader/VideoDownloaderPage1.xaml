@@ -28,9 +28,9 @@
                       HorizontalAlignment="Center"
                       StrokeThickness="0" 
                       Stretch="Uniform" 
-                      Fill="{StaticResource ToolButtonMouseDisabledForecolor}"
+                      Fill="{DynamicResource ToolButtonMouseDisabledForecolor}"
                       Width="16" Height="16"  
-                      Stroke="{StaticResource ToolButtonMouseDisabledForecolor}"
+                      Stroke="{DynamicResource ToolButtonMouseDisabledForecolor}"
                       Data="{StaticResource ri-search-line}"
                       SnapsToDevicePixels="True"/>
         </Button>
