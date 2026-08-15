@@ -1,0 +1,9 @@
+{
+  "name": "fluxo_chrome.native_host",
+  "description": "Native messaging host for Fluxo",
+  "path": "fluxo-app-host.exe",
+  "type": "stdio",
+  "allowed_origins": [
+    "chrome-extension://akdmdglbephckgfmdffcdebnpjgamofc/"
+  ]
+}

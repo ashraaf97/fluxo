@@ -5,22 +5,22 @@
 VERSION=8.0.9
 SRC_DIR=binary-source
 
-rm -rf "xdman_gtk_${VERSION}_amd64"
-rm -f "xdman_gtk_${VERSION}_amd64.deb"
+rm -rf "fluxo_gtk_${VERSION}_amd64"
+rm -f "fluxo_gtk_${VERSION}_amd64.deb"
 
-mkdir -p "xdman_gtk_${VERSION}_amd64/DEBIAN"
-mkdir -p "xdman_gtk_${VERSION}_amd64/opt/xdman"
-mkdir -p "xdman_gtk_${VERSION}_amd64/usr/bin"
-mkdir -p "xdman_gtk_${VERSION}_amd64/usr/share/applications"
+mkdir -p "fluxo_gtk_${VERSION}_amd64/DEBIAN"
+mkdir -p "fluxo_gtk_${VERSION}_amd64/opt/fluxo"
+mkdir -p "fluxo_gtk_${VERSION}_amd64/usr/bin"
+mkdir -p "fluxo_gtk_${VERSION}_amd64/usr/share/applications"
 
-cp -r "${SRC_DIR}/." "xdman_gtk_${VERSION}_amd64/opt/xdman"
+cp -r "${SRC_DIR}/." "fluxo_gtk_${VERSION}_amd64/opt/fluxo"
 
-touch "xdman_gtk_${VERSION}_amd64/DEBIAN/control"
-touch "xdman_gtk_${VERSION}_amd64/opt/xdman/xdm-app.desktop"
-touch "xdman_gtk_${VERSION}_amd64/usr/bin/xdman"
+touch "fluxo_gtk_${VERSION}_amd64/DEBIAN/control"
+touch "fluxo_gtk_${VERSION}_amd64/opt/fluxo/fluxo-app.desktop"
+touch "fluxo_gtk_${VERSION}_amd64/usr/bin/fluxo"
 
-cat <<EOF > "xdman_gtk_${VERSION}_amd64/DEBIAN/control"
-Package: xdman
+cat <<EOF > "fluxo_gtk_${VERSION}_amd64/DEBIAN/control"
+Package: fluxo
 Version: ${VERSION}
 Architecture: amd64
 Depends: libgtk-3-0 (>= 3.22.11)
@@ -30,35 +30,35 @@ Description: Open source download accelerator and video downloader.
  Open source download accelerator and video downloader.
 EOF
 
-cat <<EOF > "xdman_gtk_${VERSION}_amd64/opt/xdman/xdm-app.desktop"
+cat <<EOF > "fluxo_gtk_${VERSION}_amd64/opt/fluxo/fluxo-app.desktop"
 [Desktop Entry]
 Version=1.0
 Encoding=UTF-8
-Exec=env GTK_USE_PORTAL=1 /opt/xdman/xdm-app %U
+Exec=env GTK_USE_PORTAL=1 /opt/fluxo/fluxo-app %U
 Type=Application
 Terminal=false
-Name=Xtreme Download Manager
-Comment=Xtreme Download Manager
+Name=Fluxo
+Comment=Fluxo
 Categories=Network;
-Icon=/opt/xdman/xdm-logo.svg
-MimeType=application/xdm-app;x-scheme-handler/xdm-app;
+Icon=/opt/fluxo/fluxo-logo.svg
+MimeType=application/fluxo-app;x-scheme-handler/fluxo-app;
 StartupNotify=true
 EOF
 
-cat <<EOF > "xdman_gtk_${VERSION}_amd64/usr/bin/xdman"
+cat <<EOF > "fluxo_gtk_${VERSION}_amd64/usr/bin/fluxo"
 #!/bin/bash
 export GTK_USE_PORTAL=1
-/opt/xdman/xdm-app \$@
+/opt/fluxo/fluxo-app \$@
 EOF
 
-cat <<EOF > "xdman_gtk_${VERSION}_amd64/opt/xdman/source_pkg.txt"
-xdman_gtk|.deb
+cat <<EOF > "fluxo_gtk_${VERSION}_amd64/opt/fluxo/source_pkg.txt"
+fluxo_gtk|.deb
 EOF
 
-cp "xdman_gtk_${VERSION}_amd64/opt/xdman/xdm-app.desktop" "xdman_gtk_${VERSION}_amd64/usr/share/applications"
+cp "fluxo_gtk_${VERSION}_amd64/opt/fluxo/fluxo-app.desktop" "fluxo_gtk_${VERSION}_amd64/usr/share/applications"
 
-chmod 755 "xdman_gtk_${VERSION}_amd64/usr/bin/xdman"
-chmod 755 "xdman_gtk_${VERSION}_amd64/opt/xdman/xdm-app"
-chmod 755 "xdman_gtk_${VERSION}_amd64/opt/xdman/XDM.App.Host/xdm-app-host"
+chmod 755 "fluxo_gtk_${VERSION}_amd64/usr/bin/fluxo"
+chmod 755 "fluxo_gtk_${VERSION}_amd64/opt/fluxo/fluxo-app"
+chmod 755 "fluxo_gtk_${VERSION}_amd64/opt/fluxo/Fluxo.App.Host/fluxo-app-host"
 
-dpkg-deb --build --root-owner-group -Z xz "xdman_gtk_${VERSION}_amd64"
+dpkg-deb --build --root-owner-group -Z xz "fluxo_gtk_${VERSION}_amd64"

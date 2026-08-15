@@ -1,4 +1,4 @@
-Package: xdman
+Package: fluxo
 Version: 8.0.1
 Architecture: amd64
 Depends: libgtk-3-0 (>= 3.22.11), ffmpeg

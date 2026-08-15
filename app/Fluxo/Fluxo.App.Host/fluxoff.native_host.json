@@ -1,0 +1,9 @@
+{
+  "name": "fluxoff.native_host",
+  "description": "Native messaging host for Fluxo",
+  "path": "fluxo-app-host.exe",
+  "type": "stdio",
+  "allowed_extensions": [
+    "fluxo-integration-module@subhra74.github.io"
+  ]
+}

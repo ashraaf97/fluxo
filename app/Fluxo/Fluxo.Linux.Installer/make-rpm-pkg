@@ -1,0 +1,84 @@
+#!/bin/bash
+
+#Please place all the published files under ./binary-source directory
+
+VERSION=8.0.25
+SRC_DIR=binary-source
+SOURCE_NAME="fluxo_gtk-${VERSION}"
+
+rm -rf "${SOURCE_NAME}"
+
+mkdir -p rpmbuild/{BUILD,BUILDROOT,RPMS,SOURCES,SPECS,SRPMS}
+mkdir "${SOURCE_NAME}"
+
+mkdir -p "${SOURCE_NAME}/opt/fluxo"
+mkdir -p "${SOURCE_NAME}/usr/bin"
+mkdir -p "${SOURCE_NAME}/usr/share/applications"
+
+cp -r "${SRC_DIR}/." "${SOURCE_NAME}/opt/fluxo"
+
+touch "${SOURCE_NAME}/opt/fluxo/fluxo-app.desktop"
+touch "${SOURCE_NAME}/usr/bin/fluxo"
+
+cat <<EOF > "${SOURCE_NAME}/opt/fluxo/fluxo-app.desktop"
+[Desktop Entry]
+Version=1.0
+Encoding=UTF-8
+Exec=env GTK_USE_PORTAL=1 /opt/fluxo/fluxo-app %U
+Type=Application
+Terminal=false
+Name=Fluxo
+Comment=Fluxo
+Categories=Network;
+Icon=/opt/fluxo/fluxo-logo.svg
+MimeType=application/fluxo-app;x-scheme-handler/fluxo-app;
+StartupNotify=true
+EOF
+
+cat <<EOF > "${SOURCE_NAME}/usr/bin/fluxo"
+#!/bin/bash
+export GTK_USE_PORTAL=1 
+/opt/fluxo/fluxo-app \$@
+EOF
+
+cat <<EOF > "${SOURCE_NAME}/opt/fluxo/source_pkg"
+fluxo_gtk|.rpm
+EOF
+
+cp "${SOURCE_NAME}/opt/fluxo/fluxo-app.desktop" "${SOURCE_NAME}/usr/share/applications"
+
+chmod 755 "${SOURCE_NAME}/usr/bin/fluxo"
+chmod 755 "${SOURCE_NAME}/opt/fluxo/fluxo-app"
+
+tar --create --file "${SOURCE_NAME}.tar.gz" "${SOURCE_NAME}"
+mv "${SOURCE_NAME}.tar.gz" "rpmbuild/SOURCES"
+
+cat <<EOF > "rpmbuild/SPECS/fluxo_gtk.spec"
+Name:       	fluxo_gtk
+Version:    	${VERSION}
+Release:    	1%{?dist}
+Summary:    	Fluxo
+AutoReqProv: 	no
+Requires:   	gtk3 >= 3.22
+Requires:   	(ffmpeg-free or ffmpeg)
+
+Group:      	System Environment/Base
+License:    	GPLv3+
+Source0:    	${SOURCE_NAME}.tar.gz
+
+%description
+Open source download accelerator and video downloader.
+
+%prep
+%setup -q
+
+%install
+cp -rfa * %{buildroot}
+
+%files
+/usr/bin/*
+/usr/share/applications/*
+/opt/fluxo/*
+EOF
+
+rpmbuild --define "_topdir `pwd`/rpmbuild" -bb rpmbuild/SPECS/fluxo_gtk.spec

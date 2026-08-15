@@ -4,61 +4,61 @@
 
 VERSION=8.0.9
 SRC_DIR=binary-source
-SOURCE_NAME="xdman_gtk-${VERSION}"
+SOURCE_NAME="fluxo_gtk-${VERSION}"
 
 rm -rf "${SOURCE_NAME}"
 
 mkdir -p rpmbuild/{BUILD,BUILDROOT,RPMS,SOURCES,SPECS,SRPMS}
 mkdir "${SOURCE_NAME}"
 
-mkdir -p "${SOURCE_NAME}/opt/xdman"
+mkdir -p "${SOURCE_NAME}/opt/fluxo"
 mkdir -p "${SOURCE_NAME}/usr/bin"
 mkdir -p "${SOURCE_NAME}/usr/share/applications"
 
-cp -r "${SRC_DIR}/." "${SOURCE_NAME}/opt/xdman"
+cp -r "${SRC_DIR}/." "${SOURCE_NAME}/opt/fluxo"
 
-touch "${SOURCE_NAME}/opt/xdman/xdm-app.desktop"
-touch "${SOURCE_NAME}/usr/bin/xdman"
+touch "${SOURCE_NAME}/opt/fluxo/fluxo-app.desktop"
+touch "${SOURCE_NAME}/usr/bin/fluxo"
 
-cat <<EOF > "${SOURCE_NAME}/opt/xdman/xdm-app.desktop"
+cat <<EOF > "${SOURCE_NAME}/opt/fluxo/fluxo-app.desktop"
 [Desktop Entry]
 Version=1.0
 Encoding=UTF-8
-Exec=env GTK_USE_PORTAL=1 /opt/xdman/xdm-app %U
+Exec=env GTK_USE_PORTAL=1 /opt/fluxo/fluxo-app %U
 Type=Application
 Terminal=false
-Name=Xtreme Download Manager
-Comment=Xtreme Download Manager
+Name=Fluxo
+Comment=Fluxo
 Categories=Network;
-Icon=/opt/xdman/xdm-logo.svg
-MimeType=application/xdm-app;x-scheme-handler/xdm-app;
+Icon=/opt/fluxo/fluxo-logo.svg
+MimeType=application/fluxo-app;x-scheme-handler/fluxo-app;
 StartupNotify=true
 EOF
 
-cat <<EOF > "${SOURCE_NAME}/usr/bin/xdman"
+cat <<EOF > "${SOURCE_NAME}/usr/bin/fluxo"
 #!/bin/bash
 export GTK_USE_PORTAL=1 
-/opt/xdman/xdm-app \$@
+/opt/fluxo/fluxo-app \$@
 EOF
 
-cat <<EOF > "${SOURCE_NAME}/opt/xdman/source_pkg"
-xdman_gtk|.rpm
+cat <<EOF > "${SOURCE_NAME}/opt/fluxo/source_pkg"
+fluxo_gtk|.rpm
 EOF
 
-cp "${SOURCE_NAME}/opt/xdman/xdm-app.desktop" "${SOURCE_NAME}/usr/share/applications"
+cp "${SOURCE_NAME}/opt/fluxo/fluxo-app.desktop" "${SOURCE_NAME}/usr/share/applications"
 
-chmod 755 "${SOURCE_NAME}/usr/bin/xdman"
-chmod 755 "${SOURCE_NAME}/opt/xdman/xdm-app"
-chmod 755 "${SOURCE_NAME}/opt/xdman/XDM.App.Host/xdm-app-host"
+chmod 755 "${SOURCE_NAME}/usr/bin/fluxo"
+chmod 755 "${SOURCE_NAME}/opt/fluxo/fluxo-app"
+chmod 755 "${SOURCE_NAME}/opt/fluxo/Fluxo.App.Host/fluxo-app-host"
 
 tar --create --file "${SOURCE_NAME}.tar.gz" "${SOURCE_NAME}"
 mv "${SOURCE_NAME}.tar.gz" "rpmbuild/SOURCES"
 
-cat <<EOF > "rpmbuild/SPECS/xdman_gtk.spec"
-Name:       	xdman_gtk
+cat <<EOF > "rpmbuild/SPECS/fluxo_gtk.spec"
+Name:       	fluxo_gtk
 Version:    	${VERSION}
 Release:    	1%{?dist}
-Summary:    	Xtreme Download Manager
+Summary:    	Fluxo
 AutoReqProv: 	no
 Requires:   	gtk3 >= 3.22
 Requires:   	ffmpeg-free
@@ -79,7 +79,7 @@ cp -rfa * %{buildroot}
 %files
 /usr/bin/*
 /usr/share/applications/*
-/opt/xdman/*
+/opt/fluxo/*
 EOF
 
-rpmbuild --define "_topdir `pwd`/rpmbuild" -bb rpmbuild/SPECS/xdman_gtk.spec
+rpmbuild --define "_topdir `pwd`/rpmbuild" -bb rpmbuild/SPECS/fluxo_gtk.spec

@@ -1,0 +1,63 @@
+#!/bin/bash
+
+#Please place all the published files under ./binary-source directory
+
+VERSION=8.0.25
+SRC_DIR=binary-source
+
+rm -rf "fluxo_gtk_${VERSION}_amd64"
+rm -f "fluxo_gtk_${VERSION}_amd64.deb"
+
+mkdir -p "fluxo_gtk_${VERSION}_amd64/DEBIAN"
+mkdir -p "fluxo_gtk_${VERSION}_amd64/opt/fluxo"
+mkdir -p "fluxo_gtk_${VERSION}_amd64/usr/bin"
+mkdir -p "fluxo_gtk_${VERSION}_amd64/usr/share/applications"
+
+cp -r "${SRC_DIR}/." "fluxo_gtk_${VERSION}_amd64/opt/fluxo"
+
+touch "fluxo_gtk_${VERSION}_amd64/DEBIAN/control"
+touch "fluxo_gtk_${VERSION}_amd64/opt/fluxo/fluxo-app.desktop"
+touch "fluxo_gtk_${VERSION}_amd64/usr/bin/fluxo"
+
+cat <<EOF > "fluxo_gtk_${VERSION}_amd64/DEBIAN/control"
+Package: fluxo
+Version: ${VERSION}
+Architecture: amd64
+Depends: libgtk-3-0 (>= 3.22.11)
+Recommends: ffmpeg
+Maintainer: Subhra Das Gupta
+Description: Open source download accelerator and video downloader.
+ Open source download accelerator and video downloader.
+EOF
+
+cat <<EOF > "fluxo_gtk_${VERSION}_amd64/opt/fluxo/fluxo-app.desktop"
+[Desktop Entry]
+Version=1.0
+Encoding=UTF-8
+Exec=env GTK_USE_PORTAL=1 /opt/fluxo/fluxo-app %U
+Type=Application
+Terminal=false
+Name=Fluxo
+Comment=Fluxo
+Categories=Network;
+Icon=/opt/fluxo/fluxo-logo.svg
+MimeType=application/fluxo-app;x-scheme-handler/fluxo-app;
+StartupNotify=true
+EOF
+
+cat <<EOF > "fluxo_gtk_${VERSION}_amd64/usr/bin/fluxo"
+#!/bin/bash
+export GTK_USE_PORTAL=1
+/opt/fluxo/fluxo-app \$@
+EOF
+
+cat <<EOF > "fluxo_gtk_${VERSION}_amd64/opt/fluxo/source_pkg.txt"
+fluxo_gtk|.deb
+EOF
+
+cp "fluxo_gtk_${VERSION}_amd64/opt/fluxo/fluxo-app.desktop" "fluxo_gtk_${VERSION}_amd64/usr/share/applications"
+
+chmod 755 "fluxo_gtk_${VERSION}_amd64/usr/bin/fluxo"
+chmod 755 "fluxo_gtk_${VERSION}_amd64/opt/fluxo/fluxo-app"
+
+dpkg-deb --build --root-owner-group -Z xz "fluxo_gtk_${VERSION}_amd64"

@@ -1,0 +1,1 @@
+Code for chrome-extension now resides in fluxo/app/Fluxo/chrome-extension folder
