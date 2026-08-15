@@ -42,10 +42,6 @@
     </PackageReference>
   </ItemGroup>
 
-  <ItemGroup Condition=" '$(TargetFramework)' == 'net3.5' ">
-    <PackageReference Include="DotNetZip" Version="1.12.0" />
-  </ItemGroup>
-
   <ItemGroup Condition=" '$(TargetFramework)' != 'net3.5' ">
     <PackageReference Include="System.IO.Compression" Version="4.3.0" />
   </ItemGroup>
@@ -65,32 +61,12 @@
     <Content Include="..\fluxo-logo.svg" CopyToOutputDirectory="Always" CopyToPublishDirectory="Always" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Reference Include="AtkSharp">
-      <HintPath>D:\gtksharp\GtkSharp-master\BuildOutput\Release\AtkSharp.dll</HintPath>
-    </Reference>
-    <Reference Include="CairoSharp">
-      <HintPath>D:\gtksharp\GtkSharp-master\BuildOutput\Release\CairoSharp.dll</HintPath>
-    </Reference>
-    <Reference Include="GdkSharp">
-      <HintPath>D:\gtksharp\GtkSharp-master\BuildOutput\Release\GdkSharp.dll</HintPath>
-    </Reference>
-    <Reference Include="GioSharp">
-      <HintPath>D:\gtksharp\GtkSharp-master\BuildOutput\Release\GioSharp.dll</HintPath>
-    </Reference>
-    <Reference Include="GLibSharp">
-      <HintPath>D:\gtksharp\GtkSharp-master\BuildOutput\Release\GLibSharp.dll</HintPath>
-    </Reference>
-    <Reference Include="GtkSharp">
-      <HintPath>D:\gtksharp\GtkSharp-master\BuildOutput\Release\GtkSharp.dll</HintPath>
-    </Reference>
-    <Reference Include="GtkSourceSharp">
-      <HintPath>D:\gtksharp\GtkSharp-master\BuildOutput\Release\GtkSourceSharp.dll</HintPath>
-    </Reference>
-    <Reference Include="PangoSharp">
-      <HintPath>D:\gtksharp\GtkSharp-master\BuildOutput\Release\PangoSharp.dll</HintPath>
-    </Reference>
-  </ItemGroup>
+  <!--
+    Atk/Cairo/Gdk/Gio/GLib/Pango Sharp all arrive transitively via the GtkSharp
+    package reference above, so they are not listed explicitly here. They used to
+    be <Reference> items pointing at a hard coded D:\gtksharp build output, which
+    only ever resolved on the original author's machine.
+  -->
 
   <ItemGroup>
     <None Update="source_pkg.txt">

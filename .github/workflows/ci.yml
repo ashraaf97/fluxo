@@ -1,0 +1,81 @@
+name: CI
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+env:
+  DOTNET_NOLOGO: true
+  DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
+  DOTNET_CLI_TELEMETRY_OPTOUT: true
+
+jobs:
+  test:
+    name: Unit tests
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 6.0.x
+
+      - name: Restore
+        run: dotnet restore app/Fluxo/Fluxo.Tests/Fluxo.Tests.csproj
+
+      # Only Fluxo.Tests runs here. Fluxo_Tests (Fluxo.SystemTests) is deliberately
+      # excluded: it targets the EOL net5.0 runtime, reaches out to live streaming
+      # hosts, and hard codes local paths, so it cannot pass on a clean agent.
+      - name: Test
+        run: >
+          dotnet test app/Fluxo/Fluxo.Tests/Fluxo.Tests.csproj
+          --no-restore
+          --verbosity normal
+          --logger "trx;LogFileName=test-results.trx"
+
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results
+          path: "**/TestResults/*.trx"
+          if-no-files-found: warn
+
+  build-windows:
+    name: Build (Windows / WPF)
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 6.0.x
+
+      - name: Restore
+        run: dotnet restore app/Fluxo/Fluxo.Wpf.UI/Fluxo.Wpf.UI.csproj
+
+      - name: Build
+        run: dotnet build app/Fluxo/Fluxo.Wpf.UI/Fluxo.Wpf.UI.csproj --no-restore --configuration Release
+
+  build-linux:
+    name: Build (Linux / GTK)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 6.0.x
+
+      - name: Restore
+        run: dotnet restore app/Fluxo/Fluxo.Gtk.UI/Fluxo.Gtk.UI.csproj
+
+      # Compiling only needs the managed GtkSharp bindings from NuGet; the native
+      # GTK libraries are a runtime dependency, not a build one.
+      - name: Build
+        run: dotnet build app/Fluxo/Fluxo.Gtk.UI/Fluxo.Gtk.UI.csproj --no-restore --configuration Release

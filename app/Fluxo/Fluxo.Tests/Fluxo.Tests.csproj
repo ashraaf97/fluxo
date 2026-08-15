@@ -11,6 +11,12 @@
     <PackageReference Include="NUnit" Version="3.13.1" />
     <PackageReference Include="NUnit3TestAdapter" Version="3.17.0" />
     <PackageReference Include="coverlet.collector" Version="3.0.2" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+    <PackageReference Include="System.Data.SQLite.Core" Version="1.0.116" />
   </ItemGroup>
+
+  <Import Project="..\Fluxo.Core\Fluxo.Core.projitems" Label="Shared" />
+  <Import Project="..\Fluxo.Messaging\Fluxo.Messaging.projitems" Label="Shared" />
+  <Import Project="..\Fluxo.Compatibility\Fluxo.Compatibility.projitems" Label="Shared" />
 
 </Project>
