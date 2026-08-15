@@ -14,7 +14,6 @@ namespace Fluxo.Core.DataAccess
     public class AppDB
     {
         private static object lockObj = new();
-        private bool init = false;
         private SQLiteConnection db;
         private AppDB() { }
         private DownloadList downloadsDB;
@@ -50,7 +49,6 @@ namespace Fluxo.Core.DataAccess
                     db.Open();
                     SchemaInitializer.Init(db);
                     this.downloadsDB = new DownloadList(db);
-                    init = true;
                     return true;
                 }
                 catch (Exception ex)

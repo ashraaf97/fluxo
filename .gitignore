@@ -369,3 +369,9 @@ app/Fluxo/Fluxo.Linux.Installer/fluxo-helper-chrome/
 app/Fluxo/Fluxo.Win.Installer/binary-deps/ffmpeg-x86.exe
 app/Fluxo/Fluxo.Win.Installer/binary-deps/yt-dlp_x86.exe
 app/Fluxo/firefox-amo/fluxo-v8-browser-helper.zip
+
+# OS generated files
+Thumbs.db
+ehthumbs.db
+desktop.ini
+.DS_Store

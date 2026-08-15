@@ -25,7 +25,7 @@ Version: ${VERSION}
 Architecture: amd64
 Depends: libgtk-3-0 (>= 3.22.11)
 Recommends: ffmpeg
-Maintainer: Subhra Das Gupta
+Maintainer: Ashraaf
 Description: Open source download accelerator and video downloader.
  Open source download accelerator and video downloader.
 EOF
@@ -59,5 +59,6 @@ cp "fluxo_gtk_${VERSION}_amd64/opt/fluxo/fluxo-app.desktop" "fluxo_gtk_${VERSION
 
 chmod 755 "fluxo_gtk_${VERSION}_amd64/usr/bin/fluxo"
 chmod 755 "fluxo_gtk_${VERSION}_amd64/opt/fluxo/fluxo-app"
+chmod 755 "fluxo_gtk_${VERSION}_amd64/opt/fluxo/Fluxo.App.Host/fluxo-app-host"
 
 dpkg-deb --build --root-owner-group -Z xz "fluxo_gtk_${VERSION}_amd64"

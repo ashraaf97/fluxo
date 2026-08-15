@@ -47,7 +47,6 @@ namespace Fluxo.Core.Downloader.Adaptive.Dash
             this.TargetFileName = FileHelper.SanitizeFileName(info.File);
 
             state.FileSize = -1;
-            var i = 0;
 
             if (state.Demuxed)
             {

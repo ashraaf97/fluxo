@@ -3,6 +3,10 @@
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
 
+    <!-- Matches the other projects. Without it every nullable annotation in the
+         shared Fluxo.Core sources raises CS8632 here. -->
+    <Nullable>enable</Nullable>
+
     <IsPackable>false</IsPackable>
   </PropertyGroup>
 

@@ -49,6 +49,7 @@ cp "${SOURCE_NAME}/opt/fluxo/fluxo-app.desktop" "${SOURCE_NAME}/usr/share/applic
 
 chmod 755 "${SOURCE_NAME}/usr/bin/fluxo"
 chmod 755 "${SOURCE_NAME}/opt/fluxo/fluxo-app"
+chmod 755 "${SOURCE_NAME}/opt/fluxo/Fluxo.App.Host/fluxo-app-host"
 
 tar --create --file "${SOURCE_NAME}.tar.gz" "${SOURCE_NAME}"
 mv "${SOURCE_NAME}.tar.gz" "rpmbuild/SOURCES"

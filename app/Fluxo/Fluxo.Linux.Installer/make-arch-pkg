@@ -54,6 +54,7 @@ cp "${SOURCE_NAME}/opt/fluxo/fluxo-app.desktop" "${SOURCE_NAME}/usr/share/applic
 
 chmod 755 "${SOURCE_NAME}/usr/bin/fluxo"
 chmod 755 "${SOURCE_NAME}/opt/fluxo/fluxo-app"
+chmod 755 "${SOURCE_NAME}/opt/fluxo/Fluxo.App.Host/fluxo-app-host"
 
 #tar --create --file "${SOURCE_NAME}.tar.gz" -C "${SOURCE_NAME}" .
 
@@ -63,7 +64,7 @@ pkgver=${VERSION}
 pkgrel=1
 pkgdesc="Open source download accelerator and video downloader."
 arch=("x86_64")
-url="https://github.com/subhra74/fluxo"
+url="https://github.com/ashraaf97/fluxo"
 license=('GPLv3')
 #source=("${SOURCE_NAME}.tar.gz")
 depends=('ffmpeg' 'gtk3>=3.22.0')
