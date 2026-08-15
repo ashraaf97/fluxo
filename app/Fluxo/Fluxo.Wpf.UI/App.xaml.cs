@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Net;
 using System.Linq;
 using System.Windows;
 using TraceLog;
@@ -29,18 +28,12 @@ namespace Fluxo.Wpf.UI
 
         public App()
         {
-            ServicePointManager.ServerCertificateValidationCallback += (a, b, c, d) => true;
-            ServicePointManager.DefaultConnectionLimit = 100;
+            TlsHelper.ApplyDefaults();
 
-#if NET45_OR_GREATER
-            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls;
-            //#elif !NET35
-            //            ServicePointManager.SecurityProtocol = SecurityProtocolType.SystemDefault;
-#endif
 #if NET46_OR_GREATER
-
             AppContext.SetSwitch(DisableCachingName, true);
-            AppContext.SetSwitch(DontEnableSchUseStrongCryptoName, true);
+            // Must stay false: setting this to true opts out of the strong crypto defaults.
+            AppContext.SetSwitch(DontEnableSchUseStrongCryptoName, false);
 #endif
         }
 

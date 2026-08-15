@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Net;
 using Gtk;
 using TraceLog;
 using Translations;
@@ -73,13 +72,11 @@ namespace Fluxo.GtkUI
             //                                  ");
             //Gtk.StyleContext.AddProviderForScreen(screen, provider, 800);
 
-            ServicePointManager.ServerCertificateValidationCallback += (a, b, c, d) => true;
-            ServicePointManager.DefaultConnectionLimit = 100;
-
-            ServicePointManager.SecurityProtocol = SecurityProtocolType.SystemDefault;
+            TlsHelper.ApplyDefaults();
 
             AppContext.SetSwitch(DisableCachingName, true);
-            AppContext.SetSwitch(DontEnableSchUseStrongCryptoName, true);
+            // Must stay false: setting this to true opts out of the strong crypto defaults.
+            AppContext.SetSwitch(DontEnableSchUseStrongCryptoName, false);
 
             Log.Debug("Loading languages...");
 

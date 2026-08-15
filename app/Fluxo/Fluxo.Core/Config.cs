@@ -119,6 +119,8 @@ namespace Fluxo.Core
 
         public int NetworkTimeout { get; set; } = 30;
 
+        public bool AllowInvalidCertificates { get; set; } = false;
+
         public int MaxSegments { get; set; } = 8;
 
         public int DefaltDownloadSpeed { get; set; } = 0;
