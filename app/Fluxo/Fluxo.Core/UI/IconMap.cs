@@ -12,7 +12,9 @@ namespace Fluxo.Core.UI
             ["CAT_MUSIC"] = new HashSet<string> { ".mp3", ".aac", ".ac3", ".wma", ".m4a", ".ogg", ".mka" },
             ["CAT_VIDEOS"] = new HashSet<string> { ".mp4", ".mkv", ".ts", ".webm", ".avi", ".divx", ".mov", ".m4v" },
             ["CAT_DOCUMENTS"] = new HashSet<string> { ".docx", ".doc", ".pdf", ".txt", ".xlsx", ".xls", ".html" },
-            ["CAT_PROGRAMS"] = new HashSet<string> { ".exe", ".bin", ".appx", ".ApplicationContext.Core", ".msi", ".rpm", ".deb" }
+            // ".ApplicationContext.Core" here was ".app" before an upstream global
+            // rename of the Application type; as an extension it matched nothing.
+            ["CAT_PROGRAMS"] = new HashSet<string> { ".exe", ".bin", ".appx", ".app", ".msi", ".rpm", ".deb" }
         };
 
         public static string GetVectorNameForCategory(string categoryname)
