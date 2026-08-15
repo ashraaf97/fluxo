@@ -13,7 +13,7 @@ REM The app is published self-contained, so the target machine needs no .NET
 REM runtime installed. That is why the payload is ~165 MB and the MSI ~54 MB.
 
 setlocal
-set BUILD_VER=8.0.25
+set BUILD_VER=8.0.26
 set RID=win-x86
 
 if /I "%1"=="silent" (
