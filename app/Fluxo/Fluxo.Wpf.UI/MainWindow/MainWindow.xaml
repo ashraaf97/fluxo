@@ -185,15 +185,28 @@
                                             SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"
                                             VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
                                     </Border>
+                                    <!-- Hover comes before selection, and selected+hovered
+                                         comes last. With hover declared after IsSelected
+                                         it won outright, so moving the pointer over the
+                                         selected category replaced its accent tint with
+                                         the plain hover grey and it looked deselected. -->
                                     <ControlTemplate.Triggers>
-                                        <Trigger Property="IsSelected" Value="True">
-                                            <Setter Property="Background" TargetName="Bd" Value="{DynamicResource CategoryHighlight}" />
-                                            <Setter Property="Tag" TargetName="Bd" Value="{DynamicResource CategoryForegroundSelected}" />
-                                        </Trigger>
                                         <Trigger Property="IsMouseOver" Value="True">
                                             <Setter Property="Background" TargetName="Bd" Value="{DynamicResource CategoryMouseOverBackground}" />
                                             <Setter Property="Tag" TargetName="Bd" Value="{DynamicResource CategoryForegroundSelected}" />
                                         </Trigger>
+                                        <Trigger Property="IsSelected" Value="True">
+                                            <Setter Property="Background" TargetName="Bd" Value="{DynamicResource CategoryHighlight}" />
+                                            <Setter Property="Tag" TargetName="Bd" Value="{DynamicResource CategoryForegroundSelected}" />
+                                        </Trigger>
+                                        <MultiTrigger>
+                                            <MultiTrigger.Conditions>
+                                                <Condition Property="IsSelected" Value="True" />
+                                                <Condition Property="IsMouseOver" Value="True" />
+                                            </MultiTrigger.Conditions>
+                                            <Setter Property="Background" TargetName="Bd" Value="{DynamicResource CategorySelectedHoverBackground}" />
+                                            <Setter Property="Tag" TargetName="Bd" Value="{DynamicResource CategoryForegroundSelected}" />
+                                        </MultiTrigger>
                                         <!--<MultiTrigger>
                                             <MultiTrigger.Conditions>
                                                 <Condition Property="Selector.IsSelectionActive" Value="False" />

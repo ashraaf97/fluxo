@@ -62,6 +62,8 @@
                                           VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
                                           SnapsToDevicePixels="True"/>
                     </Border>
+                    <!-- Selected+hovered must come after IsSelected, or a selected
+                         row would stop responding to the pointer entirely. -->
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsMouseOver" Value="True">
                             <Setter TargetName="Border" Property="Background"
@@ -73,6 +75,16 @@
                             <Setter Property="Foreground"
                                     Value="{DynamicResource ListViewSelectedForecolor}"/>
                         </Trigger>
+                        <MultiTrigger>
+                            <MultiTrigger.Conditions>
+                                <Condition Property="IsSelected" Value="True"/>
+                                <Condition Property="IsMouseOver" Value="True"/>
+                            </MultiTrigger.Conditions>
+                            <Setter TargetName="Border" Property="Background"
+                                    Value="{DynamicResource ListViewSelectedHoverBackcolor}"/>
+                            <Setter Property="Foreground"
+                                    Value="{DynamicResource ListViewSelectedForecolor}"/>
+                        </MultiTrigger>
                         <Trigger Property="IsEnabled" Value="False">
                             <Setter Property="Foreground" Value="{DynamicResource TextTertiary}"/>
                         </Trigger>

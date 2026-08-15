@@ -163,6 +163,8 @@
                                           VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
                                           SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>
                     </Border>
+                    <!-- Selected+highlighted last, so keyboard/pointer focus is still
+                         visible when it lands on the already-selected entry. -->
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsHighlighted" Value="True">
                             <Setter TargetName="Bd" Property="Background"
@@ -174,6 +176,16 @@
                             <Setter Property="Foreground"
                                     Value="{DynamicResource ListViewSelectedForecolor}"/>
                         </Trigger>
+                        <MultiTrigger>
+                            <MultiTrigger.Conditions>
+                                <Condition Property="IsSelected" Value="True"/>
+                                <Condition Property="IsHighlighted" Value="True"/>
+                            </MultiTrigger.Conditions>
+                            <Setter TargetName="Bd" Property="Background"
+                                    Value="{DynamicResource ListViewSelectedHoverBackcolor}"/>
+                            <Setter Property="Foreground"
+                                    Value="{DynamicResource ListViewSelectedForecolor}"/>
+                        </MultiTrigger>
                         <Trigger Property="IsEnabled" Value="False">
                             <Setter Property="Foreground" Value="{DynamicResource TextTertiary}"/>
                         </Trigger>

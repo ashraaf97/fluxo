@@ -33,8 +33,11 @@
     <SolidColorBrush x:Key="SurfaceBase" Color="#16171A"/>
     <SolidColorBrush x:Key="SurfaceElevated" Color="#1D1F24"/>
     <SolidColorBrush x:Key="SurfaceInput" Color="#24272E"/>
-    <SolidColorBrush x:Key="SurfaceHover" Color="#2A2E36"/>
-    <SolidColorBrush x:Key="SurfacePressed" Color="#31363F"/>
+    <!-- Hover sits a clear step above the surface it covers. Earlier values were
+         only ~7 levels brighter than the list background, which read as no change
+         at all on most displays. -->
+    <SolidColorBrush x:Key="SurfaceHover" Color="#2B3038"/>
+    <SolidColorBrush x:Key="SurfacePressed" Color="#343A44"/>
     <!--#endregion-->
 
     <!--#region Borders -->
@@ -57,8 +60,9 @@
     <SolidColorBrush x:Key="CategoryForegroundNormal" Color="#9BA1AD"/>
     <SolidColorBrush x:Key="CategoryForegroundSelected" Color="#FFFFFF"/>
     <SolidColorBrush x:Key="CategoryHighlight" Color="#23324D"/>
+    <SolidColorBrush x:Key="CategorySelectedHoverBackground" Color="#2E4266"/>
     <SolidColorBrush x:Key="CategoryListBackground" Color="#16171A"/>
-    <SolidColorBrush x:Key="CategoryMouseOverBackground" Color="#22252B"/>
+    <SolidColorBrush x:Key="CategoryMouseOverBackground" Color="#24272E"/>
 
     <!-- Buttons -->
     <SolidColorBrush x:Key="ButtonBackcolor" Color="#24272E"/>
@@ -102,8 +106,9 @@
     <SolidColorBrush x:Key="ListViewForecolor" Color="#E6E8EC"/>
     <SolidColorBrush x:Key="ListViewSelectedForecolor" Color="#FFFFFF"/>
     <SolidColorBrush x:Key="ListViewSelectedBackcolor" Color="#23324D"/>
+    <SolidColorBrush x:Key="ListViewSelectedHoverBackcolor" Color="#2E4266"/>
     <SolidColorBrush x:Key="ListViewIconForecolor" Color="#9BA1AD"/>
-    <SolidColorBrush x:Key="ListViewMouseOverBackcolor" Color="#24272E"/>
+    <SolidColorBrush x:Key="ListViewMouseOverBackcolor" Color="#2B3038"/>
     <SolidColorBrush x:Key="ListViewMouseOverForecolor" Color="#FFFFFF"/>
     <SolidColorBrush x:Key="ListViewHeaderForecolor" Color="#9BA1AD"/>
 

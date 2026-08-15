@@ -213,6 +213,10 @@
                                               VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
                                               SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>
                     </Border>
+                    <!-- Order matters: later triggers win when they set the same
+                         property. The selected+hovered MultiTrigger has to come last,
+                         otherwise IsSelected swallows the hover and a selected row
+                         gives no feedback at all when the pointer is over it. -->
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsMouseOver" Value="True">
                             <Setter TargetName="Border" Property="Background"
@@ -224,6 +228,16 @@
                             <Setter Property="Foreground"
                                     Value="{DynamicResource ListViewSelectedForecolor}"/>
                         </Trigger>
+                        <MultiTrigger>
+                            <MultiTrigger.Conditions>
+                                <Condition Property="IsSelected" Value="True"/>
+                                <Condition Property="IsMouseOver" Value="True"/>
+                            </MultiTrigger.Conditions>
+                            <Setter TargetName="Border" Property="Background"
+                                    Value="{DynamicResource ListViewSelectedHoverBackcolor}"/>
+                            <Setter Property="Foreground"
+                                    Value="{DynamicResource ListViewSelectedForecolor}"/>
+                        </MultiTrigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
             </Setter.Value>
