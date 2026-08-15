@@ -31,6 +31,7 @@ namespace Fluxo.Core
         void ShowYoutubeDLDialog();
 
         void ShowBatchDownloadWindow();
+        void ShowAddTorrentWindow();
 
         void ShowSettingsDialog(int page = 0);
 

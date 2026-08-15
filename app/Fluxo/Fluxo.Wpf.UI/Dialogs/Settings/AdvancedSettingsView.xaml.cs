@@ -44,6 +44,7 @@ namespace Fluxo.Wpf.UI.Dialogs.Settings
             TxtAntiVirusCmd.Text = Config.Instance.AntiVirusExecutable;
             TxtAntiVirusArgs.Text = Config.Instance.AntiVirusArgs;
             TxtDefaultUserAgent.Text = Config.Instance.FallbackUserAgent;
+            TxtAllDebridApiKey.Text = Config.Instance.AllDebridApiKey;
         }
 
         public void UpdateConfig()
@@ -58,6 +59,7 @@ namespace Fluxo.Wpf.UI.Dialogs.Settings
             Config.Instance.AntiVirusExecutable = TxtAntiVirusCmd.Text;
             Config.Instance.AntiVirusArgs = TxtAntiVirusArgs.Text;
             Config.Instance.FallbackUserAgent = TxtDefaultUserAgent.Text;
+            Config.Instance.AllDebridApiKey = TxtAllDebridApiKey.Text.Trim();
         }
 
         private void BtnBrowse_Click(object sender, RoutedEventArgs e)

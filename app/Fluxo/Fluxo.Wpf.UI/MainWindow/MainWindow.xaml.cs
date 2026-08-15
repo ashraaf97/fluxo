@@ -206,6 +206,7 @@ namespace Fluxo.Wpf.UI
         public event EventHandler? NewDownloadClicked;
         public event EventHandler? YoutubeDLDownloadClicked;
         public event EventHandler? BatchDownloadClicked;
+        public event EventHandler? AddTorrentClicked;
         public event EventHandler? SettingsClicked;
         public event EventHandler? ClearAllFinishedClicked;
         public event EventHandler? ExportClicked;
@@ -657,6 +658,10 @@ namespace Fluxo.Wpf.UI
             var menuBatchDownload = (MenuItem)newDownloadMenu.Items[2];
             menuBatchDownload.Click += MenuBatchDownload_Click;
             menuBatchDownload.Header = TextResource.GetText("MENU_BATCH_DOWNLOAD");
+
+            var menuAddTorrent = (MenuItem)newDownloadMenu.Items[3];
+            menuAddTorrent.Click += MenuAddTorrent_Click;
+            menuAddTorrent.Header = TextResource.GetText("MENU_ADD_TORRENT");
         }
 
         private void BtnHelp_Click(object sender, RoutedEventArgs e)
@@ -705,6 +710,11 @@ namespace Fluxo.Wpf.UI
         private void MenuBatchDownload_Click(object sender, RoutedEventArgs e)
         {
             this.BatchDownloadClicked?.Invoke(sender, e);
+        }
+
+        private void MenuAddTorrent_Click(object sender, RoutedEventArgs e)
+        {
+            this.AddTorrentClicked?.Invoke(sender, e);
         }
 
         private void LvFinishedContextMenu_ContextMenuOpening(object sender, ContextMenuEventArgs e)

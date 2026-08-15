@@ -30,7 +30,7 @@ namespace Fluxo.GtkUI.Dialogs.Settings
             Label8, Label9, Label10, Label11, Label12, Label13, Label14, Label15,
             Label16, Label17, Label18, Label19, Label20, Label21,
             Label22, Label23, Label24, Label25, Label26, Label27,
-            Label28, Label29, Label30;
+            Label28, Label29, Label30, LabelAllDebrid;
         [UI]
         private LinkButton VideoWikiLink;
         [UI]
@@ -47,7 +47,7 @@ namespace Fluxo.GtkUI.Dialogs.Settings
         [UI]
         private Entry TxtChromeWebStoreUrl, TxtFirefoxAMOUrl, TxtTempFolder, TxtDownloadFolder,
             TxtMaxSpeedLimit, TxtProxyHost, TxtProxyPort, TxtProxyUser, TxtProxyPassword,
-            TxtCustomCmd, TxtAntiVirusCmd, TxtAntiVirusArgs, TxtDefaultUserAgent,
+            TxtCustomCmd, TxtAntiVirusCmd, TxtAntiVirusArgs, TxtDefaultUserAgent, TxtAllDebridApiKey,
             TxtExceptions, TxtDefaultVideoFormats, TxtDefaultFileTypes;
         [UI]
         private TreeView LvCategories, LvPasswords;
@@ -539,6 +539,7 @@ namespace Fluxo.GtkUI.Dialogs.Settings
             Label28.Text = TextResource.GetText("ANTIVIR_CMD");
             Label29.Text = TextResource.GetText("ANTIVIR_ARGS");
             Label30.Text = TextResource.GetText("MSG_FALLBACK_UA");
+            LabelAllDebrid.Text = TextResource.GetText("LBL_ALLDEBRID_API_KEY");
 
             BtnOK.Label = TextResource.GetText("DESC_SAVE_Q");
             BtnCancel.Label = TextResource.GetText("ND_CANCEL");
@@ -602,6 +603,7 @@ namespace Fluxo.GtkUI.Dialogs.Settings
             TxtAntiVirusCmd.Text = Config.Instance.AntiVirusExecutable;
             TxtAntiVirusArgs.Text = Config.Instance.AntiVirusArgs;
             TxtDefaultUserAgent.Text = Config.Instance.FallbackUserAgent;
+            TxtAllDebridApiKey.Text = Config.Instance.AllDebridApiKey;
         }
 
         private void CreateCategoryListView()
@@ -723,6 +725,7 @@ namespace Fluxo.GtkUI.Dialogs.Settings
             Config.Instance.AntiVirusExecutable = TxtAntiVirusCmd.Text;
             Config.Instance.AntiVirusArgs = TxtAntiVirusArgs.Text;
             Config.Instance.FallbackUserAgent = TxtDefaultUserAgent.Text;
+            Config.Instance.AllDebridApiKey = TxtAllDebridApiKey.Text.Trim();
         }
 
         public void SetActivePage(int page)

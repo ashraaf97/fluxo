@@ -121,6 +121,8 @@ namespace Fluxo.Core
 
         public bool AllowInvalidCertificates { get; set; } = false;
 
+        public string AllDebridApiKey { get; set; } = string.Empty;
+
         public int MaxSegments { get; set; } = 8;
 
         public int DefaltDownloadSpeed { get; set; } = 0;

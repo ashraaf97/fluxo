@@ -441,6 +441,11 @@ namespace Fluxo.Core
                 ApplicationContext.PlatformUIService.ShowBatchDownloadWindow();
             };
 
+            ApplicationContext.MainWindow.AddTorrentClicked += (s, e) =>
+            {
+                ApplicationContext.PlatformUIService.ShowAddTorrentWindow();
+            };
+
             ApplicationContext.MainWindow.SelectionChanged += (s, e) =>
             {
                 UpdateToolbarButtonState();

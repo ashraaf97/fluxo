@@ -83,6 +83,7 @@ namespace Fluxo.GtkUI
         public event EventHandler NewDownloadClicked;
         public event EventHandler YoutubeDLDownloadClicked;
         public event EventHandler BatchDownloadClicked;
+        public event EventHandler AddTorrentClicked;
         public event EventHandler SettingsClicked;
         public event EventHandler ClearAllFinishedClicked;
         public event EventHandler ExportClicked;
@@ -202,9 +203,12 @@ namespace Fluxo.GtkUI
             menuVideoDownload.Activated += MenuVideoDownload_Click;
             var menuBatchDownload = new MenuItem(TextResource.GetText("MENU_BATCH_DOWNLOAD"));
             menuBatchDownload.Activated += MenuBatchDownload_Click;
+            var menuAddTorrent = new MenuItem(TextResource.GetText("MENU_ADD_TORRENT"));
+            menuAddTorrent.Activated += MenuAddTorrent_Click;
             newDownloadMenu.Append(menuNewDownload);
             newDownloadMenu.Append(menuVideoDownload);
             newDownloadMenu.Append(menuBatchDownload);
+            newDownloadMenu.Append(menuAddTorrent);
             newDownloadMenu.ShowAll();
 
             mainMenu = new Menu();
@@ -315,6 +319,11 @@ namespace Fluxo.GtkUI
         private void MenuBatchDownload_Click(object? sender, EventArgs e)
         {
             this.BatchDownloadClicked?.Invoke(sender, e);
+        }
+
+        private void MenuAddTorrent_Click(object? sender, EventArgs e)
+        {
+            this.AddTorrentClicked?.Invoke(sender, e);
         }
 
         private void MenuVideoDownload_Click(object? sender, EventArgs e)

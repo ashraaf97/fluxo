@@ -102,6 +102,7 @@ namespace Fluxo.Core.UI
         event EventHandler YoutubeDLDownloadClicked;
 
         event EventHandler BatchDownloadClicked;
+        event EventHandler AddTorrentClicked;
 
         event EventHandler SettingsClicked;
 

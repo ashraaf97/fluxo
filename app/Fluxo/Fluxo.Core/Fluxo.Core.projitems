@@ -184,6 +184,12 @@
     <Compile Include="..\Fluxo.Core\IO\ConfigIO.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Util\TimeHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Util\TlsHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Clients\Debrid\IDebridService.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Clients\Debrid\AllDebridService.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Clients\Debrid\DebridFile.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Clients\Debrid\DebridException.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)UI\IAddTorrentView.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)UI\AddTorrentUIController.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Util\Win32NativeMethods.cs" />
     <Compile Include="..\Fluxo.Core\Application.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CallbackActions.cs" />

@@ -10,6 +10,7 @@ using Fluxo.Core.Downloader;
 using Fluxo.Core.UI;
 using Fluxo.Core.Util;
 using Fluxo.GtkUI.Dialogs;
+using Fluxo.GtkUI.Dialogs.AddTorrent;
 using Fluxo.GtkUI.Dialogs.BatchWindow;
 using Fluxo.GtkUI.Dialogs.ChromeIntegrator;
 using Fluxo.GtkUI.Dialogs.DownloadComplete;
@@ -119,6 +120,12 @@ namespace Fluxo.GtkUI
         public void ShowBatchDownloadWindow()
         {
             var uvc = new BatchDownloadUIController(BatchDownloadWindow.CreateFromGladeFile(GetMainWindow()));
+            uvc.Run();
+        }
+
+        public void ShowAddTorrentWindow()
+        {
+            var uvc = new AddTorrentUIController(AddTorrentWindow.CreateFromGladeFile(GetMainWindow()));
             uvc.Run();
         }
 

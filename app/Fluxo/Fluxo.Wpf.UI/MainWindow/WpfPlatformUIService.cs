@@ -9,6 +9,7 @@ using Fluxo.Core;
 using Fluxo.Core.Downloader;
 using Fluxo.Core.UI;
 using Fluxo.Core.Util;
+using Fluxo.Wpf.UI.Dialogs.AddTorrent;
 using Fluxo.Wpf.UI.Dialogs.BatchDownload;
 using Fluxo.Wpf.UI.Dialogs.ChromeIntegrator;
 using Fluxo.Wpf.UI.Dialogs.CompletedDialog;
@@ -141,6 +142,12 @@ namespace Fluxo.Wpf.UI
         public void ShowBatchDownloadWindow()
         {
             var uvc = new BatchDownloadUIController(new BatchDownloadWindow { Owner = GetMainWindow() });
+            uvc.Run();
+        }
+
+        public void ShowAddTorrentWindow()
+        {
+            var uvc = new AddTorrentUIController(new AddTorrentWindow { Owner = GetMainWindow() });
             uvc.Run();
         }
 

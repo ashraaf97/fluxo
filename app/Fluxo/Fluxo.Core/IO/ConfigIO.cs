@@ -193,6 +193,15 @@ namespace Fluxo.Core.IO
                     case "NetworkTimeout":
                         instance.NetworkTimeout = r.ReadInt32();
                         break;
+                    case "AllowInvalidCertificates":
+                        instance.AllowInvalidCertificates = r.ReadBoolean();
+                        break;
+                    case "AllDebridApiKey":
+                        instance.AllDebridApiKey = r.ReadString();
+                        break;
+                    case "FallbackUserAgent":
+                        instance.FallbackUserAgent = r.ReadString();
+                        break;
                     case "RetryDelay":
                         instance.RetryDelay = r.ReadInt32();
                         break;
@@ -398,6 +407,12 @@ namespace Fluxo.Core.IO
             WriteInt32(w, instance.MinVideoSize, "MinVideoSize");
             count++;
             WriteInt32(w, instance.NetworkTimeout, "NetworkTimeout");
+            count++;
+            WriteBoolean(w, instance.AllowInvalidCertificates, "AllowInvalidCertificates");
+            count++;
+            WriteString(w, instance.AllDebridApiKey, "AllDebridApiKey");
+            count++;
+            WriteString(w, instance.FallbackUserAgent, "FallbackUserAgent");
             count++;
             WriteInt32(w, instance.RetryDelay, "RetryDelay");
             count++;
