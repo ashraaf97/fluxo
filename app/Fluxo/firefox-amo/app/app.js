@@ -106,7 +106,7 @@ class App {
     }
 
     updateActionIcon() {
-        chrome.browserAction.setIcon({ path: this.getActionIcon() });
+        chrome.action.setIcon({ path: this.getActionIcon() });
         let vc = "";
         if (this.videoList && this.videoList.length > 0) {
             let len = this.videoList.filter(vid => {
@@ -122,21 +122,21 @@ class App {
                 vc = len + "";
             }
         }
-        chrome.browserAction.setBadgeText({ text: vc });
+        chrome.action.setBadgeText({ text: vc });
         if (!this.connector.isConnected()) {
             this.logger.log("Not connected...");
-            chrome.browserAction.setPopup({ popup: "./app/error.html" });
+            chrome.action.setPopup({ popup: "./app/error.html" });
             return;
         }
         if (!this.appEnabled) {
-            chrome.browserAction.setPopup({ popup: "./app/disabled.html" });
+            chrome.action.setPopup({ popup: "./app/disabled.html" });
             return;
         }
         else {
-            chrome.browserAction.setPopup({ popup: "./app/popup.html" });
+            chrome.action.setPopup({ popup: "./app/popup.html" });
             return;
             // if (this.videoList && this.videoList.length > 0) {
-            //     chrome.browserAction.setBadgeText({ text: this.videoList.length + "" });
+            //     chrome.action.setBadgeText({ text: this.videoList.length + "" });
             // }
         }
     }

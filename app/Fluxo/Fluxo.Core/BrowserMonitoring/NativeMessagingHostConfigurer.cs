@@ -71,7 +71,7 @@
 //        {
 //            Log.Debug("msix: " + msix);
 //            Log.Debug("Manifest path: " + manifestPath);
-//            var extensions = new HashSet<string> { browser == Browser.Firefox ? "fluxo-integration-module@subhra74.github.io" : "chrome-extension://akdmdglbephckgfmdffcdebnpjgamofc/" };
+//            var extensions = new HashSet<string> { browser == Browser.Firefox ? "fluxo-browser-helper@ashraaf97.github.io" : "chrome-extension://REPLACE_WITH_YOUR_CHROME_EXTENSION_ID/" };
 //            if (browser == Browser.Chrome)
 //            {
 //                Log.Debug("Configuring for chrome");

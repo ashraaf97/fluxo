@@ -4,6 +4,6 @@
   "path": "fluxo-app-host.exe",
   "type": "stdio",
   "allowed_origins": [
-    "chrome-extension://akdmdglbephckgfmdffcdebnpjgamofc/"
+    "chrome-extension://REPLACE_WITH_YOUR_CHROME_EXTENSION_ID/"
   ]
 }

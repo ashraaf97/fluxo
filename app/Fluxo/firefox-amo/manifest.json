@@ -1,9 +1,9 @@
 {
     "name": "Fluxo v8+ Browser Helper",
-    "browser_action": {},
-    "manifest_version": 2,
+    "manifest_version": 3,
     "version": "1.4",
     "description": "Download files with Fluxo v8+",
+    "action": {},
     "permissions": [
         "tabs",
         "cookies",
@@ -11,11 +11,19 @@
         "menus",
         "activeTab",
         "webRequest",
-        "webRequestBlocking",
+        "webRequestBlocking"
+    ],
+    "host_permissions": [
         "*://*/*"
     ],
     "background": {
-        "page": "main.html"
+        "scripts": [
+            "app/logger.js",
+            "app/connector.js",
+            "app/request-watcher.js",
+            "app/app.js",
+            "main.js"
+        ]
     },
     "icons": {
         "16": "icon16.png",
@@ -24,7 +32,8 @@
     },
     "browser_specific_settings": {
         "gecko": {
-            "id": "fluxo-v8-browser-helper@subhra74.github.io"
+            "id": "fluxo-browser-helper@ashraaf97.github.io",
+            "strict_min_version": "115.0"
         }
     }
 }

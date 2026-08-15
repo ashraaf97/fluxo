@@ -645,12 +645,12 @@ namespace Fluxo.Core
 
             peer.SupportPageClicked += (s, e) =>
             {
-                Helpers.OpenBrowser("https://subhra74.github.io/fluxo/redirect-support.html");
+                Helpers.OpenBrowser(Links.SupportUrl);
             };
 
             peer.BugReportClicked += (s, e) =>
             {
-                Helpers.OpenBrowser("https://subhra74.github.io/fluxo/redirect-issue.html");
+                Helpers.OpenBrowser(Links.IssueUrl);
             };
 
             peer.CheckForUpdateClicked += (s, e) =>

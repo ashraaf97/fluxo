@@ -31,7 +31,7 @@
 
 //        private static void CreateMessagingHostManifest(Browser browser, string appName, string manifestPath)
 //        {
-//            var extensions = new List<string> { browser == Browser.Firefox ? "fluxo-integration-module@subhra74.github.io" : "chrome-extension://akdmdglbephckgfmdffcdebnpjgamofc/" };
+//            var extensions = new List<string> { browser == Browser.Firefox ? "fluxo-browser-helper@ashraaf97.github.io" : "chrome-extension://REPLACE_WITH_YOUR_CHROME_EXTENSION_ID/" };
 //            try
 //            {
 //                var file = Path.Combine(Config.AppDir, "extension.txt");
