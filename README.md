@@ -1,5 +1,5 @@
 <p id="downloads" align="center">
-	<img src="https://i.stack.imgur.com/TOfqL.png" height="120px"/>
+	<img src="app/Fluxo/fluxo-logo.png" height="120px"/>
 	<h1 align="center">Fluxo</h1>
 </p>
 
