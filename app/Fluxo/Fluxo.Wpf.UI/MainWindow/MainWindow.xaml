@@ -161,12 +161,13 @@
             BorderThickness="{DynamicResource MainContentBorderThickness}" SnapsToDevicePixels="True">
         <Grid>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="190"></ColumnDefinition>
+                <!-- Sidebar is now user-resizable rather than pinned at 190px. -->
+                <ColumnDefinition x:Name="SidebarColumn" Width="200" MinWidth="150" MaxWidth="360"/>
                 <ColumnDefinition Width="*"></ColumnDefinition>
             </Grid.ColumnDefinitions>
-            <ListBox BorderThickness="{DynamicResource CategoryListBorderThickness}" 
-                 Name="lvCategory" 
-                 SelectionChanged="lvCategory_SelectionChanged" 
+            <ListBox BorderThickness="{DynamicResource CategoryListBorderThickness}"
+                 Name="lvCategory"
+                 SelectionChanged="lvCategory_SelectionChanged"
                  BorderBrush="{DynamicResource ToolbarBordercolor}"
                  Background="{DynamicResource CategoryListBackground}" >
                 <ListBox.Resources>
@@ -256,6 +257,20 @@
                     </DataTemplate>
                 </ListBox.ItemTemplate>
             </ListBox>
+
+            <!-- Straddles the column boundary; transparent so only the sidebar's
+                 own right-hand border is visible. -->
+            <GridSplitter Grid.Column="1"
+                          Width="6"
+                          Margin="-3,0,0,0"
+                          HorizontalAlignment="Left"
+                          VerticalAlignment="Stretch"
+                          Background="Transparent"
+                          ResizeBehavior="PreviousAndNext"
+                          ResizeDirection="Columns"
+                          Panel.ZIndex="10"
+                          Focusable="False"/>
+
             <DockPanel Grid.Column="1">
                 <Border  DockPanel.Dock="Top" 
                      Background="{DynamicResource ControlBackcolor}" 
@@ -263,33 +278,37 @@
                      BorderBrush="{DynamicResource ToolbarBordercolor}">
                     <Grid>
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="auto"/>
-                            <ColumnDefinition Width="auto"/>
+                            <!-- Commands are Auto so they are never truncated; the search
+                                 field takes what is left and shrinks first. The reverse
+                                 (commands starred, search Auto) let the search box win
+                                 the space and clip "Open folder" mid-word. -->
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
-                        <StackPanel Grid.Column="0" Orientation="Horizontal" >
-                            <Button 
-                                Background="{DynamicResource ControlBackcolor}"
-                                Foreground="{DynamicResource ToolButtonForecolor}"
-                                BorderThickness="0"
-                                Margin="0"
-                                Padding="15,12" 
+                        <StackPanel Grid.Column="0" Orientation="Horizontal" Margin="8,0,0,0"
+                                    ClipToBounds="True">
+                            <!-- New is the primary action, so it gets the accent
+                                 treatment; the rest stay ghost buttons. -->
+                            <Button
+                                Style="{StaticResource AccentButton}"
+                                Margin="0,8,8,8"
+                                Padding="12,6"
                                 Name="BtnNew">
                                 <StackPanel Orientation="Horizontal">
-                                    <Path 
-                                        VerticalAlignment="Center"  Margin="0,0,10,0" Width="14" Height="14" Stretch="Uniform" StrokeThickness="0" 
-                                        Fill="{DynamicResource ToolButtonForecolor}" Stroke="{DynamicResource ToolButtonForecolor}" 
+                                    <Path
+                                        VerticalAlignment="Center"  Margin="0,0,8,0" Width="14" Height="14" Stretch="Uniform" StrokeThickness="0"
+                                        Fill="{DynamicResource OnAccentBrush}" Stroke="{DynamicResource OnAccentBrush}"
                                         Data="{StaticResource ri-links-line}" SnapsToDevicePixels="True"/>
-                                    <TextBlock Foreground="{DynamicResource ToolButtonForecolor}" Text="{StaticResource DESC_NEW}"/>
+                                    <TextBlock Foreground="{DynamicResource OnAccentBrush}" Text="{StaticResource DESC_NEW}"/>
                                 </StackPanel>
                             </Button>
 
                             <Button 
-                                Background="{DynamicResource ControlBackcolor}"
-                                Foreground="{DynamicResource ToolButtonForecolor}"
-                                BorderThickness="0"
-                                Margin="0"
-                                Padding="10,12" 
+                                Style="{StaticResource GhostButton}"
+                                Margin="0,8,4,8"
+                                Padding="10,6"
+
                                 Name="BtnDelete">
                                 <StackPanel Orientation="Horizontal">
                                     <Path 
@@ -337,11 +356,10 @@
                             </Button>-->
                             <Button 
                                 Visibility="Collapsed"
-                                Background="{DynamicResource ControlBackcolor}"
-                                Foreground="{DynamicResource ToolButtonForecolor}"
-                                BorderThickness="0"
-                                Margin="0"
-                                Padding="10,12" 
+                                Style="{StaticResource GhostButton}"
+                                Margin="0,8,4,8"
+                                Padding="10,6"
+
                                 Name="BtnOpen">
                                 <StackPanel Orientation="Horizontal">
                                     <Path 
@@ -352,11 +370,10 @@
                                 </StackPanel>
                             </Button>
                             <Button 
-                                Background="{DynamicResource ControlBackcolor}"
-                                Foreground="{DynamicResource ToolButtonForecolor}"
-                                BorderThickness="0"
-                                Margin="0"
-                                Padding="10,12" 
+                                Style="{StaticResource GhostButton}"
+                                Margin="0,8,4,8"
+                                Padding="10,6"
+
                                 Name="BtnOpenFolder">
                                 <StackPanel Orientation="Horizontal">
                                     <Path 
@@ -367,11 +384,10 @@
                                 </StackPanel>
                             </Button>
                             <Button 
-                                Background="{DynamicResource ControlBackcolor}"
-                                Foreground="{DynamicResource ToolButtonForecolor}"
-                                BorderThickness="0"
-                                Margin="0"
-                                Padding="10,12" 
+                                Style="{StaticResource GhostButton}"
+                                Margin="0,8,4,8"
+                                Padding="10,6"
+
                                 Name="BtnPause">
                                 <StackPanel Orientation="Horizontal">
                                     <Path 
@@ -382,11 +398,10 @@
                                 </StackPanel>
                             </Button>
                             <Button 
-                                Background="{DynamicResource ControlBackcolor}"
-                                Foreground="{DynamicResource ToolButtonForecolor}"
-                                BorderThickness="0"
-                                Margin="0"
-                                Padding="10,12" 
+                                Style="{StaticResource GhostButton}"
+                                Margin="0,8,4,8"
+                                Padding="10,6"
+
                                 Name="BtnResume">
                                 <StackPanel Orientation="Horizontal">
                                     <Path 
@@ -397,56 +412,67 @@
                                 </StackPanel>
                             </Button>
                         </StackPanel>
-                        <StackPanel Grid.Column="1" Orientation="Horizontal" Margin="0,5" VerticalAlignment="Stretch" 
-                                    Background="{DynamicResource SearchBackcolor}">
-                            <Border BorderBrush="{DynamicResource SearchBorder}" BorderThickness="1" SnapsToDevicePixels="True">
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition/>
-                                        <ColumnDefinition/>
-                                    </Grid.ColumnDefinitions>
-                                    <TextBox Grid.Column="0" Name="TxtSearch"  AcceptsReturn="False"  
-                                                TextWrapping="NoWrap" Width="100" VerticalContentAlignment="Center" 
-                                                Padding="5,0"
-                                                BorderThickness="0" Background="{DynamicResource SearchBackcolor}"
-                                                Foreground="{DynamicResource TextForecolor}"/>
-                                    <TextBlock Grid.Column="0" x:Name="Placeholder" IsHitTestVisible="False" 
-                                       TextWrapping="NoWrap" Text="{StaticResource LBL_SEARCH}" VerticalAlignment="Center"  
-                                       Background="{DynamicResource SearchBackcolor}"
-                                       Margin="10,5" 
-                                       Foreground="{DynamicResource PlaceHolderForecolor}">
-                                        <TextBlock.Style>
-                                            <Style TargetType="{x:Type TextBlock}">
-                                                <Setter Property="Visibility" Value="Collapsed"/>
-                                                <Style.Triggers>
-                                                    <MultiDataTrigger>
-                                                        <MultiDataTrigger.Conditions>
-                                                            <Condition Binding="{Binding IsFocused, ElementName=TxtSearch}" Value="false" />
-                                                            <Condition Binding="{Binding Text, ElementName=TxtSearch}" Value="" />
-                                                        </MultiDataTrigger.Conditions>
-                                                        <MultiDataTrigger.Setters>
-                                                            <Setter Property="Visibility" Value="Visible"/>
-                                                        </MultiDataTrigger.Setters>
-                                                    </MultiDataTrigger>
-                                                </Style.Triggers>
-                                            </Style>
-                                        </TextBlock.Style>
-                                    </TextBlock>
-                                    <Button Grid.Column="1" Padding="6,4" Margin="1"
-                                            Background="{DynamicResource SearchBackcolor}" BorderThickness="0" SnapsToDevicePixels="True"
-                                            Click="SearchButton_Click">
-                                        <Path VerticalAlignment="Center"  Margin="0,0,0,0" Width="12" Height="12" Stretch="Uniform" 
-                                              StrokeThickness="0" Fill="{DynamicResource ToolButtonForecolor}" 
-                                              Stroke="{DynamicResource ToolButtonForecolor}"  SnapsToDevicePixels="True" 
-                                              Data="{StaticResource ri-search-line}"/>
-                                    </Button>
-                                </Grid>
-                            </Border>
-                        </StackPanel>
-                        <Button Name="BtnMenu" Grid.Column="2" Padding="10,0" Margin="2,0,0,0" 
-                                Background="{DynamicResource ControlBackcolor}"
-                                Foreground="{DynamicResource ToolButtonForecolor}"
-                                BorderThickness="0"
+                        <!-- Leading icon, then the field, then nothing. The previous
+                             markup put the TextBox and the search Button in two
+                             star-width columns and pinned the box to Width="100",
+                             so the two overlapped as the toolbar resized. -->
+                        <Border Grid.Column="1" Margin="12,8,0,8" VerticalAlignment="Center"
+                                HorizontalAlignment="Right"
+                                MinWidth="150" MaxWidth="280"
+                                CornerRadius="{DynamicResource RadiusMd}"
+                                Background="{DynamicResource SearchBackcolor}"
+                                BorderBrush="{DynamicResource SearchBorder}"
+                                BorderThickness="1"
+                                SnapsToDevicePixels="True">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+
+                                <Path Grid.Column="0" VerticalAlignment="Center"
+                                      Margin="10,0,6,0" Width="14" Height="14" Stretch="Uniform"
+                                      StrokeThickness="0"
+                                      Fill="{DynamicResource PlaceHolderForecolor}"
+                                      Stroke="{DynamicResource PlaceHolderForecolor}"
+                                      SnapsToDevicePixels="True"
+                                      Data="{StaticResource ri-search-line}"/>
+
+                                <!-- Filters as you type. There used to be a separate
+                                     search button and no TextChanged handler, so typing
+                                     a query did nothing until you clicked it. -->
+                                <TextBox Grid.Column="1" Name="TxtSearch" AcceptsReturn="False"
+                                         TextWrapping="NoWrap" VerticalContentAlignment="Center"
+                                         MinHeight="0" Padding="0,4" Margin="0,0,10,0"
+                                         BorderThickness="0" Background="Transparent"
+                                         TextChanged="TxtSearch_TextChanged"
+                                         Foreground="{DynamicResource TextForecolor}"/>
+
+                                <TextBlock Grid.Column="1" x:Name="Placeholder" IsHitTestVisible="False"
+                                           TextWrapping="NoWrap" Text="{StaticResource LBL_SEARCH}"
+                                           VerticalAlignment="Center"
+                                           Foreground="{DynamicResource PlaceHolderForecolor}">
+                                    <TextBlock.Style>
+                                        <Style TargetType="{x:Type TextBlock}">
+                                            <Setter Property="Visibility" Value="Collapsed"/>
+                                            <Style.Triggers>
+                                                <MultiDataTrigger>
+                                                    <MultiDataTrigger.Conditions>
+                                                        <Condition Binding="{Binding IsFocused, ElementName=TxtSearch}" Value="false" />
+                                                        <Condition Binding="{Binding Text, ElementName=TxtSearch}" Value="" />
+                                                    </MultiDataTrigger.Conditions>
+                                                    <MultiDataTrigger.Setters>
+                                                        <Setter Property="Visibility" Value="Visible"/>
+                                                    </MultiDataTrigger.Setters>
+                                                </MultiDataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </TextBlock.Style>
+                                </TextBlock>
+                            </Grid>
+                        </Border>
+                        <Button Name="BtnMenu" Grid.Column="2" Style="{StaticResource IconButton}"
+                                Padding="9" Margin="6,8,8,8"
                                 Click="BtnMenu_Click">
                             <Path VerticalAlignment="Center" Width="16" Height="16"  Margin="0,0,0,0" Stretch="Uniform" 
                                   StrokeThickness="0" Fill="{DynamicResource ToolButtonForecolor}" 
@@ -542,26 +568,91 @@
                           GridViewColumnHeader.Click="lvInProgress_Click">
                         <ListView.View>
                             <GridView>
-                                <GridViewColumn Width="200">
+                                <GridViewColumn Width="280">
                                     <GridViewColumn.Header>
                                         <GridViewColumnHeader Tag="Name">
-                                            <TextBlock Padding="40,0" Text="{StaticResource SORT_NAME}" />
+                                            <TextBlock Padding="34,0,0,0" Text="{StaticResource SORT_NAME}" />
                                         </GridViewColumnHeader>
                                     </GridViewColumn.Header>
                                     <GridViewColumn.CellTemplate>
                                         <DataTemplate>
                                             <StackPanel Orientation="Horizontal">
-                                                <Path SnapsToDevicePixels="True" 
-                                                  VerticalAlignment="Center" Margin="5,5" StrokeThickness="0" Stretch="None" Fill="{DynamicResource ListViewIconForecolor}"
-                                                  Width="24" Height="24" 
+                                                <!-- Tinted per file type via FileExtensionToColorConverter.
+                                                     The converter already existed but the list painted
+                                                     every icon the same flat grey. -->
+                                                <Path SnapsToDevicePixels="True"
+                                                  VerticalAlignment="Center" Margin="0,0,10,0" StrokeThickness="0" Stretch="Uniform"
+                                                  Fill="{Binding Path=Name, Converter={StaticResource FileExtensionToColorConverter}}"
+                                                  Width="20" Height="20"
                                                   Data="{Binding Path=Name, Converter={StaticResource FileExtensionToVectorImageConverter}}"
                                                   />
-                                                <TextBlock Text="{Binding Name}" Margin="5,5" VerticalAlignment="Center"></TextBlock>
+                                                <TextBlock Text="{Binding Name}" VerticalAlignment="Center"
+                                                           TextTrimming="CharacterEllipsis"
+                                                           ToolTip="{Binding Name}"/>
                                             </StackPanel>
                                         </DataTemplate>
                                     </GridViewColumn.CellTemplate>
                                 </GridViewColumn>
-                                <GridViewColumn Width="80">
+                                <GridViewColumn Width="150" x:Name="p1">
+                                    <GridViewColumn.Header>
+                                        <!-- Literal, as before: there is no translation
+                                             key for "progress" and "%" needs none. -->
+                                        <GridViewColumnHeader Tag="Progress">
+                                            <TextBlock Text="%"/>
+                                        </GridViewColumnHeader>
+                                    </GridViewColumn.Header>
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <!-- Bar plus the percentage beside it. The old cell was a
+                                                 bare 5px bar in a 50px column with no readout. -->
+                                            <Grid VerticalAlignment="Center" Margin="0,0,12,0">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                </Grid.ColumnDefinitions>
+                                                <ProgressBar Grid.Column="0"
+                                                             Value="{Binding Progress}"
+                                                             Maximum="100"
+                                                             Height="6"
+                                                             VerticalAlignment="Center"/>
+                                                <TextBlock Grid.Column="1" Margin="8,0,0,0"
+                                                           MinWidth="34" TextAlignment="Right"
+                                                           VerticalAlignment="Center"
+                                                           Foreground="{DynamicResource TextSecondary}"
+                                                           Text="{Binding Progress, StringFormat={}{0}%}"/>
+                                            </Grid>
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+                                <GridViewColumn Width="85">
+                                    <GridViewColumn.Header>
+                                        <GridViewColumnHeader Tag="Size">
+                                            <TextBlock Text="{StaticResource SORT_SIZE}"/>
+                                        </GridViewColumnHeader>
+                                    </GridViewColumn.Header>
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding Size, Converter={StaticResource FileSizeValueConverter}}"
+                                                       Foreground="{DynamicResource TextSecondary}"/>
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+                                <!-- Carries speed and ETA, e.g. "2.1 MB/s, 00:02:54 left". -->
+                                <GridViewColumn Width="150">
+                                    <GridViewColumn.Header>
+                                        <GridViewColumnHeader Tag="Status">
+                                            <TextBlock Text="{StaticResource SORT_STATUS}"/>
+                                        </GridViewColumnHeader>
+                                    </GridViewColumn.Header>
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding StatusText}"
+                                                       TextTrimming="CharacterEllipsis"
+                                                       Foreground="{DynamicResource TextSecondary}"/>
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+                                <GridViewColumn Width="85">
                                     <GridViewColumn.Header>
                                         <GridViewColumnHeader Tag="DateAdded" Name="lvInProgress_DateAdded">
                                             <TextBlock Text="{StaticResource SORT_DATE}"/>
@@ -569,28 +660,11 @@
                                     </GridViewColumn.Header>
                                     <GridViewColumn.CellTemplate>
                                         <DataTemplate>
-                                            <TextBlock Text="{Binding DateAdded, StringFormat=d}"  />
+                                            <TextBlock Text="{Binding DateAdded, StringFormat=d}"
+                                                       Foreground="{DynamicResource TextSecondary}"/>
                                         </DataTemplate>
                                     </GridViewColumn.CellTemplate>
                                 </GridViewColumn>
-                                <GridViewColumn Width="60" 
-                                            DisplayMemberBinding="{Binding Size, Converter={StaticResource FileSizeValueConverter}}" >
-                                    <GridViewColumn.Header>
-                                        <GridViewColumnHeader Tag="Size">
-                                            <TextBlock Text="{StaticResource SORT_SIZE}"/>
-                                        </GridViewColumnHeader>
-                                    </GridViewColumn.Header>
-                                </GridViewColumn>
-                                <GridViewColumn Header="%" Width="50" x:Name="p1" >
-                                    <GridViewColumn.CellTemplate>
-                                        <DataTemplate>
-                                            <ProgressBar Width="{Binding Path=Width, ElementName=p1}" 
-                                                     Value="{Binding Progress}" Height="5"
-                                                     Maximum="100"   />
-                                        </DataTemplate>
-                                    </GridViewColumn.CellTemplate>
-                                </GridViewColumn>
-                                <GridViewColumn Header="{StaticResource SORT_STATUS}" Width="150" DisplayMemberBinding="{Binding StatusText}" />
                             </GridView>
                         </ListView.View>
                         <ListView.ItemContainerStyle>
@@ -617,27 +691,42 @@
                         </ListView.Resources>-->
                         <ListView.View>
                             <GridView>
-                                <GridViewColumn  Width="400" >
+                                <GridViewColumn  Width="380" >
                                     <GridViewColumn.Header>
                                         <GridViewColumnHeader Tag="Name">
-                                            <TextBlock Padding="40,0" Text="{StaticResource SORT_NAME}"/>
+                                            <TextBlock Padding="34,0,0,0" Text="{StaticResource SORT_NAME}"/>
                                         </GridViewColumnHeader>
                                     </GridViewColumn.Header>
                                     <GridViewColumn.CellTemplate>
                                         <DataTemplate>
                                             <StackPanel Orientation="Horizontal">
-                                                <Path SnapsToDevicePixels="True" VerticalAlignment="Center" 
-                                                  Margin="5,5" StrokeThickness="0" Stretch="None" 
-                                                      Fill="{DynamicResource ListViewIconForecolor}"
-                                                  Width="24" Height="24"  
+                                                <Path SnapsToDevicePixels="True" VerticalAlignment="Center"
+                                                  Margin="0,0,10,0" StrokeThickness="0" Stretch="Uniform"
+                                                      Fill="{Binding Path=Name, Converter={StaticResource FileExtensionToColorConverter}}"
+                                                  Width="20" Height="20"
                                                   Data="{Binding Path=Name, Converter={StaticResource FileExtensionToVectorImageConverter}}"
                                                   />
-                                                <TextBlock Text="{Binding Name}" Margin="5,5" VerticalAlignment="Center"></TextBlock>
+                                                <TextBlock Text="{Binding Name}" VerticalAlignment="Center"
+                                                           TextTrimming="CharacterEllipsis"
+                                                           ToolTip="{Binding Name}"/>
                                             </StackPanel>
                                         </DataTemplate>
                                     </GridViewColumn.CellTemplate>
                                 </GridViewColumn>
-                                <GridViewColumn Width="80">
+                                <GridViewColumn Width="100">
+                                    <GridViewColumn.Header>
+                                        <GridViewColumnHeader Tag="Size">
+                                            <TextBlock Text="{StaticResource SORT_SIZE}"/>
+                                        </GridViewColumnHeader>
+                                    </GridViewColumn.Header>
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding Size, Converter={StaticResource FileSizeValueConverter}}"
+                                                       Foreground="{DynamicResource TextSecondary}"/>
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+                                <GridViewColumn Width="100">
                                     <GridViewColumn.Header>
                                         <GridViewColumnHeader Tag="DateAdded" Name="lvFinished_DateAdded">
                                             <TextBlock Text="{StaticResource SORT_DATE}"/>
@@ -645,17 +734,10 @@
                                     </GridViewColumn.Header>
                                     <GridViewColumn.CellTemplate>
                                         <DataTemplate>
-                                            <TextBlock Text="{Binding DateAdded, StringFormat=d}"  />
+                                            <TextBlock Text="{Binding DateAdded, StringFormat=d}"
+                                                       Foreground="{DynamicResource TextSecondary}"/>
                                         </DataTemplate>
                                     </GridViewColumn.CellTemplate>
-                                </GridViewColumn>
-                                <GridViewColumn  Width="60"
-                                    DisplayMemberBinding="{Binding Size, Converter={StaticResource FileSizeValueConverter}}" >
-                                    <GridViewColumn.Header>
-                                        <GridViewColumnHeader Tag="Size">
-                                            <TextBlock Text="{StaticResource SORT_SIZE}"/>
-                                        </GridViewColumnHeader>
-                                    </GridViewColumn.Header>
                                 </GridViewColumn>
                             </GridView>
                         </ListView.View>
@@ -667,28 +749,47 @@
                             </Style>
                         </ListView.ItemContainerStyle>
                     </ListView>
-                    <!--<Grid>
-                        <Grid.RowDefinitions>
-                            <RowDefinition/>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition/>
-                        </Grid.RowDefinitions>
-                        <Path Grid.Row="1"
-                                Height="96"
-                                Width="96"
-                                Margin="5,0"
-                                VerticalAlignment="Center" 
-                                StrokeThickness="0"
-                                Stretch="Fill" 
-                                Fill="{DynamicResource ControlBackcolor}"
-                                Stroke="{DynamicResource ControlBackcolor}" 
-                                Data="{StaticResource ri-folder-download-line}"
-                                SnapsToDevicePixels="True"/>
-                        <TextBlock FontSize="36" Grid.Row="2" TextAlignment="Center" Margin="10" 
-                                   Foreground="{DynamicResource ControlBackcolor}">No Downloads</TextBlock>
-                    </Grid>-->
+                    <!-- Empty state. Sits on top of both lists and shows only when the
+                         list currently on screen has nothing in it, so it never covers
+                         the hidden one. Driven entirely by triggers - no code-behind. -->
+                    <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center"
+                                IsHitTestVisible="False">
+                        <StackPanel.Style>
+                            <Style TargetType="{x:Type StackPanel}">
+                                <Setter Property="Visibility" Value="Collapsed"/>
+                                <Style.Triggers>
+                                    <MultiDataTrigger>
+                                        <MultiDataTrigger.Conditions>
+                                            <Condition Binding="{Binding Visibility, ElementName=lvInProgress}" Value="Visible"/>
+                                            <Condition Binding="{Binding HasItems, ElementName=lvInProgress}" Value="False"/>
+                                        </MultiDataTrigger.Conditions>
+                                        <Setter Property="Visibility" Value="Visible"/>
+                                    </MultiDataTrigger>
+                                    <MultiDataTrigger>
+                                        <MultiDataTrigger.Conditions>
+                                            <Condition Binding="{Binding Visibility, ElementName=lvFinished}" Value="Visible"/>
+                                            <Condition Binding="{Binding HasItems, ElementName=lvFinished}" Value="False"/>
+                                        </MultiDataTrigger.Conditions>
+                                        <Setter Property="Visibility" Value="Visible"/>
+                                    </MultiDataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </StackPanel.Style>
+                        <Path Height="64" Width="64"
+                              HorizontalAlignment="Center"
+                              StrokeThickness="0"
+                              Stretch="Uniform"
+                              Opacity="0.35"
+                              Fill="{DynamicResource TextTertiary}"
+                              Stroke="{DynamicResource TextTertiary}"
+                              Data="{StaticResource ri-folder-download-line}"
+                              SnapsToDevicePixels="True"/>
+                        <TextBlock Margin="0,16,0,0"
+                                   TextAlignment="Center"
+                                   FontSize="{DynamicResource FontSizeSubtitle}"
+                                   Foreground="{DynamicResource TextTertiary}"
+                                   Text="{StaticResource MSG_NO_DOWNLOADS}"/>
+                    </StackPanel>
                 </Grid>
             </DockPanel>
         </Grid>

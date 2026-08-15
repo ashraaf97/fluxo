@@ -431,6 +431,12 @@ namespace Fluxo.Wpf.UI
             ApplyFilter();
         }
 
+        private void TxtSearch_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
+        {
+            // Filter live rather than waiting for a button press.
+            ApplyFilter();
+        }
+
         protected override void OnSourceInitialized(EventArgs e)
         {
             base.OnSourceInitialized(e);

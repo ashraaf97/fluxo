@@ -268,3 +268,4 @@ MSG_INVALID_MAGNET=Enter a magnet link, a .torrent file or a hoster link.
 MSG_ALLDEBRID_NO_KEY=No AllDebrid API key configured. Add one under Settings, Advanced settings.
 MSG_ALLDEBRID_FAILED=AllDebrid could not process this torrent.
 MSG_TORRENT_RESOLVING=Contacting AllDebrid...
+MSG_NO_DOWNLOADS=Nothing here yet
