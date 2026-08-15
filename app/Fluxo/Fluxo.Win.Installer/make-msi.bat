@@ -1,44 +1,57 @@
+@echo off
+REM Builds the Fluxo Windows installer.
+REM
+REM   make-msi          -> fluxosetup-<ver>.msi         (with install wizard)
+REM   make-msi silent   -> fluxosetup-<ver>-silent.msi  (no wizard)
+REM
+REM Requirements:
+REM   .NET 10 SDK    https://dotnet.microsoft.com/download/dotnet/10.0
+REM   WiX v5         dotnet tool install --global wix --version 5.*
+REM                  wix extension add --global WixToolset.UI.wixext/5.0.2
+REM
+REM The app is published self-contained, so the target machine needs no .NET
+REM runtime installed. That is why the payload is ~165 MB and the MSI ~54 MB.
+
+setlocal
 set BUILD_VER=8.0.25
+set RID=win-x86
 
-DEL /s /q *.wixobj
-DEL /s /q net4.5.0.wxs
-DEL /s /q net4.6.0.wxs
-RMDIR /S /Q BIN\NET450
-RMDIR /S /Q BIN\NET460
-RMDIR /S /Q WIXOBJ\NET450
-RMDIR /S /Q WIXOBJ\NET460
-RMDIR /S /Q BIN\NET450\chrome-extension
-RMDIR /S /Q BIN\NET460\chrome-extension
+if /I "%1"=="silent" (
+    set WIXFLAGS=-d Silent=1
+    set OUTPUT=fluxosetup-%BUILD_VER%-silent.msi
+) else (
+    set WIXFLAGS=
+    set OUTPUT=fluxosetup-%BUILD_VER%.msi
+)
 
-DEL /s /q *.wixpdb
+echo === cleaning ===
+if exist BIN rmdir /S /Q BIN
+if exist "%OUTPUT%" del /q "%OUTPUT%"
 
-MKDIR BIN
-MKDIR BIN\NET450
-MKDIR BIN\NET460
-MKDIR BIN\NET450\chrome-extension
-MKDIR BIN\NET460\chrome-extension
-MKDIR WIXOBJ\NET450
-MKDIR WIXOBJ\NET460
+echo === publishing self-contained %RID% ===
+dotnet publish ..\Fluxo.Wpf.UI\Fluxo.Wpf.UI.csproj -c Release -r %RID% --self-contained true -o BIN
+if errorlevel 1 goto :failed
 
-dotnet build -c Release -f net4.5 ..\Fluxo.Wpf.UI\Fluxo.Wpf.UI.csproj -o BIN\NET450
-dotnet build -c Release -f net4.6 ..\Fluxo.Wpf.UI\Fluxo.Wpf.UI.csproj -o BIN\NET460
-dotnet build -c Release -f net4.5 ..\Fluxo.WinForms.IntegrationUI\Fluxo.WinForms.IntegrationUI.csproj -o BIN\NET450
-dotnet build -c Release -f net4.6 ..\Fluxo.WinForms.IntegrationUI\Fluxo.WinForms.IntegrationUI.csproj -o BIN\NET460
+echo === staging browser payloads ===
+xcopy /E /I /Y ..\chrome-extension BIN\chrome-extension >nul
+if errorlevel 1 goto :failed
+xcopy /E /I /Y ..\ext-loader BIN\ext-loader >nul
+if errorlevel 1 goto :failed
 
-#copy /B binary-deps\ffmpeg-x86.exe BIN\NET450
-#copy /B binary-deps\yt-dlp_x86.exe BIN\NET460
+REM ffmpeg is not redistributed here. Drop ffmpeg-x86.exe beside this script to
+REM bundle it; otherwise Fluxo falls back to ffmpeg on PATH or FFMPEG_HOME.
+if exist ffmpeg-x86.exe copy /B /Y ffmpeg-x86.exe BIN >nul
 
+echo === building %OUTPUT% ===
+wix build product.wxs -d Version=%BUILD_VER% -d PublishDir=BIN %WIXFLAGS% ^
+    -b BIN -arch x86 -ext WixToolset.UI.wixext -culture en-us -out "%OUTPUT%"
+if errorlevel 1 goto :failed
 
-#xcopy /E ..\chrome-extension BIN\NET450\chrome-extension
-#xcopy /E ..\chrome-extension BIN\NET460\chrome-extension
+echo.
+echo Built %OUTPUT%
+goto :eof
 
-heat dir BIN\NET450 -o net4.5.0.wxs -scom -frag -srd -sreg -gg -cg NET4 -dr INSTALLFOLDER
-heat dir BIN\NET460 -o net4.6.0.wxs -scom -frag -srd -sreg -gg -cg NET4 -dr INSTALLFOLDER
-
-candle product-net4.5.0.wxs net4.5.0.wxs -o WIXOBJ\NET450\
-candle product-net4.6.0.wxs net4.6.0.wxs -o WIXOBJ\NET460\
-
-light -ext WixUIExtension -ext WixUtilExtension -cultures:en-us WIXOBJ\NET450\product-net4.5.0.wixobj WIXOBJ\NET450\net4.5.0.wixobj -b BIN\NET450 -out fluxosetup-%BUILD_VER%-win7.msi
-light -ext WixUIExtension -ext WixUtilExtension -cultures:en-us WIXOBJ\NET460\product-net4.6.0.wixobj WIXOBJ\NET460\net4.6.0.wixobj -b BIN\NET460 -out fluxosetup-%BUILD_VER%.msi
-
-
+:failed
+echo.
+echo BUILD FAILED
+exit /b 1
