@@ -1,0 +1,13 @@
+# Files executed by a Linux shell or interpreter must keep LF in the working
+# tree. This repository is cloned with core.autocrlf=true on Windows, which
+# would otherwise rewrite them to CRLF, and the shebang then fails on Linux as
+#   /bin/bash^M: bad interpreter: No such file or directory
+#
+# Scoped deliberately to the affected files. A repository wide `* text=auto`
+# would renormalise ~510 files and bury real changes in whitespace churn.
+make-arch-pkg text eol=lf
+make-deb-pkg  text eol=lf
+make-rpm-pkg  text eol=lf
+*.sh          text eol=lf
+*.py          text eol=lf
+*.desktop     text eol=lf
