@@ -65,14 +65,6 @@ namespace Fluxo.Core.Updater
                     }
                 }
 
-                //if ((updateMode & UpdateMode.FFmpegUpdateOnly) == UpdateMode.FFmpegUpdateOnly)
-                //{
-                //    var ffmpegUpdate = FindNewFFmpegVersion(hc, lastFFmpegUpdate);
-                //    if (ffmpegUpdate != null)
-                //    {
-                //        updates.Add(ffmpegUpdate.Value);
-                //    }
-                //}
 
                 return true;
             }
@@ -169,17 +161,6 @@ namespace Fluxo.Core.Updater
                 Extensions = new string[] { }
             };
 
-        ////TODO: Handle MacOS
-        //private static AssetPattern GetFFmpegExecutableNameForCurrentOS() =>
-        //    Environment.OSVersion.Platform == PlatformID.Win32NT ? new AssetPattern
-        //    {
-        //        Prefix = "ffmpeg-x86",
-        //        Extensions = new string[] { ".exe" }
-        //    } : new AssetPattern
-        //    {
-        //        Prefix = "ffmpeg",
-        //        Extensions = new string[] { }
-        //    };
 
         //TODO: Handle Linux and Mac
         private static AssetPattern? GetAppInstallerNameForCurrentOS()
@@ -206,9 +187,6 @@ namespace Fluxo.Core.Updater
             FindNewRelease(hc, Links.YtDlpReleaseGH, r => r.PublishedAt > lastUpdated,
                 GetYoutubeDLExecutableNameForCurrentOS());
 
-        //private static UpdateInfo? FindNewFFmpegVersion(IHttpClient hc, DateTime lastUpdated) =>
-        //    FindNewRelease(hc, Links.FFmpegCustomReleaseGH, r => r.PublishedAt > lastUpdated,
-        //        GetFFmpegExecutableNameForCurrentOS());
 
         private static UpdateInfo? FindNewAppVersion(IHttpClient hc, Version appVersion) =>
             FindNewRelease(hc, Links.AppLatestReleaseGH, r => ParseGitHubTag(r.TagName) > appVersion,

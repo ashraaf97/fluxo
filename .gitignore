@@ -364,8 +364,6 @@ app/Fluxo/Fluxo.Win.Installer/net4.6.0.wxs
 app/Fluxo/Fluxo.Win.Installer/net4.6.0.wxs
 app/packaging/publish.zip
 app/Fluxo/Fluxo.Linux.Installer/BIN.zip
-app/Fluxo/Fluxo.Win.Installer/fluxo-helper-chrome/
-app/Fluxo/Fluxo.Linux.Installer/fluxo-helper-chrome/
 app/Fluxo/Fluxo.Win.Installer/binary-deps/ffmpeg-x86.exe
 app/Fluxo/Fluxo.Win.Installer/binary-deps/yt-dlp_x86.exe
 app/Fluxo/firefox-amo/fluxo-v8-browser-helper.zip

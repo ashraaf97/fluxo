@@ -33,9 +33,5 @@ namespace Fluxo.Core
         public const string AppUpdateCheckerUrl = RepoUrl + "/releases/latest";
 
         public const string YtDlpReleaseGH = "https://api.github.com/repos/yt-dlp/yt-dlp/releases/latest";
-
-        // ffmpeg builds still come from the upstream XDM helper repo; this fork
-        // does not publish its own.
-        public const string FFmpegCustomReleaseGH = "https://api.github.com/repos/subhra74/xdm-ffmpeg-update/releases/latest";
     }
 }
