@@ -59,6 +59,8 @@ cp "fluxo_gtk_${VERSION}_amd64/opt/fluxo/fluxo-app.desktop" "fluxo_gtk_${VERSION
 
 chmod 755 "fluxo_gtk_${VERSION}_amd64/usr/bin/fluxo"
 chmod 755 "fluxo_gtk_${VERSION}_amd64/opt/fluxo/fluxo-app"
-chmod 755 "fluxo_gtk_${VERSION}_amd64/opt/fluxo/Fluxo.App.Host/fluxo-app-host"
+# Fluxo.App.Host is a Windows only project, so it is absent from a plain GTK
+# publish. Only chmod it when it has actually been staged.
+[ -f "fluxo_gtk_${VERSION}_amd64/opt/fluxo/Fluxo.App.Host/fluxo-app-host" ] && chmod 755 "fluxo_gtk_${VERSION}_amd64/opt/fluxo/Fluxo.App.Host/fluxo-app-host"
 
 dpkg-deb --build --root-owner-group -Z xz "fluxo_gtk_${VERSION}_amd64"

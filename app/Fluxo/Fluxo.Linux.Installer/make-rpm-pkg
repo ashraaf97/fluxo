@@ -49,7 +49,9 @@ cp "${SOURCE_NAME}/opt/fluxo/fluxo-app.desktop" "${SOURCE_NAME}/usr/share/applic
 
 chmod 755 "${SOURCE_NAME}/usr/bin/fluxo"
 chmod 755 "${SOURCE_NAME}/opt/fluxo/fluxo-app"
-chmod 755 "${SOURCE_NAME}/opt/fluxo/Fluxo.App.Host/fluxo-app-host"
+# Fluxo.App.Host is a Windows only project, so it is absent from a plain GTK
+# publish. Only chmod it when it has actually been staged.
+[ -f "${SOURCE_NAME}/opt/fluxo/Fluxo.App.Host/fluxo-app-host" ] && chmod 755 "${SOURCE_NAME}/opt/fluxo/Fluxo.App.Host/fluxo-app-host"
 
 tar --create --file "${SOURCE_NAME}.tar.gz" "${SOURCE_NAME}"
 mv "${SOURCE_NAME}.tar.gz" "rpmbuild/SOURCES"
