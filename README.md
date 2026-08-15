@@ -35,10 +35,6 @@ dotnet build Fluxo.sln
 </pre>
 Or open <code>app/Fluxo/Fluxo.sln</code> in Visual Studio.
 
-## Submitting translations
-If you want to translate Fluxo to your language, feel free to submit a translation file.<br>
-See the language files under <code>app/Fluxo/Lang</code> for the format, based on the original XDM translation process: https://github.com/subhra74/xdm/wiki/Submitting-translations-for-XDM
-
 
 [//]: #ImageLinks
 [01]: https://i.stack.imgur.com/s7ViA.jpg
