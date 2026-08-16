@@ -111,29 +111,8 @@ dotnet test app/Fluxo/Fluxo.Tests/Fluxo.Tests.csproj
 - **Linux packages** — `make-deb-pkg`, `make-rpm-pkg` and `make-arch-pkg` in
   `app/Fluxo/Fluxo.Linux.Installer/`.
 
-ffmpeg is not redistributed in this repository. Fluxo finds it on `PATH` or via the
-`FFMPEG_HOME` environment variable; see `app/Fluxo/FFmpegCustomBuild` for how upstream
-builds it.
-
-## Differences from upstream XDM
-
-- Renamed throughout, with its own branding, update feed and issue tracker.
-- Migrated from .NET Framework 4.x / .NET 5–6 to **.NET 10**.
-- Added **torrent support through AllDebrid**, with a torrent's files grouped under one
-  expandable row.
-- **Rebuilt interface** on a shared design language across Windows and Linux. Upstream's
-  light theme had no control templates of its own and fell back to default system chrome;
-  both themes now render the same UI, and the theme can be switched without restarting.
-- Firefox extension migrated from **Manifest V2 to V3**.
-- TLS certificate validation is enforced. Upstream disabled it globally, which left every
-  HTTPS download open to interception; it is now on by default, with an opt-out in
-  settings for self-signed hosts.
-- The build no longer clones any external repository, so packaging does not depend on
-  another project staying online.
-
 ## Licence
 
-GPL, inherited from XDM — see [LICENSE](LICENSE). The bundled `ext-loader` originates
-from [xdm-helper-chrome](https://github.com/subhra74/xdm-helper-chrome) (GPLv3).
+GPL, see [LICENSE](LICENSE).
 
 
