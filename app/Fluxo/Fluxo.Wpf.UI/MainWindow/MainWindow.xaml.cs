@@ -49,6 +49,8 @@ namespace Fluxo.Wpf.UI
     {
         private ObservableCollection<InProgressDownloadEntryWrapper> inProgressList
             = new ObservableCollection<InProgressDownloadEntryWrapper>();
+        // Keeps the flat collection above ordered as header-then-members.
+        private DownloadGroupRows groupRows;
         private ObservableCollection<FinishedDownloadEntryWrapper> finishedList
             = new ObservableCollection<FinishedDownloadEntryWrapper>();
 
@@ -126,7 +128,21 @@ namespace Fluxo.Wpf.UI
                     inProgressListViewSortAdorner = new SortAdorner(inProgressListViewSortCol, ListSortDirection.Descending);
                     layer.Add(inProgressListViewSortAdorner);
                 }
-                lvInProgress.Items.SortDescriptions.Add(new SortDescription("DateAdded", ListSortDirection.Descending));
+                ApplyInProgressSort("DateAdded", ListSortDirection.Descending);
+            }
+        }
+
+        /// <summary>
+        /// Sorts the in-progress list through a comparer that keeps a torrent's files
+        /// with their header. A SortDescription cannot express that, so CustomSort is
+        /// used instead.
+        /// </summary>
+        private void ApplyInProgressSort(string field, ListSortDirection direction)
+        {
+            EnsureGroupRows();
+            if (CollectionViewSource.GetDefaultView(lvInProgress.ItemsSource) is ListCollectionView view)
+            {
+                view.CustomSort = new GroupAwareRowComparer(field, direction, this.groupRows);
             }
         }
 
@@ -238,18 +254,25 @@ namespace Fluxo.Wpf.UI
 
         public IEnumerable<InProgressDownloadItem> InProgressDownloads
         {
-            get => this.inProgressList.Select(x => x.DownloadEntry);
+            get => this.inProgressList.Where(x => !x.IsGroupHeader).Select(x => x.DownloadEntry);
             set
             {
-                this.inProgressList = new ObservableCollection<InProgressDownloadEntryWrapper>(
-                    value.Select(x => new InProgressDownloadEntryWrapper(x)));
+                this.inProgressList = new ObservableCollection<InProgressDownloadEntryWrapper>();
+                this.groupRows = new DownloadGroupRows(this.inProgressList);
+                foreach (var item in value)
+                {
+                    this.groupRows.Add(item);
+                }
                 this.lvInProgress.ItemsSource = inProgressList;
                 InProgressListViewInitialSortIfNotAlreadySorted();
             }
         }
 
+        // Selecting a torrent's header means selecting its files: pause, resume and
+        // delete all cascade rather than acting on a row that owns no download.
         public IList<IInProgressDownloadRow> SelectedInProgressRows =>
-            this.lvInProgress.SelectedItems.OfType<IInProgressDownloadRow>().ToList();
+            ExpandSelection(this.lvInProgress.SelectedItems.OfType<InProgressDownloadEntryWrapper>())
+            .Cast<IInProgressDownloadRow>().ToList();
 
         public IList<IFinishedDownloadRow> SelectedFinishedRows =>
             this.lvFinished.SelectedItems.OfType<IFinishedDownloadRow>().ToList();
@@ -272,9 +295,12 @@ namespace Fluxo.Wpf.UI
 
         public Dictionary<string, IMenuItem> MenuItemMap { get; private set; }
 
+        // Skips header rows: their synthetic entry carries the group id, which must
+        // never be mistaken for a download id.
         public IInProgressDownloadRow FindInProgressItem(string id) =>
-            this.lvInProgress.Items.OfType<IInProgressDownloadRow>()
-            .Where(x => x.DownloadEntry.Id == id).FirstOrDefault();
+            this.inProgressList
+            .Where(x => !x.IsGroupHeader && x.DownloadEntry.Id == id)
+            .FirstOrDefault();
 
         public IFinishedDownloadRow FindFinishedItem(string id) =>
             this.lvFinished.Items.OfType<IFinishedDownloadRow>()
@@ -282,7 +308,33 @@ namespace Fluxo.Wpf.UI
 
         public void AddToTop(InProgressDownloadItem entry)
         {
-            this.inProgressList.Add(new InProgressDownloadEntryWrapper(entry));
+            EnsureGroupRows();
+            this.groupRows.Add(entry);
+        }
+
+        private void EnsureGroupRows()
+        {
+            this.groupRows ??= new DownloadGroupRows(this.inProgressList);
+        }
+
+        /// <summary>
+        /// Expands a selection so acting on a torrent's header acts on its files.
+        /// </summary>
+        internal IEnumerable<InProgressDownloadEntryWrapper> ExpandSelection(
+            IEnumerable<InProgressDownloadEntryWrapper> selection)
+        {
+            EnsureGroupRows();
+            return this.groupRows.Expand(selection);
+        }
+
+        private void GroupExpander_Click(object sender, RoutedEventArgs e)
+        {
+            EnsureGroupRows();
+            if (sender is FrameworkElement fe && fe.DataContext is InProgressDownloadEntryWrapper row)
+            {
+                this.groupRows.Toggle(row);
+            }
+            e.Handled = true;
         }
 
         public void AddToTop(FinishedDownloadItem entry)
@@ -340,7 +392,8 @@ namespace Fluxo.Wpf.UI
 
         public void Delete(IInProgressDownloadRow row)
         {
-            this.inProgressList.Remove((InProgressDownloadEntryWrapper)row);
+            EnsureGroupRows();
+            this.groupRows.Remove((InProgressDownloadEntryWrapper)row);
         }
 
         public void Delete(IFinishedDownloadRow row)
@@ -597,7 +650,6 @@ namespace Fluxo.Wpf.UI
                 if (inProgressListViewSortCol != null)
                 {
                     AdornerLayer.GetAdornerLayer(inProgressListViewSortCol).Remove(inProgressListViewSortAdorner);
-                    lvInProgress.Items.SortDescriptions.Clear();
                 }
 
                 ListSortDirection newDir = ListSortDirection.Ascending;
@@ -607,7 +659,7 @@ namespace Fluxo.Wpf.UI
                 inProgressListViewSortCol = column;
                 inProgressListViewSortAdorner = new SortAdorner(inProgressListViewSortCol, newDir);
                 AdornerLayer.GetAdornerLayer(inProgressListViewSortCol).Add(inProgressListViewSortAdorner);
-                lvInProgress.Items.SortDescriptions.Add(new SortDescription(sortBy, newDir));
+                ApplyInProgressSort(sortBy, newDir);
             }
         }
 

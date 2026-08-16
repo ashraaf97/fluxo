@@ -581,7 +581,7 @@
                           GridViewColumnHeader.Click="lvInProgress_Click">
                         <ListView.View>
                             <GridView>
-                                <GridViewColumn Width="280">
+                                <GridViewColumn Width="190">
                                     <GridViewColumn.Header>
                                         <GridViewColumnHeader Tag="Name">
                                             <TextBlock Padding="34,0,0,0" Text="{StaticResource SORT_NAME}" />
@@ -589,24 +589,39 @@
                                     </GridViewColumn.Header>
                                     <GridViewColumn.CellTemplate>
                                         <DataTemplate>
-                                            <StackPanel Orientation="Horizontal">
+                                            <!-- Torrents render as a header row with their files
+                                                 nested underneath. RowIndent shifts members across;
+                                                 the chevron only appears on headers. -->
+                                            <StackPanel Orientation="Horizontal" Margin="{Binding RowIndent}">
+                                                <Button Style="{StaticResource IconButton}"
+                                                        Padding="2" Margin="0,0,2,0" MinHeight="0"
+                                                        Visibility="{Binding ExpanderVisibility}"
+                                                        Click="GroupExpander_Click"
+                                                        Focusable="False">
+                                                    <TextBlock Text="{Binding ExpanderGlyph}"
+                                                               FontFamily="Segoe MDL2 Assets"
+                                                               FontSize="10"
+                                                               VerticalAlignment="Center"
+                                                               Foreground="{DynamicResource TextSecondary}"/>
+                                                </Button>
                                                 <!-- Tinted per file type via FileExtensionToColorConverter.
                                                      The converter already existed but the list painted
                                                      every icon the same flat grey. -->
                                                 <Path SnapsToDevicePixels="True"
                                                   VerticalAlignment="Center" Margin="0,0,10,0" StrokeThickness="0" Stretch="Uniform"
-                                                  Fill="{Binding Path=Name, Converter={StaticResource FileExtensionToColorConverter}}"
+                                                  Fill="{Binding Path=FileIconText, Converter={StaticResource VectorNameToColorConverter}}"
                                                   Width="20" Height="20"
-                                                  Data="{Binding Path=Name, Converter={StaticResource FileExtensionToVectorImageConverter}}"
+                                                  Data="{Binding Path=FileIconText, Converter={StaticResource VectorNameToGeometryConverter}}"
                                                   />
                                                 <TextBlock Text="{Binding Name}" VerticalAlignment="Center"
+                                                           FontWeight="{Binding RowWeight}"
                                                            TextTrimming="CharacterEllipsis"
                                                            ToolTip="{Binding Name}"/>
                                             </StackPanel>
                                         </DataTemplate>
                                     </GridViewColumn.CellTemplate>
                                 </GridViewColumn>
-                                <GridViewColumn Width="150" x:Name="p1">
+                                <GridViewColumn Width="100" x:Name="p1">
                                     <GridViewColumn.Header>
                                         <!-- Literal, as before: there is no translation
                                              key for "progress" and "%" needs none. -->
@@ -637,7 +652,7 @@
                                         </DataTemplate>
                                     </GridViewColumn.CellTemplate>
                                 </GridViewColumn>
-                                <GridViewColumn Width="85">
+                                <GridViewColumn Width="70">
                                     <GridViewColumn.Header>
                                         <GridViewColumnHeader Tag="Size">
                                             <TextBlock Text="{StaticResource SORT_SIZE}"/>
@@ -651,7 +666,7 @@
                                     </GridViewColumn.CellTemplate>
                                 </GridViewColumn>
                                 <!-- Carries speed and ETA, e.g. "2.1 MB/s, 00:02:54 left". -->
-                                <GridViewColumn Width="150">
+                                <GridViewColumn Width="115">
                                     <GridViewColumn.Header>
                                         <GridViewColumnHeader Tag="Status">
                                             <TextBlock Text="{StaticResource SORT_STATUS}"/>
@@ -665,7 +680,7 @@
                                         </DataTemplate>
                                     </GridViewColumn.CellTemplate>
                                 </GridViewColumn>
-                                <GridViewColumn Width="85">
+                                <GridViewColumn Width="70">
                                     <GridViewColumn.Header>
                                         <GridViewColumnHeader Tag="DateAdded" Name="lvInProgress_DateAdded">
                                             <TextBlock Text="{StaticResource SORT_DATE}"/>
@@ -704,7 +719,7 @@
                         </ListView.Resources>-->
                         <ListView.View>
                             <GridView>
-                                <GridViewColumn  Width="380" >
+                                <GridViewColumn  Width="300" >
                                     <GridViewColumn.Header>
                                         <GridViewColumnHeader Tag="Name">
                                             <TextBlock Padding="34,0,0,0" Text="{StaticResource SORT_NAME}"/>
@@ -726,7 +741,7 @@
                                         </DataTemplate>
                                     </GridViewColumn.CellTemplate>
                                 </GridViewColumn>
-                                <GridViewColumn Width="100">
+                                <GridViewColumn Width="90">
                                     <GridViewColumn.Header>
                                         <GridViewColumnHeader Tag="Size">
                                             <TextBlock Text="{StaticResource SORT_SIZE}"/>
@@ -739,7 +754,7 @@
                                         </DataTemplate>
                                     </GridViewColumn.CellTemplate>
                                 </GridViewColumn>
-                                <GridViewColumn Width="100">
+                                <GridViewColumn Width="90">
                                     <GridViewColumn.Header>
                                         <GridViewColumnHeader Tag="DateAdded" Name="lvFinished_DateAdded">
                                             <TextBlock Text="{StaticResource SORT_DATE}"/>
