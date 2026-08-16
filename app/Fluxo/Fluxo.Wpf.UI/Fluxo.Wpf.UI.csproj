@@ -19,7 +19,7 @@
     <StartupObject>Fluxo.Wpf.UI.App</StartupObject>
     <Description>Fluxo</Description>
     <AssemblyTitle>Fluxo</AssemblyTitle>
-    <AssemblyVersion>8.0.27</AssemblyVersion>
+    <AssemblyVersion>8.0.28</AssemblyVersion>
     <EnableNETAnalyzers>true</EnableNETAnalyzers>
     <DefineConstants>TRACE;WINDOWS</DefineConstants>
   </PropertyGroup>
