@@ -46,6 +46,7 @@ namespace Fluxo.GtkUI
             {
                 this.DownloadEntry.Size = value;
                 store.SetValue(treeIter, 2, FormattingHelper.FormatSize(value));
+                RefreshParent();
             }
         }
 
@@ -66,6 +67,7 @@ namespace Fluxo.GtkUI
             {
                 this.DownloadEntry.Progress = value;
                 store.SetValue(treeIter, 3, value);
+                RefreshParent();
             }
         }
 
@@ -76,6 +78,7 @@ namespace Fluxo.GtkUI
             {
                 this.DownloadEntry.Status = value;
                 store.SetValue(treeIter, 4, Helpers.GenerateStatusText(this.DownloadEntry));
+                RefreshParent();
             }
         }
 
@@ -105,5 +108,17 @@ namespace Fluxo.GtkUI
         {
             return this.store;
         }
-    }
+    
+        /// <summary>
+        /// Keeps the torrent's summary row in step when one of its files changes.
+        /// No-op for a standalone download, which has no parent.
+        /// </summary>
+        private void RefreshParent()
+        {
+            if (store is TreeStore treeStore)
+            {
+                Fluxo.GtkUI.Utils.DownloadTreeHelper.RefreshParentOf(treeStore, treeIter);
+            }
+        }
+}
 }

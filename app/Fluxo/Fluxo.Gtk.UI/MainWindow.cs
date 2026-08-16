@@ -20,7 +20,12 @@ namespace Fluxo.GtkUI
     {
         private TreeStore categoryTreeStore;
         private TreeView categoryTree;
-        private ListStore inprogressDownloadsStore, finishedDownloadsStore;
+        // TreeStore rather than ListStore so a torrent can be a real parent node
+        // with its files as children. The finished list stays flat for now.
+        private TreeStore inprogressDownloadsStore;
+        private ListStore finishedDownloadsStore;
+        // Parent node per group id, so arriving files find their torrent.
+        private readonly Dictionary<string, TreeIter> inProgressGroupRows = new();
         private TreeView lvInprogress, lvFinished;
         private ScrolledWindow swInProgress, swFinished;
         private TreeModelFilter finishedDownloadFilter;
@@ -639,7 +644,7 @@ namespace Fluxo.GtkUI
 
         private Widget CreateInProgressListView()
         {
-            inprogressDownloadsStore = new ListStore(typeof(string),        // file name
+            inprogressDownloadsStore = new TreeStore(typeof(string),        // file name
                 typeof(string),                                             // date modified
                 typeof(string),                                             // size
                 typeof(int),                                                // progress
@@ -651,7 +656,26 @@ namespace Fluxo.GtkUI
             inprogressDownloadFilter.VisibleFunc = (model, iter) =>
             {
                 var name = (string)model.GetValue(iter, 0);
-                return Helpers.IsOfCategoryOrMatchesKeyword(name, searchKeyword, category);
+                if (Helpers.IsOfCategoryOrMatchesKeyword(name, searchKeyword, category))
+                {
+                    return true;
+                }
+
+                // A torrent stays visible while any of its files match, otherwise
+                // filtering would hide the parent and orphan the matches.
+                if (model.IterHasChild(iter) && model.IterChildren(out var child, iter))
+                {
+                    do
+                    {
+                        var childName = (string)model.GetValue(child, 0);
+                        if (Helpers.IsOfCategoryOrMatchesKeyword(childName, searchKeyword, category))
+                        {
+                            return true;
+                        }
+                    }
+                    while (model.IterNext(ref child));
+                }
+                return false;
             };
 
             var sortedStore = new TreeModelSort(inprogressDownloadFilter);
@@ -932,9 +956,12 @@ namespace Fluxo.GtkUI
         void GetFileIcon(ICellLayout cell_layout,
                 CellRenderer cell, ITreeModel tree_model, TreeIter iter)
         {
-            var name = (string)tree_model.GetValue(iter, 0);
-            var pix = LoadSvg(IconResource.GetSVGNameForFileType(name), 20);
-            ((CellRendererPixbuf)cell).Pixbuf = pix;
+            // A torrent's own row gets a folder icon; its files keep their file-type
+            // icon. Group rows are the ones carrying no download item.
+            var iconName = DownloadTreeHelper.IsGroupRow(tree_model, iter)
+                ? "folder-shared-line"
+                : IconResource.GetSVGNameForFileType((string)tree_model.GetValue(iter, 0));
+            ((CellRendererPixbuf)cell).Pixbuf = LoadSvg(iconName, 20);
         }
 
         private void AppWin1_DeleteEvent(object o, DeleteEventArgs args)
@@ -953,37 +980,27 @@ namespace Fluxo.GtkUI
 
         public IInProgressDownloadRow? FindInProgressItem(string id)
         {
-            if (!inprogressDownloadsStore!.GetIterFirst(out TreeIter iter))
+            foreach (var iter in DownloadTreeHelper.WalkAll(inprogressDownloadsStore!))
             {
-                return null;
-            }
-            do
-            {
-                var ent = (InProgressDownloadItem)inprogressDownloadsStore.GetValue(iter, INPROGRESS_DATA_INDEX);
-                if (ent.Id == id)
+                if (inprogressDownloadsStore.GetValue(iter, INPROGRESS_DATA_INDEX)
+                    is InProgressDownloadItem ent && ent.Id == id)
                 {
                     return new InProgressEntryWrapper(ent, iter, inprogressDownloadsStore);
                 }
             }
-            while (inprogressDownloadsStore.IterNext(ref iter));
             return null;
         }
 
         public TreeIter? FindInProgressItemIterById(string id)
         {
-            if (!inprogressDownloadsStore!.GetIterFirst(out TreeIter iter))
+            foreach (var iter in DownloadTreeHelper.WalkAll(inprogressDownloadsStore!))
             {
-                return null;
-            }
-            do
-            {
-                var ent = (InProgressDownloadItem)inprogressDownloadsStore.GetValue(iter, INPROGRESS_DATA_INDEX);
-                if (ent.Id == id)
+                if (inprogressDownloadsStore.GetValue(iter, INPROGRESS_DATA_INDEX)
+                    is InProgressDownloadItem ent && ent.Id == id)
                 {
                     return iter;
                 }
             }
-            while (inprogressDownloadsStore.IterNext(ref iter));
             return null;
         }
 
@@ -1025,7 +1042,27 @@ namespace Fluxo.GtkUI
 
         public void AddToTop(InProgressDownloadItem entry)
         {
-            var iter = inprogressDownloadsStore.Insert(0);
+            // A file belonging to a torrent is appended under that torrent's node;
+            // anything else goes to the top of the list as before.
+            if (!string.IsNullOrEmpty(entry.GroupId))
+            {
+                var parent = DownloadTreeHelper.GetOrCreateGroupRow(
+                    inprogressDownloadsStore, inProgressGroupRows, entry.GroupId!);
+
+                inprogressDownloadsStore.AppendValues(parent,
+                    entry.Name,
+                    entry.DateAdded.ToShortDateString(),
+                    FormattingHelper.FormatSize(entry.Size),
+                    entry.Progress,
+                    Helpers.GenerateStatusText(entry),
+                    entry);
+
+                DownloadTreeHelper.RefreshGroupRow(inprogressDownloadsStore, parent);
+                lvInprogress?.ExpandAll();
+                return;
+            }
+
+            var iter = inprogressDownloadsStore.InsertNode(0);
             inprogressDownloadsStore.SetValue(iter, 0, entry.Name);
             inprogressDownloadsStore.SetValue(iter, 1, entry.DateAdded.ToShortDateString());
             inprogressDownloadsStore.SetValue(iter, 2, FormattingHelper.FormatSize(entry.Size));
@@ -1102,10 +1139,35 @@ namespace Fluxo.GtkUI
         {
             var id = row.DownloadEntry.Id;
             var modelIter = FindInProgressItemIterById(id);
-            if (modelIter.HasValue)
+            if (!modelIter.HasValue)
             {
-                var iter = modelIter.Value;
-                inprogressDownloadsStore.Remove(ref iter);
+                return;
+            }
+
+            var iter = modelIter.Value;
+            var groupId = row.DownloadEntry.GroupId;
+            var hasParent = inprogressDownloadsStore.IterParent(out var parent, iter);
+
+            inprogressDownloadsStore.Remove(ref iter);
+
+            if (!hasParent)
+            {
+                return;
+            }
+
+            // Drop the torrent's row once its last file has gone, otherwise a
+            // finished torrent would leave an empty parent behind.
+            if (!inprogressDownloadsStore.IterHasChild(parent))
+            {
+                inprogressDownloadsStore.Remove(ref parent);
+                if (!string.IsNullOrEmpty(groupId))
+                {
+                    inProgressGroupRows.Remove(groupId!);
+                }
+            }
+            else
+            {
+                DownloadTreeHelper.RefreshGroupRow(inprogressDownloadsStore, parent);
             }
 
             //var iter = GtkHelper.ConvertViewToModel(((InProgressEntryWrapper)row).TreeIter,
@@ -1233,14 +1295,15 @@ namespace Fluxo.GtkUI
 
         private IEnumerable<InProgressDownloadItem> GetAllInProgressDownloads()
         {
-            if (!inprogressDownloadsStore!.GetIterFirst(out TreeIter iter))
+            // Group rows carry no download, so they are skipped rather than leaking
+            // a synthetic entry to callers.
+            foreach (var iter in DownloadTreeHelper.WalkAll(inprogressDownloadsStore!))
             {
-                yield break;
-            }
-            yield return (InProgressDownloadItem)inprogressDownloadsStore.GetValue(iter, INPROGRESS_DATA_INDEX);
-            while (inprogressDownloadsStore.IterNext(ref iter))
-            {
-                yield return (InProgressDownloadItem)inprogressDownloadsStore.GetValue(iter, INPROGRESS_DATA_INDEX);
+                if (inprogressDownloadsStore.GetValue(iter, INPROGRESS_DATA_INDEX)
+                    is InProgressDownloadItem item)
+                {
+                    yield return item;
+                }
             }
         }
 
@@ -1259,8 +1322,24 @@ namespace Fluxo.GtkUI
         private void SetInProgressDownloads(IEnumerable<InProgressDownloadItem> incompleteDownloads)
         {
             inprogressDownloadsStore.Clear();
+            inProgressGroupRows.Clear();
+
             foreach (var item in incompleteDownloads)
             {
+                if (!string.IsNullOrEmpty(item.GroupId))
+                {
+                    var parent = DownloadTreeHelper.GetOrCreateGroupRow(
+                        inprogressDownloadsStore, inProgressGroupRows, item.GroupId!);
+                    inprogressDownloadsStore.AppendValues(parent,
+                        item.Name,
+                        item.DateAdded.ToShortDateString(),
+                        FormattingHelper.FormatSize(item.Size),
+                        item.Progress,
+                        Helpers.GenerateStatusText(item),
+                        item);
+                    continue;
+                }
+
                 inprogressDownloadsStore.AppendValues(item.Name,
                     item.DateAdded.ToShortDateString(),
                     FormattingHelper.FormatSize(item.Size),
@@ -1268,6 +1347,12 @@ namespace Fluxo.GtkUI
                     Helpers.GenerateStatusText(item),
                     item);
             }
+
+            foreach (var parent in inProgressGroupRows.Values)
+            {
+                DownloadTreeHelper.RefreshGroupRow(inprogressDownloadsStore, parent);
+            }
+            lvInprogress?.ExpandAll();
         }
 
         private IList<IInProgressDownloadRow> GetSelectedInProgressDownloads()
@@ -1279,10 +1364,29 @@ namespace Fluxo.GtkUI
                 list.Capacity = rows.Length;
                 foreach (var row in rows)
                 {
-                    if (model.GetIter(out TreeIter iter, row))
+                    if (!model.GetIter(out TreeIter iter, row))
                     {
-                        var ent = (InProgressDownloadItem)model.GetValue(iter, INPROGRESS_DATA_INDEX);
+                        continue;
+                    }
+
+                    if (model.GetValue(iter, INPROGRESS_DATA_INDEX) is InProgressDownloadItem ent)
+                    {
                         list.Add(new InProgressEntryWrapper(ent, iter, model));
+                        continue;
+                    }
+
+                    // A torrent's own row owns no download, so selecting it means
+                    // selecting its files - pause, resume and delete cascade.
+                    if (model.IterChildren(out var child, iter))
+                    {
+                        do
+                        {
+                            if (model.GetValue(child, INPROGRESS_DATA_INDEX) is InProgressDownloadItem c)
+                            {
+                                list.Add(new InProgressEntryWrapper(c, child, model));
+                            }
+                        }
+                        while (model.IterNext(ref child));
                     }
                 }
             }
