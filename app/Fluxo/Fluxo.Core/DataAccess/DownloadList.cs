@@ -88,6 +88,10 @@ namespace Fluxo.Core.DataAccess
                         proxy.UserName = r.GetSafeString(19);
                         proxy.Password = r.GetSafeString(20);
                         entry.Proxy = proxy;
+                        // Index 22: appended by SchemaInitializer.Migrate after the 22
+                        // original columns (0..21, ending at proxy_type). Guarded
+                        // because a row written before the migration has none.
+                        entry.GroupId = r.FieldCount > 22 ? r.GetSafeString(22) : null;
 
                         if (inProgress)
                         {
@@ -158,6 +162,7 @@ namespace Fluxo.Core.DataAccess
                         proxy.UserName = r.GetSafeString(19);
                         proxy.Password = r.GetSafeString(20);
                         entry.Proxy = proxy;
+                        entry.GroupId = r.FieldCount > 22 ? r.GetSafeString(22) : null;
 
                         if (inProgress)
                         {
@@ -188,12 +193,12 @@ namespace Fluxo.Core.DataAccess
                                             id, completed, name, date_added, size, status, 
                                             progress, download_type, filenamefetchmode, maxspeedlimitinkib, targetdir, primary_url,
                                             referer_url, auth, user, pass, proxy, proxy_host,
-                                            proxy_port, proxy_user, proxy_pass, proxy_type)
+                                            proxy_port, proxy_user, proxy_pass, proxy_type, group_id)
                                             VALUES(
                                             @id, @completed, @name, @date_added, @size, @status, 
                                             @progress, @download_type, @filenamefetchmode, @maxspeedlimitinkib, @targetdir, @primary_url,
                                             @referer_url, @auth, @user, @pass, @proxy, @proxy_host, 
-                                            @proxy_port, @proxy_user, @proxy_pass, @proxy_type)", db);
+                                            @proxy_port, @proxy_user, @proxy_pass, @proxy_type, @group_id)", db);
                     }
                     SetParam("@id", entry.Id, cmdInsertOne.Parameters);
                     SetParam("@completed", 0, cmdInsertOne.Parameters);
@@ -217,6 +222,7 @@ namespace Fluxo.Core.DataAccess
                     SetParam("@proxy_user", entry.Proxy?.UserName ?? null, cmdInsertOne.Parameters);
                     SetParam("@proxy_pass", entry.Proxy?.Password ?? null, cmdInsertOne.Parameters);
                     SetParam("@proxy_type", 1, cmdInsertOne.Parameters);
+                    SetParam("@group_id", entry.GroupId, cmdInsertOne.Parameters);
                     cmdInsertOne.ExecuteNonQuery();
                     return true;
                 }

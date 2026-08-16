@@ -30,6 +30,13 @@ namespace Fluxo.Core
 
         public int MaxSpeedLimitInKiB { get; set; }
 
+        /// <summary>
+        /// The <see cref="DownloadGroup"/> this belongs to, or null for a standalone
+        /// download. Members of a group are shown nested under one parent row rather
+        /// than as top-level entries.
+        /// </summary>
+        public string? GroupId { get; set; }
+
         public int CompareTo(object? obj)
         {
             if (obj == null) return 1;

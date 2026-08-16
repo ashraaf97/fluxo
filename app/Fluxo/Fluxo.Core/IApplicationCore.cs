@@ -26,7 +26,8 @@ namespace Fluxo.Core
             AuthenticationInfo? authentication,
             ProxyInfo? proxyInfo,
             string? queueId,
-            bool convertToMp3);
+            bool convertToMp3,
+            string? groupId = null);
 
         public void StopDownloads(IEnumerable<string> list, bool closeProgressWindow = false);
 

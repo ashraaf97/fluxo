@@ -18,6 +18,8 @@ namespace Fluxo.Core.DataAccess
         private AppDB() { }
         private DownloadList downloadsDB;
         public DownloadList Downloads => downloadsDB;
+        private DownloadGroupList groupsDB;
+        public DownloadGroupList Groups => groupsDB;
         private static AppDB instance;
         public static AppDB Instance
         {
@@ -49,6 +51,7 @@ namespace Fluxo.Core.DataAccess
                     db.Open();
                     SchemaInitializer.Init(db);
                     this.downloadsDB = new DownloadList(db);
+                    this.groupsDB = new DownloadGroupList(db);
                     return true;
                 }
                 catch (Exception ex)

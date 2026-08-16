@@ -105,7 +105,7 @@ namespace Fluxo.Core.UI
                     // dialog is earning its keep by letting you set the destination.
                     if (resolved.Folder != null)
                     {
-                        StartAll(resolved.Requests, resolved.Folder);
+                        StartAll(resolved.Requests, resolved.Folder, resolved.GroupName, input);
                     }
                     else
                     {
@@ -154,6 +154,9 @@ namespace Fluxo.Core.UI
         {
             public IList<IRequestData> Requests { get; set; } = new List<IRequestData>();
             public string? Folder { get; set; }
+
+            /// <summary>Torrent name, used to label the group's parent row.</summary>
+            public string? GroupName { get; set; }
         }
 
         /// <summary>
@@ -204,7 +207,8 @@ namespace Fluxo.Core.UI
             return new ResolveResult
             {
                 Requests = requests,
-                Folder = TorrentPaths.RootFolderFor(torrent)
+                Folder = TorrentPaths.RootFolderFor(torrent),
+                GroupName = torrent.Name
             };
         }
 
@@ -212,8 +216,16 @@ namespace Fluxo.Core.UI
         /// Queues every file of a torrent without further prompting, each into the
         /// sub-folder its path within the torrent implies.
         /// </summary>
-        private void StartAll(IEnumerable<IRequestData> requests, string rootFolder)
+        private void StartAll(IEnumerable<IRequestData> requests, string rootFolder,
+            string? groupName, string sourceUrl)
         {
+            // One group per torrent, so its files collapse into a single expandable
+            // row and the completion popup fires once rather than per file.
+            var group = DownloadGroupManager.Create(
+                string.IsNullOrWhiteSpace(groupName) ? "Torrent" : groupName!,
+                sourceUrl,
+                rootFolder);
+
             var started = 0;
             foreach (var request in requests)
             {
@@ -238,11 +250,12 @@ namespace Fluxo.Core.UI
                     null,
                     Config.Instance.Proxy,
                     null,
-                    false);
+                    false,
+                    group.Id);
                 started++;
             }
 
-            Log.Debug($"Queued {started} file(s) from torrent into {rootFolder}");
+            Log.Debug($"Queued {started} file(s) from torrent '{group.Name}' into {rootFolder}");
         }
 
         private static bool IsTorrentFilePath(string input)

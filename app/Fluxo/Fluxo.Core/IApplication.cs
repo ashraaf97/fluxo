@@ -52,7 +52,8 @@ namespace Fluxo.Core
             string? targetDir, DateTime date,
             long fileSize, string type, FileNameFetchMode fileNameFetchMode,
             string primaryUrl, DownloadStartType startType,
-            AuthenticationInfo? authentication, ProxyInfo? proxyInfo);
+            AuthenticationInfo? authentication, ProxyInfo? proxyInfo,
+            string? groupId = null);
 
         /// <summary>
         /// 

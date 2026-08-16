@@ -45,10 +45,12 @@ namespace Fluxo.Core
             string primaryUrl,
             DownloadStartType startType,
             AuthenticationInfo? authentication,
-            ProxyInfo? proxyInfo)
+            ProxyInfo? proxyInfo,
+            string? groupId = null)
         {
             var downloadEntry = new InProgressDownloadItem
             {
+                GroupId = groupId,
                 Name = targetFileName,
                 DateAdded = date,
                 DownloadType = type,
@@ -135,7 +137,10 @@ namespace Fluxo.Core
                     TargetDir = Path.GetDirectoryName(filePath)!,
                     PrimaryUrl = downloadEntry.PrimaryUrl,
                     Authentication = downloadEntry.Authentication,
-                    Proxy = downloadEntry.Proxy
+                    Proxy = downloadEntry.Proxy,
+                    // UpdateDownloadEntry does not write group_id, so the stored value
+                    // survives; this keeps the in-memory copy handed to the UI in step.
+                    GroupId = downloadEntry.GroupId
                 };
                 AppDB.Instance.Downloads.UpdateDownloadEntry(finishedEntry);
 

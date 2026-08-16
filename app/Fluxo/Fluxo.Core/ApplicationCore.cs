@@ -42,6 +42,23 @@ namespace Fluxo.Core
         public ApplicationCore()
         {
             ApplicationContext.Initialized += AppInstance_Initialized;
+
+            // One announcement per torrent, in place of the per-file ones that
+            // DownloadFinished suppresses for grouped downloads.
+            DownloadGroupManager.GroupCompleted += OnGroupCompleted;
+        }
+
+        private void OnGroupCompleted(object? sender, DownloadGroupEventArgs e)
+        {
+            if (!Config.Instance.ShowDownloadCompleteWindow)
+            {
+                return;
+            }
+
+            ApplicationContext.Application.RunOnUiThread(() =>
+            {
+                ApplicationContext.Application.ShowDownloadCompleteDialog(e.Group.Name, e.Group.TargetDir);
+            });
         }
 
         private void AppInstance_Initialized(object sender, EventArgs e)
@@ -79,7 +96,8 @@ namespace Fluxo.Core
             AuthenticationInfo? authentication,
             ProxyInfo? proxyInfo,
             string? queueId,
-            bool convertToMp3)
+            bool convertToMp3,
+            string? groupId = null)
         {
             Log.Debug($"Starting download: {fileName} {fileNameFetchMode} {convertToMp3}");
 
@@ -119,7 +137,7 @@ namespace Fluxo.Core
             }
             http.SetFileName(FileHelper.SanitizeFileName(fileName), fileNameFetchMode);
             http.SetTargetDirectory(targetFolder);
-            StartDownload(http, targetFolder, startImmediately, authentication, proxyInfo);
+            StartDownload(http, targetFolder, startImmediately, authentication, proxyInfo, groupId);
             return http.Id;
         }
 
@@ -127,7 +145,8 @@ namespace Fluxo.Core
             string? targetDir,
             bool startImmediately,
             AuthenticationInfo? authentication,
-            ProxyInfo? proxyInfo)
+            ProxyInfo? proxyInfo,
+            string? groupId = null)
         {
             if (!awakePingTimer.Enabled)
             {
@@ -150,7 +169,7 @@ namespace Fluxo.Core
             ApplicationContext.Application.AddItemToTop(id, download.TargetFileName, targetDir, DateTime.Now,
                 download.FileSize, download.Type, download.FileNameFetchMode,
                 download.PrimaryUrl?.ToString(), startType, authentication,
-                proxyInfo);
+                proxyInfo, groupId);
 
             if (startImmediately)
             {
@@ -439,6 +458,17 @@ namespace Fluxo.Core
                     activeProgressWindows.Remove(http.Id);
                     prgWin.DownloadId = null;
                     prgWin.DestroyWindow();
+                }
+
+                // Files that belong to a torrent do not each announce themselves.
+                // OnMemberFinished reports whether this was part of a group and, if it
+                // was the last one outstanding, raises GroupCompleted so the group
+                // announces itself once instead. The entry has already been marked
+                // finished above, so it is not counted as outstanding here.
+                var finishedEntry = AppDB.Instance.Downloads.GetDownloadById(http.Id);
+                if (DownloadGroupManager.OnMemberFinished(finishedEntry?.GroupId))
+                {
+                    showCompleteDialog = false;
                 }
 
                 if (showCompleteDialog)
