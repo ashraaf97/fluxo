@@ -581,7 +581,7 @@
                           GridViewColumnHeader.Click="lvInProgress_Click">
                         <ListView.View>
                             <GridView>
-                                <GridViewColumn Width="190">
+                                <GridViewColumn Width="235">
                                     <GridViewColumn.Header>
                                         <GridViewColumnHeader Tag="Name">
                                             <TextBlock Padding="34,0,0,0" Text="{StaticResource SORT_NAME}" />
@@ -621,7 +621,7 @@
                                         </DataTemplate>
                                     </GridViewColumn.CellTemplate>
                                 </GridViewColumn>
-                                <GridViewColumn Width="100" x:Name="p1">
+                                <GridViewColumn Width="85" x:Name="p1">
                                     <GridViewColumn.Header>
                                         <!-- Literal, as before: there is no translation
                                              key for "progress" and "%" needs none. -->
@@ -652,7 +652,7 @@
                                         </DataTemplate>
                                     </GridViewColumn.CellTemplate>
                                 </GridViewColumn>
-                                <GridViewColumn Width="70">
+                                <GridViewColumn Width="68">
                                     <GridViewColumn.Header>
                                         <GridViewColumnHeader Tag="Size">
                                             <TextBlock Text="{StaticResource SORT_SIZE}"/>
@@ -666,7 +666,7 @@
                                     </GridViewColumn.CellTemplate>
                                 </GridViewColumn>
                                 <!-- Carries speed and ETA, e.g. "2.1 MB/s, 00:02:54 left". -->
-                                <GridViewColumn Width="115">
+                                <GridViewColumn Width="105">
                                     <GridViewColumn.Header>
                                         <GridViewColumnHeader Tag="Status">
                                             <TextBlock Text="{StaticResource SORT_STATUS}"/>
@@ -680,7 +680,7 @@
                                         </DataTemplate>
                                     </GridViewColumn.CellTemplate>
                                 </GridViewColumn>
-                                <GridViewColumn Width="70">
+                                <GridViewColumn Width="68">
                                     <GridViewColumn.Header>
                                         <GridViewColumnHeader Tag="DateAdded" Name="lvInProgress_DateAdded">
                                             <TextBlock Text="{StaticResource SORT_DATE}"/>

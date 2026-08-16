@@ -13,13 +13,18 @@ It runs on **Windows** (WPF) and **Linux** (GTK).
 
 ## Screenshots
 
-> These are still upstream XDM's screenshots. The interface is unchanged apart from the
-> rename and the new Add Torrent dialog.
+The interface was rebuilt for Fluxo: a shared design language across both platforms,
+a light theme that is a real theme rather than a fallback, and torrents shown as one
+expandable row.
 
-| ![fluxo_1][01] | ![fluxo_5][05] | ![fluxo_3][03] |
-| --- | --- | --- |
-| ![fluxo_7][07] | ![fluxo_6][06] | ![fluxo_9][09] |
-| ![fluxo_4][04] | ![fluxo_2][02] |  |
+![Fluxo, dark theme](docs/screenshots/fluxo-dark.png)
+
+A torrent downloads as a single entry — expand it to see the individual files, with the
+parent summarising total size, combined progress and how many files are done.
+
+| Light theme | Settings |
+| --- | --- |
+| ![Fluxo, light theme](docs/screenshots/fluxo-light.png) | ![Fluxo settings](docs/screenshots/fluxo-settings.png) |
 
 
 ## Features
@@ -56,8 +61,17 @@ This requires an active AllDebrid subscription.
 | `.torrent` file | Uploaded to AllDebrid (use **Browse…**) |
 | Premium hoster link | Unlocked directly, no torrent involved |
 
-For a torrent, Fluxo waits while AllDebrid caches it, then lists the contents so you can
-tick the files you want. Each selected file becomes an ordinary download in the main list.
+For a torrent, Fluxo waits while AllDebrid caches it, then queues **every** file at once —
+there is no file picker to work through. The files are saved into a folder mirroring the
+torrent's own layout, so nested folders come out the same shape they went in.
+
+In the download list the torrent appears as a single row that expands to show its files,
+summarising total size, combined progress and how many files are done. Pausing, resuming
+or deleting that row applies to the whole torrent. Only one "download complete" notice is
+shown, once the last file lands.
+
+**Add torrent / magnet** is disabled until an API key is set, since without one there is
+nothing Fluxo can do with a torrent.
 
 ## Browser integration
 
@@ -105,7 +119,11 @@ builds it.
 
 - Renamed throughout, with its own branding, update feed and issue tracker.
 - Migrated from .NET Framework 4.x / .NET 5–6 to **.NET 10**.
-- Added **torrent support through AllDebrid**.
+- Added **torrent support through AllDebrid**, with a torrent's files grouped under one
+  expandable row.
+- **Rebuilt interface** on a shared design language across Windows and Linux. Upstream's
+  light theme had no control templates of its own and fell back to default system chrome;
+  both themes now render the same UI, and the theme can be switched without restarting.
 - Firefox extension migrated from **Manifest V2 to V3**.
 - TLS certificate validation is enforced. Upstream disabled it globally, which left every
   HTTPS download open to interception; it is now on by default, with an opt-out in
@@ -119,13 +137,3 @@ GPL, inherited from XDM — see [LICENSE](LICENSE). The bundled `ext-loader` ori
 from [xdm-helper-chrome](https://github.com/subhra74/xdm-helper-chrome) (GPLv3).
 
 
-[//]: #ImageLinks
-[01]: https://i.stack.imgur.com/s7ViA.jpg
-[02]: https://i.stack.imgur.com/90TQO.jpg
-[03]: https://i.stack.imgur.com/V5XF3.jpg
-[04]: https://i.stack.imgur.com/aFyH5.png
-[05]: https://i.stack.imgur.com/lmAr6.png
-[06]: https://i.stack.imgur.com/H4yMj.png
-[07]: https://i.stack.imgur.com/8ulBq.png
-[08]: https://i.stack.imgur.com/Gfgae.jpg
-[09]: https://i.stack.imgur.com/GlVDC.png
