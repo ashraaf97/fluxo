@@ -111,11 +111,40 @@ namespace Fluxo.Core.Clients.Http
                 {
                     if (values != null && values.Count > 0)
                     {
-                        req.Content.Headers.ContentType = new MediaTypeHeaderValue(values[0]);
+                        SetContentType(req.Content, values[0]);
                     }
                 }
             }
             return new HttpRequest { Session = new DotNetHttpSession { Request = req } };
+        }
+
+        /// <summary>
+        /// Applies a Content-Type that may carry parameters, such as
+        /// "multipart/form-data; boundary=----X".
+        ///
+        /// The MediaTypeHeaderValue(string) constructor accepts a bare media type
+        /// only and throws FormatException on anything with a parameter, so a
+        /// multipart upload failed with "The format of value ... is invalid" while a
+        /// plain form post worked. Parse handles the full header value.
+        /// </summary>
+        internal static void SetContentType(HttpContent content, string? value)
+        {
+            if (string.IsNullOrWhiteSpace(value))
+            {
+                return;
+            }
+
+            try
+            {
+                content.Headers.ContentType = MediaTypeHeaderValue.Parse(value);
+            }
+            catch (FormatException)
+            {
+                // Never let an odd content type sink the request: send it unvalidated
+                // and let the server decide.
+                content.Headers.Remove("Content-Type");
+                content.Headers.TryAddWithoutValidation("Content-Type", value);
+            }
         }
 
         public HttpResponse Send(HttpRequest request)
