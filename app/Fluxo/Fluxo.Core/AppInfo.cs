@@ -6,7 +6,7 @@ namespace Fluxo.Core
 {
     public static class AppInfo
     {
-        public static string APP_VERSION = "8.0.28";
+        public static string APP_VERSION = "8.0.29";
         public static string APP_VERSION_TEXT = $"Fluxo {APP_VERSION} BETA";
         // Upstream copyright is retained deliberately: Fluxo is a fork of XDM and
         // the original author holds copyright on the code this is derived from.

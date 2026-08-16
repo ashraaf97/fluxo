@@ -19,7 +19,7 @@
     <StartupObject>Fluxo.Wpf.UI.App</StartupObject>
     <Description>Fluxo</Description>
     <AssemblyTitle>Fluxo</AssemblyTitle>
-    <AssemblyVersion>8.0.28</AssemblyVersion>
+    <AssemblyVersion>8.0.29</AssemblyVersion>
     <EnableNETAnalyzers>true</EnableNETAnalyzers>
     <DefineConstants>TRACE;WINDOWS</DefineConstants>
   </PropertyGroup>
@@ -77,6 +77,12 @@
     <None Update="fluxo-logo.ico">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- Embedded rather than copied, so the About dialog cannot end up with a
+         missing image if the output directory is incomplete. -->
+    <Resource Include="fluxo-logo-256.png" />
   </ItemGroup>
 
   <ItemGroup>

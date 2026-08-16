@@ -7,25 +7,44 @@
         mc:Ignorable="d"
         Title="{StaticResource MENU_ABOUT}" Height="450" Width="500" ShowInTaskbar="False" WindowStartupLocation="CenterOwner">
     <Grid>
-        <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
-            <Canvas Width="128" Height="128" Background="#2471A3">
-                <Canvas.Clip>
-                    <RectangleGeometry Rect="0,0,128,128" />
-                </Canvas.Clip>
-                <Ellipse Width="200" Height="100" Canvas.Left="-36" Canvas.Top="-30" Fill="#3498DB"/>
-                <Rectangle Width="30" Height="50" Fill="White" Canvas.Left="49" Canvas.Top="30"/>
-                <Polygon Points="34,70 94,70, 64,100" Fill="White" />
-            </Canvas>
-            <TextBlock Name="TxtAppVersion"  FontSize="16" Padding="10,20,10,10" HorizontalAlignment="Center"/>
-            <TextBlock Name="TxtCopyright"  Padding="10,0" HorizontalAlignment="Center"/>
-            <TextBlock Name="TxtWebsite"  Cursor="Hand" Foreground="DeepSkyBlue" 
-                       Padding="10" FontSize="14" HorizontalAlignment="Center" MouseDown="TextBlock_MouseDown"/>
+        <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Margin="24">
+            <!-- The app icon itself. This used to be the old XDM mark hand-drawn from
+                 a Canvas, an Ellipse and a Polygon, which is why it survived the
+                 rebrand: there was no image file to replace. -->
+            <Image Source="/fluxo-logo-256.png"
+                   Width="112" Height="112"
+                   HorizontalAlignment="Center"
+                   RenderOptions.BitmapScalingMode="HighQuality"
+                   SnapsToDevicePixels="True"/>
+
+            <TextBlock Name="TxtAppVersion"
+                       FontSize="{DynamicResource FontSizeTitle}"
+                       FontWeight="SemiBold"
+                       Foreground="{DynamicResource TextPrimary}"
+                       Margin="0,20,0,0" HorizontalAlignment="Center"/>
+
+            <TextBlock Name="TxtCopyright"
+                       Foreground="{DynamicResource TextSecondary}"
+                       Margin="0,8,0,0" TextAlignment="Center" HorizontalAlignment="Center"/>
+
+            <TextBlock Name="TxtWebsite" Cursor="Hand"
+                       Foreground="{DynamicResource HyperlinkForecolor}"
+                       FontSize="{DynamicResource FontSizeBodyLarge}"
+                       Margin="0,12,0,0" HorizontalAlignment="Center"
+                       MouseDown="TextBlock_MouseDown"/>
+
+            <Border Margin="0,20,0,0" Height="1" Width="220"
+                    Background="{DynamicResource BorderSubtle}"/>
+
             <TextBlock Name="TxtOSInfo"
-                       Padding="0,10,0,3" HorizontalAlignment="Center"/>
+                       Foreground="{DynamicResource TextTertiary}"
+                       Margin="0,16,0,0" HorizontalAlignment="Center"/>
             <TextBlock Name="TxtNetFxInfo"
-                       Padding="3" HorizontalAlignment="Center"/>
+                       Foreground="{DynamicResource TextTertiary}"
+                       Margin="0,4,0,0" HorizontalAlignment="Center"/>
             <TextBlock Name="TxtMSIXInfo"
-                       Padding="3" HorizontalAlignment="Center"/>
+                       Foreground="{DynamicResource TextTertiary}"
+                       Margin="0,4,0,0" HorizontalAlignment="Center"/>
         </StackPanel>
     </Grid>
 </Window>
