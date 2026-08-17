@@ -19,6 +19,7 @@ using Fluxo.Core.Downloader.Adaptive.Hls;
 using Fluxo.Core.Downloader.Adaptive.Dash;
 using Fluxo.Core.Downloader.Progressive;
 using Fluxo.Core.Downloader.Torrent;
+using Fluxo.Core.Rss;
 using Fluxo.Core.DataAccess;
 using Fluxo.Core.IO;
 
@@ -81,7 +82,18 @@ namespace Fluxo.Core
 
             StartScheduler();
             StartBrowserMonitoring();
+
+            // Does nothing unless RSS has been switched on, so an install that never
+            // subscribes to anything makes no outbound requests.
+            Rss.Start();
         }
+
+        /// <summary>
+        /// The feed watcher. Held here so the settings dialog can re-apply its
+        /// interval, and the UI can list and refresh feeds, without either of them
+        /// owning the timer.
+        /// </summary>
+        public RssService Rss { get; } = new RssService();
 
         public void StartBrowserMonitoring()
         {

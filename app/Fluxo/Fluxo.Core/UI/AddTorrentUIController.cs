@@ -176,7 +176,7 @@ namespace Fluxo.Core.UI
                     // dialog is earning its keep by letting you set the destination.
                     if (resolved.Folder != null)
                     {
-                        StartAll(resolved.Requests, resolved.Folder, resolved.GroupName, input);
+                        DebridTorrentResolver.StartAll(resolved.Requests, resolved.Folder, resolved.GroupName, input);
                     }
                     else
                     {
@@ -217,48 +217,16 @@ namespace Fluxo.Core.UI
             => ApplicationContext.Application.ShowMessageBox(this.view, message);
 
         /// <summary>
-        /// What a resolved input turned into. <see cref="Folder"/> is null when the
-        /// result should go through the selection dialog, and set to the torrent's
-        /// destination root when it should be queued directly.
-        /// </summary>
-        private sealed class ResolveResult
-        {
-            public IList<IRequestData> Requests { get; set; } = new List<IRequestData>();
-            public string? Folder { get; set; }
-
-            /// <summary>Torrent name, used to label the group's parent row.</summary>
-            public string? GroupName { get; set; }
-        }
-
-        /// <summary>
-        /// Resolves user input into download requests. A plain hoster URL unlocks
-        /// straight to a single link; magnets and .torrent files go through the
-        /// torrent flow and can yield many files.
+        /// Resolves user input into download requests. The journey itself lives in
+        /// <see cref="DebridTorrentResolver"/>, shared with RSS auto-download; what
+        /// stays here is reporting progress back into the dialog.
         /// </summary>
         private ResolveResult Resolve(string input)
         {
             void Progress(string text) => this.view.RunOnUiThread(() => this.view.StatusText = text);
 
-            var service = ServiceFor(input);
-
-            if (IsTorrentFilePath(input))
-            {
-                var bytes = File.ReadAllBytes(input);
-                return FromTorrent(service, service.ResolveTorrentFile(bytes, Path.GetFileName(input), Progress, this.cancelFlag), Progress);
-            }
-
-            if (IsMagnet(input))
-            {
-                return FromTorrent(service, service.ResolveMagnet(input, Progress, this.cancelFlag), Progress);
-            }
-
-            // Anything else is treated as a premium hoster link. Nothing to pick
-            // from, so it unlocks straight to a single download.
-            var link = service.UnlockLink(input);
-            return new ResolveResult
-            {
-                Requests = new List<IRequestData> { ToRequest(link.Url, link.FileName, link.Size) }
-            };
+            return new DebridTorrentResolver(ServiceFor(input), this.cancelFlag)
+                .ResolveInput(input, Progress);
         }
 
         /// <summary>
@@ -275,139 +243,10 @@ namespace Fluxo.Core.UI
             return IsTorrentInput(input) ? DebridSupport.CreateForTorrents() : DebridSupport.Create();
         }
 
-        private static bool IsTorrentInput(string input)
-            => IsMagnet(input) || IsTorrentFilePath(input);
+        // Shared with RSS auto-download, which has to classify the same inputs.
+        private static bool IsTorrentInput(string input) => DebridTorrentResolver.IsTorrentInput(input);
 
-        private static bool IsMagnet(string input)
-            => input.StartsWith("magnet:", StringComparison.OrdinalIgnoreCase);
+        private static bool IsTorrentFilePath(string input) => DebridTorrentResolver.IsTorrentFilePath(input);
 
-        private ResolveResult FromTorrent(IDebridService service, DebridTorrent torrent, Action<string> progress)
-        {
-            var requests = Unlock(service, torrent.Files, progress);
-
-            // One file behaves as it always has, so the picker still offers a
-            // destination for the common "grab this one file" case. The picker has
-            // nowhere to put a folder prefix, so flatten to the bare name.
-            if (torrent.Files.Count < 2)
-            {
-                foreach (var request in requests)
-                {
-                    request.File = TorrentPaths.FileNameOf(request.File ?? string.Empty);
-                }
-                return new ResolveResult { Requests = requests };
-            }
-
-            return new ResolveResult
-            {
-                Requests = requests,
-                Folder = TorrentPaths.RootFolderFor(torrent),
-                GroupName = torrent.Name
-            };
-        }
-
-        /// <summary>
-        /// Queues every file of a torrent without further prompting, each into the
-        /// sub-folder its path within the torrent implies.
-        /// </summary>
-        private void StartAll(IEnumerable<IRequestData> requests, string rootFolder,
-            string? groupName, string sourceUrl)
-        {
-            // One group per torrent, so its files collapse into a single expandable
-            // row and the completion popup fires once rather than per file.
-            var group = DownloadGroupManager.Create(
-                string.IsNullOrWhiteSpace(groupName) ? "Torrent" : groupName!,
-                sourceUrl,
-                rootFolder);
-
-            var started = 0;
-            foreach (var request in requests)
-            {
-                // File carries the torrent-relative path; split it back into the
-                // directory to create and the name to save under.
-                var relativePath = request.File ?? string.Empty;
-                var directory = TorrentPaths.DirectoryOf(relativePath);
-                var name = TorrentPaths.FileNameOf(relativePath);
-
-                var targetFolder = string.IsNullOrEmpty(directory)
-                    ? rootFolder
-                    : Path.Combine(rootFolder, directory);
-
-                request.File = name;
-
-                ApplicationContext.CoreService.StartDownload(
-                    request,
-                    name,
-                    FileNameFetchMode.None,
-                    targetFolder,
-                    Config.Instance.StartDownloadAutomatically,
-                    null,
-                    Config.Instance.Proxy,
-                    null,
-                    false,
-                    group.Id);
-                started++;
-            }
-
-            Log.Debug($"Queued {started} file(s) from torrent '{group.Name}' into {rootFolder}");
-        }
-
-        private static bool IsTorrentFilePath(string input)
-            => input.EndsWith(".torrent", StringComparison.OrdinalIgnoreCase) && File.Exists(input);
-
-        /// <summary>
-        /// Converts the service's restricted links into direct URLs.
-        ///
-        /// This happens before the file picker rather than after, because the
-        /// picker starts downloads itself and offers no hook in between. The cost
-        /// is unlocking files the user may then deselect; the alternative would be
-        /// modifying the shared selection controller. Direct URLs are time limited,
-        /// but comfortably outlive the few seconds between here and the picker.
-        /// </summary>
-        private IList<IRequestData> Unlock(IDebridService service, IList<DebridFile> files, Action<string> progress)
-        {
-            var results = new List<IRequestData>(files.Count);
-            var index = 0;
-            foreach (var file in files)
-            {
-                this.cancelFlag.ThrowIfCancellationRequested();
-                index++;
-                progress($"Preparing links {index}/{files.Count}...");
-
-                try
-                {
-                    var link = service.UnlockLink(file.RestrictedLink);
-
-                    // Carry the torrent-relative path, not just the file name, so the
-                    // caller can rebuild the folder structure. The single-file path
-                    // flattens this back to a bare name before showing the picker.
-                    var relativePath = string.IsNullOrEmpty(file.Path)
-                        ? (string.IsNullOrEmpty(link.FileName) ? file.FileName : link.FileName!)
-                        : file.Path;
-
-                    results.Add(ToRequest(link.Url,
-                        relativePath,
-                        link.Size > 0 ? link.Size : file.Size));
-                }
-                catch (DebridException ex)
-                {
-                    // One bad file should not sink the whole torrent.
-                    Log.Debug($"Skipping '{file.FileName}', unlock failed: {ex.Code ?? ex.Message}");
-                }
-            }
-
-            if (results.Count == 0)
-            {
-                throw new DebridException(TextResource.GetText("MSG_DEBRID_FAILED"));
-            }
-            return results;
-        }
-
-        private static IRequestData ToRequest(string url, string? fileName, long size)
-            => new SingleSourceHTTPDownloadInfo
-            {
-                Uri = url,
-                File = string.IsNullOrEmpty(fileName) ? FileHelper.GetFileName(new Uri(url)) : fileName!,
-                ContentLength = size
-            };
     }
 }

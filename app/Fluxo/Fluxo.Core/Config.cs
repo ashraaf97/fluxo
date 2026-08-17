@@ -194,6 +194,25 @@ namespace Fluxo.Core
 
         public TorrentEncryptionMode TorrentEncryption { get; set; } = TorrentEncryptionMode.Prefer;
 
+        // ------------------------------------------------------------------ RSS
+
+        /// <summary>
+        /// Off until asked for. Refreshing feeds means periodic outbound requests
+        /// and, with rules in place, downloads starting unattended - neither of which
+        /// should happen because the app was merely installed.
+        /// </summary>
+        public bool RssEnabled { get; set; } = false;
+
+        /// <summary>How often feeds are re-read. Clamped to something sane on use.</summary>
+        public int RssRefreshMinutes { get; set; } = 30;
+
+        /// <summary>
+        /// Articles kept per feed. The history is what stops a rule re-downloading
+        /// something, so it has to outlive the feed's own window, but not grow
+        /// without limit.
+        /// </summary>
+        public int RssMaxArticlesPerFeed { get; set; } = 200;
+
         public bool TorrentEnableDht { get; set; } = true;
 
         public bool TorrentEnablePeerExchange { get; set; } = true;

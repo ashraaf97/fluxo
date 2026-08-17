@@ -247,6 +247,15 @@ namespace Fluxo.Core.IO
                     case "TorrentEncryption":
                         instance.TorrentEncryption = (TorrentEncryptionMode)r.ReadInt32();
                         break;
+                    case "RssEnabled":
+                        instance.RssEnabled = r.ReadBoolean();
+                        break;
+                    case "RssRefreshMinutes":
+                        instance.RssRefreshMinutes = r.ReadInt32();
+                        break;
+                    case "RssMaxArticlesPerFeed":
+                        instance.RssMaxArticlesPerFeed = r.ReadInt32();
+                        break;
                     case "TorrentEnableDht":
                         instance.TorrentEnableDht = r.ReadBoolean();
                         break;
@@ -537,6 +546,12 @@ namespace Fluxo.Core.IO
             WriteBoolean(w, instance.TorrentEnableSuperSeeding, "TorrentEnableSuperSeeding");
             count++;
             WriteInt32(w, (int)instance.TorrentEncryption, "TorrentEncryption");
+            count++;
+            WriteBoolean(w, instance.RssEnabled, "RssEnabled");
+            count++;
+            WriteInt32(w, instance.RssRefreshMinutes, "RssRefreshMinutes");
+            count++;
+            WriteInt32(w, instance.RssMaxArticlesPerFeed, "RssMaxArticlesPerFeed");
             count++;
             WriteBoolean(w, instance.TorrentEnableDht, "TorrentEnableDht");
             count++;
