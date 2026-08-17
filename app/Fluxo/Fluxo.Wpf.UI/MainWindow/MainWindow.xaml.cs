@@ -457,14 +457,11 @@ namespace Fluxo.Wpf.UI
         {
             var nctx = (ContextMenu)FindResource("newDownloadContextMenu");
 
-            // Torrents go through a debrid service, so without an API key there is
-            // nothing this entry can do. Checked on every open so adding a key in
-            // Settings takes effect immediately.
+            // Always available now: a torrent no debrid service can take falls back
+            // to Fluxo's own BitTorrent engine, which needs no subscription.
             var torrentItem = (MenuItem)nctx.Items[3];
-            torrentItem.IsEnabled = DebridSupport.IsConfigured;
-            torrentItem.ToolTip = torrentItem.IsEnabled
-                ? null
-                : TextResource.GetText("MSG_DEBRID_NO_KEY");
+            torrentItem.IsEnabled = true;
+            torrentItem.ToolTip = null;
 
             nctx.PlacementTarget = BtnNew;
             nctx.Placement = PlacementMode.Bottom;

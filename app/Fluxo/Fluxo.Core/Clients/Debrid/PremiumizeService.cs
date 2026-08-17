@@ -6,6 +6,7 @@ using System.Threading;
 using Newtonsoft.Json.Linq;
 using TraceLog;
 using Fluxo.Core.Clients.Http;
+using Fluxo.Core.Util;
 
 namespace Fluxo.Core.Clients.Debrid
 {
@@ -369,28 +370,7 @@ namespace Fluxo.Core.Clients.Debrid
         /// The display name carried by a magnet, used only to give a multi-file
         /// torrent a folder when its own paths do not supply one.
         /// </summary>
-        internal static string? NameFromMagnet(string magnet)
-        {
-            const string marker = "dn=";
-            var start = magnet.IndexOf(marker, StringComparison.OrdinalIgnoreCase);
-            if (start < 0)
-            {
-                return null;
-            }
-
-            start += marker.Length;
-            var end = magnet.IndexOf('&', start);
-            var value = end < 0 ? magnet.Substring(start) : magnet.Substring(start, end - start);
-
-            try
-            {
-                return Uri.UnescapeDataString(value.Replace('+', ' ')).Trim();
-            }
-            catch (Exception)
-            {
-                return null;
-            }
-        }
+        internal static string? NameFromMagnet(string magnet) => MagnetHelper.DisplayName(magnet);
 
         internal static bool IsPremiumizeLink(string link)
             => Uri.TryCreate(link, UriKind.Absolute, out var uri)

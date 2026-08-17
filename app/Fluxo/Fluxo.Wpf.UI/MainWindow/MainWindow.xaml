@@ -679,6 +679,37 @@
                                         </DataTemplate>
                                     </GridViewColumn.CellTemplate>
                                 </GridViewColumn>
+                                <!-- Torrent columns. Bound to properties that stay empty
+                                     for every other kind of download, so the list reads
+                                     as before when no torrent is running. -->
+                                <GridViewColumn Width="72">
+                                    <GridViewColumn.Header>
+                                        <GridViewColumnHeader Tag="UploadSpeed">
+                                            <TextBlock Text="{StaticResource SORT_UPLOAD}"/>
+                                        </GridViewColumnHeader>
+                                    </GridViewColumn.Header>
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding UploadSpeed}"
+                                                       TextTrimming="CharacterEllipsis"
+                                                       Foreground="{DynamicResource TextSecondary}"/>
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+                                <GridViewColumn Width="82">
+                                    <GridViewColumn.Header>
+                                        <GridViewColumnHeader Tag="Peers">
+                                            <TextBlock Text="{StaticResource SORT_PEERS}"/>
+                                        </GridViewColumnHeader>
+                                    </GridViewColumn.Header>
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding Peers}"
+                                                       TextTrimming="CharacterEllipsis"
+                                                       Foreground="{DynamicResource TextSecondary}"/>
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
                                 <GridViewColumn Width="68">
                                     <GridViewColumn.Header>
                                         <GridViewColumnHeader Tag="DateAdded" Name="lvInProgress_DateAdded">

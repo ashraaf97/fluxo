@@ -638,7 +638,11 @@ namespace Fluxo.GtkUI
                 typeof(string),                                             // size
                 typeof(int),                                                // progress
                 typeof(string),                                             // status
-                typeof(InProgressDownloadItem)                             // download type
+                typeof(InProgressDownloadItem),                            // download type
+                // Torrent only, and appended after the entry so that every existing
+                // index into this store keeps pointing at the same thing.
+                typeof(string),                                             // upload speed
+                typeof(string)                                              // seeds / peers
                 );
 
             inprogressDownloadFilter = new TreeModelFilter(inprogressDownloadsStore, null);
@@ -783,6 +787,32 @@ namespace Fluxo.GtkUI
             };
             statusColumn.SetAttributes(statusRendererText, "text", 4);
             lvInprogress.AppendColumn(statusColumn);
+
+            // Torrent columns. They stay blank for every other kind of download, so
+            // the list reads the same as before when no torrent is running.
+            var uploadRendererText = new CellRendererText();
+            uploadRendererText.SetPadding(5, 8);
+            var uploadColumn = new TreeViewColumn(TextResource.GetText("SORT_UPLOAD"), uploadRendererText, "text", 6)
+            {
+                Resizable = true,
+                Reorderable = false,
+                Sizing = TreeViewColumnSizing.Fixed,
+                FixedWidth = 80
+            };
+            uploadColumn.SetAttributes(uploadRendererText, "text", 6);
+            lvInprogress.AppendColumn(uploadColumn);
+
+            var peersRendererText = new CellRendererText();
+            peersRendererText.SetPadding(5, 8);
+            var peersColumn = new TreeViewColumn(TextResource.GetText("SORT_PEERS"), peersRendererText, "text", 7)
+            {
+                Resizable = true,
+                Reorderable = false,
+                Sizing = TreeViewColumnSizing.Fixed,
+                FixedWidth = 80
+            };
+            peersColumn.SetAttributes(peersRendererText, "text", 7);
+            lvInprogress.AppendColumn(peersColumn);
 
             lvInprogress.Selection.Changed += (_, _) =>
             {
@@ -1214,13 +1244,10 @@ namespace Fluxo.GtkUI
 
         public void OpenNewDownloadMenu()
         {
-            // Torrents go through a debrid service, so without an API key there is
-            // nothing this entry can do. Checked on every open so adding a key in
-            // Settings takes effect immediately.
-            menuAddTorrent.Sensitive = DebridSupport.IsConfigured;
-            menuAddTorrent.TooltipText = menuAddTorrent.Sensitive
-                ? null
-                : TextResource.GetText("MSG_DEBRID_NO_KEY");
+            // Always available now: a torrent no debrid service can take falls back
+            // to Fluxo's own BitTorrent engine, which needs no subscription.
+            menuAddTorrent.Sensitive = true;
+            menuAddTorrent.TooltipText = null;
 
             newDownloadMenu.PopupAtWidget(this.btnNew, Gdk.Gravity.SouthWest, Gdk.Gravity.NorthWest, null);
         }

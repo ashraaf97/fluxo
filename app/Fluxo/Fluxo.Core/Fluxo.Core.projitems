@@ -194,6 +194,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Downloader\Torrent\TorrentDownloader.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Downloader\Torrent\TorrentDownloadInfo.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Downloader\Torrent\SeedingPolicy.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Util\MagnetHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Clients\Debrid\DebridFile.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Clients\Debrid\DebridTorrent.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DownloadGroup.cs" />

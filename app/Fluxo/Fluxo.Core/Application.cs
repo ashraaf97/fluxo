@@ -325,6 +325,22 @@ namespace Fluxo.Core
             ApplicationContext.MainWindow.RunOnUIThread(this.updateProgressAction, id, progress, speed, eta);
         }
 
+        public void UpdateSwarmStats(string id, double uploadSpeed, long uploaded, int seeds, int peers)
+        {
+            // Nothing is written to the database: these are live readings that mean
+            // nothing once the engine has stopped.
+            ApplicationContext.MainWindow.RunOnUIThread(() =>
+            {
+                var row = ApplicationContext.MainWindow.FindInProgressItem(id);
+                if (row == null)
+                {
+                    return;
+                }
+                row.UploadSpeed = FormattingHelper.FormatSize(uploadSpeed) + "/s";
+                row.Peers = $"{seeds} / {peers}";
+            });
+        }
+
         private void LoadDownloadList()
         {
             try

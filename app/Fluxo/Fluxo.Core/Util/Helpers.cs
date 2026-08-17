@@ -220,6 +220,8 @@ namespace Fluxo.Core.Util
                     return TextResource.GetText("STAT_FINISHED");
                 case DownloadStatus.Waiting:
                     return TextResource.GetText("STAT_WAITING");
+                case DownloadStatus.Seeding:
+                    return TextResource.GetText("STAT_SEEDING");
                 default:
                     return status.ToString();
             }

@@ -215,7 +215,15 @@ namespace Fluxo.Core.Downloader.Torrent
                     Progress = (int)Math.Round(Math.Clamp(current.Progress, 0, 100)),
                     DownloadSpeed = speed,
                     Downloaded = downloaded,
-                    Eta = speed > 0 && remaining > 0 ? remaining / speed : 0
+                    Eta = speed > 0 && remaining > 0 ? remaining / speed : 0,
+
+                    HasSwarmStats = true,
+                    UploadSpeed = current.Monitor.UploadRate,
+                    Uploaded = current.Monitor.DataBytesSent,
+                    // Leechs, not Available: the latter is the pool of known
+                    // addresses, which reads as a wildly inflated peer count.
+                    Seeds = current.Peers.Seeds,
+                    Peers = current.Peers.Leechs
                 });
 
                 this.lastReportedDownloaded = downloaded;

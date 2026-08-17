@@ -62,6 +62,20 @@ namespace Fluxo.Core
         public string? DownloadSpeed { get; set; }
 
         public string? ETA { get; set; }
+
+        /// <summary>
+        /// Torrent only, and deliberately not persisted: upload rate, swarm counts
+        /// and share ratio are live readings that mean nothing once the engine has
+        /// stopped. They stay empty for every other kind of download.
+        /// </summary>
+        public string? UploadSpeed { get; set; }
+
+        /// <summary>Connected seeds and peers, already formatted, e.g. "12 / 34".</summary>
+        public string? Peers { get; set; }
+
+        public string? Ratio { get; set; }
+
+        public bool IsTorrent => DownloadType == Downloader.DownloadTypes.Torrent;
     }
 
     public class FinishedDownloadItem : DownloadItemBase
@@ -70,6 +84,12 @@ namespace Fluxo.Core
 
     public enum DownloadStatus
     {
-        Downloading, Stopped, Finished, Waiting
+        Downloading, Stopped, Finished, Waiting,
+
+        /// <summary>
+        /// A torrent that has finished downloading and is uploading back. Appended
+        /// rather than inserted because the values are persisted as integers.
+        /// </summary>
+        Seeding
     }
 }

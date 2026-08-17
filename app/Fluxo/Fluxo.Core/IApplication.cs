@@ -17,6 +17,13 @@ namespace Fluxo.Core
         /// <param name="id"></param>
         /// <param name="progress"></param>
         void UpdateProgress(string id, int progress, double speed, long eta);
+
+        /// <summary>
+        /// Live swarm readings for a torrent row. Separate from
+        /// <see cref="UpdateProgress"/> because none of it is persisted and none of
+        /// it applies to an HTTP download.
+        /// </summary>
+        void UpdateSwarmStats(string id, double uploadSpeed, long uploaded, int seeds, int peers);
         /// <summary>
         /// 
         /// </summary>

@@ -222,6 +222,30 @@ namespace Fluxo.Wpf.UI
         }
 
         /// <summary>
+        /// Torrent only. Both stay empty for every other kind of download, which is
+        /// what keeps the two extra columns unobtrusive when no torrent is running.
+        /// </summary>
+        public string UploadSpeed
+        {
+            get => entry.UploadSpeed ?? string.Empty;
+            set
+            {
+                entry.UploadSpeed = value;
+                OnPropertyChanged(nameof(UploadSpeed));
+            }
+        }
+
+        public string Peers
+        {
+            get => entry.Peers ?? string.Empty;
+            set
+            {
+                entry.Peers = value;
+                OnPropertyChanged(nameof(Peers));
+            }
+        }
+
+        /// <summary>
         /// This needs to be called after updating download speed or stopping the download
         /// </summary>
         public void UpdateStatusText()

@@ -25,6 +25,14 @@ namespace Fluxo.Core.UI
 
         public string ETA { get; set; }
 
+        /// <summary>
+        /// Torrent columns. Empty for every other kind of download, which is what
+        /// keeps the list readable when no torrent is running.
+        /// </summary>
+        public string UploadSpeed { get; set; }
+
+        public string Peers { get; set; }
+
         public InProgressDownloadItem DownloadEntry { get; }
     }
 }

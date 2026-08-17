@@ -7,6 +7,7 @@ using TraceLog;
 using Translations;
 using Fluxo.Core.Clients.Debrid;
 using Fluxo.Core.Downloader;
+using Fluxo.Core.Downloader.Torrent;
 using Fluxo.Core.Downloader.Progressive.SingleHttp;
 using Fluxo.Core.Util;
 
@@ -79,15 +80,19 @@ namespace Fluxo.Core.UI
                 return;
             }
 
+            // A torrent with no debrid service able to take it falls back to Fluxo's
+            // own BitTorrent engine, which needs no subscription. A hoster link has
+            // no such fallback: unlocking it is exactly what a debrid service is for.
+            if (IsTorrentInput(input) && !ServiceFor(input).IsConfigured)
+            {
+                StartNativeTorrent(input);
+                return;
+            }
+
             var service = ServiceFor(input);
             if (!service.IsConfigured)
             {
-                // A torrent with only a link-only service set up is a different
-                // problem from nothing being set up at all, and says so.
-                ShowMessage(TextResource.GetText(
-                    IsTorrentInput(input) && DebridSupport.IsConfigured
-                        ? "MSG_DEBRID_NO_TORRENT_SERVICE"
-                        : "MSG_DEBRID_NO_KEY"));
+                ShowMessage(TextResource.GetText("MSG_DEBRID_NO_KEY"));
                 return;
             }
 
@@ -99,6 +104,59 @@ namespace Fluxo.Core.UI
             // cache, so it must not run on the UI thread.
             var thread = new Thread(() => ResolveInBackground(input)) { IsBackground = true };
             thread.Start();
+        }
+
+        /// <summary>
+        /// Hands the input to Fluxo's own BitTorrent engine. Unlike the debrid path
+        /// there is nothing to resolve first - the engine takes the magnet or the
+        /// file directly - so this returns immediately and the download appears in
+        /// the list straight away.
+        /// </summary>
+        private void StartNativeTorrent(string input)
+        {
+            try
+            {
+                var info = BuildNativeRequest(input);
+
+                ApplicationContext.CoreService.StartDownload(
+                    info,
+                    info.File,
+                    FileNameFetchMode.None,
+                    Config.Instance.DefaultDownloadFolder,
+                    Config.Instance.StartDownloadAutomatically,
+                    null,
+                    Config.Instance.Proxy,
+                    null,
+                    false);
+
+                this.view.DestroyWindow();
+            }
+            catch (Exception ex)
+            {
+                Log.Debug(ex, "Failed to start native torrent");
+                ShowMessage(TextResource.GetText("MSG_DEBRID_FAILED"));
+            }
+        }
+
+        private static TorrentDownloadInfo BuildNativeRequest(string input)
+        {
+            if (IsTorrentFilePath(input))
+            {
+                return new TorrentDownloadInfo
+                {
+                    TorrentFile = File.ReadAllBytes(input),
+
+                    // A placeholder until the metadata supplies the real name, which
+                    // the downloader adopts once the torrent is loaded.
+                    File = Path.GetFileNameWithoutExtension(input)
+                };
+            }
+
+            return new TorrentDownloadInfo
+            {
+                MagnetUri = input,
+                File = MagnetHelper.DisplayName(input) ?? "Torrent"
+            };
         }
 
         private void ResolveInBackground(string input)

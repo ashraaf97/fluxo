@@ -102,6 +102,28 @@ namespace Fluxo.GtkUI
             }
         }
 
+        // Columns 6 and 7 are appended after the entry rather than inserted before
+        // it, so every existing index into this store stays where it was.
+        public string UploadSpeed
+        {
+            get => DownloadEntry.UploadSpeed ?? string.Empty;
+            set
+            {
+                this.DownloadEntry.UploadSpeed = value;
+                store.SetValue(treeIter, 6, value);
+            }
+        }
+
+        public string Peers
+        {
+            get => DownloadEntry.Peers ?? string.Empty;
+            set
+            {
+                this.DownloadEntry.Peers = value;
+                store.SetValue(treeIter, 7, value);
+            }
+        }
+
         internal TreeIter TreeIter => treeIter;
 
         public ITreeModel GetStore()

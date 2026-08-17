@@ -18,6 +18,7 @@ using Fluxo.Core.Downloader.Progressive.SingleHttp;
 using Fluxo.Core.Downloader.Adaptive.Hls;
 using Fluxo.Core.Downloader.Adaptive.Dash;
 using Fluxo.Core.Downloader.Progressive;
+using Fluxo.Core.Downloader.Torrent;
 using Fluxo.Core.DataAccess;
 using Fluxo.Core.IO;
 
@@ -124,6 +125,10 @@ namespace Fluxo.Core
                 case MultiSourceDASHDownloadInfo info:
                     http = new MultiSourceDASHDownloader(info, authentication: authentication,
                         proxy: proxyInfo, mediaProcessor: new FFmpegMediaProcessor());
+                    RequestDataIO.SaveDownloadInfo(http.Id!, info);
+                    break;
+                case TorrentDownloadInfo info:
+                    http = new TorrentDownloader(info);
                     RequestDataIO.SaveDownloadInfo(http.Id!, info);
                     break;
                 default:
@@ -307,6 +312,11 @@ namespace Fluxo.Core
                         download = new MultiSourceDASHDownloader(item.Key,
                             mediaProcessor: new FFmpegMediaProcessor());
                         break;
+                    case DownloadTypes.Torrent:
+                        // The engine holds the fast-resume data, so restoring needs
+                        // nothing beyond the id and the saved request.
+                        download = new TorrentDownloader(item.Key);
+                        break;
                     default:
                         continue;
                 }
@@ -404,6 +414,14 @@ namespace Fluxo.Core
             {
                 var http = source as IBaseDownloader;
                 ApplicationContext.Application.UpdateProgress(http.Id, args.Progress, args.DownloadSpeed, args.Eta);
+
+                // Only a torrent sets these, so the HTTP downloaders never take the
+                // extra hop and non-torrent rows keep their swarm columns empty.
+                if (args.HasSwarmStats)
+                {
+                    ApplicationContext.Application.UpdateSwarmStats(http.Id!, args.UploadSpeed,
+                        args.Uploaded, args.Seeds, args.Peers);
+                }
                 if (activeProgressWindows.ContainsKey(http.Id))
                 {
                     var prgWin = activeProgressWindows[http.Id];
