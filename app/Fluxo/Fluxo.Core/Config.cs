@@ -121,6 +121,18 @@ namespace Fluxo.Core
 
         public string AllDebridApiKey { get; set; } = string.Empty;
 
+        public string RealDebridApiKey { get; set; } = string.Empty;
+
+        /// <summary>
+        /// Debrid services in the order they should be tried, held as
+        /// <see cref="DebridProvider"/> values. The first one that has an API key
+        /// wins, so this only decides anything when more than one key is filled in.
+        /// Providers missing from the list still work; see
+        /// <see cref="Clients.Debrid.DebridSupport"/>.
+        /// </summary>
+        public int[] DebridProviderOrder { get; set; } =
+            new[] { (int)DebridProvider.AllDebrid, (int)DebridProvider.RealDebrid };
+
         public int MaxSegments { get; set; } = 8;
 
         public int DefaltDownloadSpeed { get; set; } = 0;
@@ -513,5 +525,14 @@ namespace Fluxo.Core
     {
         AutoRename,
         Overwrite
+    }
+
+    /// <summary>
+    /// Values are persisted as integers, so only append to this list.
+    /// </summary>
+    public enum DebridProvider
+    {
+        AllDebrid,
+        RealDebrid
     }
 }

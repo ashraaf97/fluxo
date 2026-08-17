@@ -464,7 +464,7 @@ namespace Fluxo.Wpf.UI
             torrentItem.IsEnabled = DebridSupport.IsConfigured;
             torrentItem.ToolTip = torrentItem.IsEnabled
                 ? null
-                : TextResource.GetText("MSG_ALLDEBRID_NO_KEY");
+                : TextResource.GetText("MSG_DEBRID_NO_KEY");
 
             nctx.PlacementTarget = BtnNew;
             nctx.Placement = PlacementMode.Bottom;

@@ -193,6 +193,17 @@ namespace Fluxo.Core.IO
                     case "AllowInvalidCertificates":
                         instance.AllowInvalidCertificates = r.ReadBoolean();
                         break;
+                    case "RealDebridApiKey":
+                        instance.RealDebridApiKey = r.ReadString();
+                        break;
+                    case "DebridProviderOrder":
+                        var debridProviderOrderLength = r.ReadInt16();
+                        instance.DebridProviderOrder = new int[debridProviderOrderLength];
+                        for (int a = 0; a < debridProviderOrderLength; a++)
+                        {
+                            instance.DebridProviderOrder[a] = r.ReadInt32();
+                        }
+                        break;
                     case "AllDebridApiKey":
                         instance.AllDebridApiKey = r.ReadString();
                         break;
@@ -336,6 +347,17 @@ namespace Fluxo.Core.IO
             }
         }
 
+        private static void WriteInt32Array(BinaryWriter w, IEnumerable<int> array, string name, int count)
+        {
+            w.Write(name);
+            w.Write(INT_ARRAY);
+            w.Write((short)count);
+            foreach (var item in array)
+            {
+                w.Write(item);
+            }
+        }
+
         public static void SerializeConfig()
         {
             var instance = Config.Instance;
@@ -406,6 +428,10 @@ namespace Fluxo.Core.IO
             WriteBoolean(w, instance.AllowInvalidCertificates, "AllowInvalidCertificates");
             count++;
             WriteString(w, instance.AllDebridApiKey, "AllDebridApiKey");
+            count++;
+            WriteString(w, instance.RealDebridApiKey, "RealDebridApiKey");
+            count++;
+            WriteInt32Array(w, instance.DebridProviderOrder, "DebridProviderOrder", instance.DebridProviderOrder.Length);
             count++;
             WriteString(w, instance.FallbackUserAgent, "FallbackUserAgent");
             count++;

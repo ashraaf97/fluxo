@@ -102,8 +102,23 @@ namespace Fluxo.Core.Clients.Http
             string? cookies = null,
             AuthenticationInfo? authentication = null,
             byte[]? body = null)
+            => CreateBodyRequest(uri, HttpMethod.Post, headers, cookies, authentication, body);
+
+        public HttpRequest CreatePutRequest(Uri uri,
+            Dictionary<string, List<string>>? headers = null,
+            string? cookies = null,
+            AuthenticationInfo? authentication = null,
+            byte[]? body = null)
+            => CreateBodyRequest(uri, HttpMethod.Put, headers, cookies, authentication, body);
+
+        private HttpRequest CreateBodyRequest(Uri uri,
+            HttpMethod method,
+            Dictionary<string, List<string>>? headers,
+            string? cookies,
+            AuthenticationInfo? authentication,
+            byte[]? body)
         {
-            var req = this.CreateRequest(uri, HttpMethod.Post, headers, cookies, authentication);
+            var req = this.CreateRequest(uri, method, headers, cookies, authentication);
             if (body != null)
             {
                 req.Content = new ByteArrayContent(body);

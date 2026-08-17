@@ -187,6 +187,16 @@ namespace Fluxo.Core.Clients.Http
             return CreateRequest(uri, "POST", headers, cookies, authentication, body);
         }
 
+        public HttpRequest CreatePutRequest(
+            Uri uri,
+            Dictionary<string, List<string>>? headers = null,
+            string? cookies = null,
+            AuthenticationInfo? authentication = null,
+            byte[]? body = null)
+        {
+            return CreateRequest(uri, "PUT", headers, cookies, authentication, body);
+        }
+
         public void Dispose()
         {
             disposed = true;

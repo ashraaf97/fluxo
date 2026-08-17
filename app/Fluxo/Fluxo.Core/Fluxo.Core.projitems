@@ -186,6 +186,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Util\TlsHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Clients\Debrid\IDebridService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Clients\Debrid\AllDebridService.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Clients\Debrid\RealDebridService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Clients\Debrid\DebridFile.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Clients\Debrid\DebridTorrent.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DownloadGroup.cs" />

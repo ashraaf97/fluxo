@@ -30,7 +30,7 @@ parent summarising total size, combined progress and how many files are done.
 ## Features
 - Downloads files in parallel segments, typically several times faster than a plain browser download.
 - Saves video from numerous streaming sites.
-- **Torrents, magnet links and premium hoster links via [AllDebrid](#torrents-via-alldebrid).**
+- **Torrents, magnet links and premium hoster links via [AllDebrid or Real-Debrid](#torrents-via-a-debrid-service).**
 - Built in video converter for MP3 and MP4 output.
 - Supports `HTTP`, `HTTPS`, `FTP` and the streaming protocols `MPEG-DASH`, `Apple HLS` and `Adobe HDS`.
 - Authentication, proxy servers, cookies and redirection, including NTLM and Kerberos.
@@ -39,29 +39,37 @@ parent summarising total size, combined progress and how many files are done.
 - Browser integration for Chrome, Edge, Brave, Opera, Vivaldi, Firefox and other Chromium
   and Firefox based browsers — see [Browser integration](#browser-integration).
 
-## Torrents via AllDebrid
+## Torrents via a debrid service
 
-Fluxo does not embed a BitTorrent client. Instead it hands torrents to
-[AllDebrid](https://alldebrid.com), a paid service that downloads the torrent on its own
-infrastructure and exposes the result over HTTPS. Fluxo then downloads those links
-normally, so torrent files get the same segmented speed, resume and queueing as any other
-download — and your machine never joins the swarm.
+Fluxo does not embed a BitTorrent client. Instead it hands torrents to a debrid service —
+a paid service that downloads the torrent on its own infrastructure and exposes the result
+over HTTPS. Fluxo then downloads those links normally, so torrent files get the same
+segmented speed, resume and queueing as any other download — and your machine never joins
+the swarm.
 
-This requires an active AllDebrid subscription.
+[AllDebrid](https://alldebrid.com) and [Real-Debrid](https://real-debrid.com) are both
+supported, and an active subscription to one of them is required.
 
-**Setup** — paste your API key from
-[alldebrid.com/apikeys](https://alldebrid.com/apikeys/) into
-**Settings → Advanced settings → AllDebrid API key**.
+**Setup** — paste your API key into **Settings → Premium hosters**:
+
+| Service | Where to get the key |
+| --- | --- |
+| AllDebrid | [alldebrid.com/apikeys](https://alldebrid.com/apikeys/) |
+| Real-Debrid | [real-debrid.com/apitoken](https://real-debrid.com/apitoken) |
+
+Filling in one key is enough. With both filled in, the **Order to try services in** list
+on the same page decides: the first service that has a key is the one used, and **Move
+up** / **Move down** reorder it.
 
 **Use** — toolbar **New → Add torrent / magnet**, then supply any of:
 
 | Input | What happens |
 | --- | --- |
-| Magnet link | Submitted to AllDebrid, which fetches the torrent |
-| `.torrent` file | Uploaded to AllDebrid (use **Browse…**) |
+| Magnet link | Submitted to the service, which fetches the torrent |
+| `.torrent` file | Uploaded to the service (use **Browse…**) |
 | Premium hoster link | Unlocked directly, no torrent involved |
 
-For a torrent, Fluxo waits while AllDebrid caches it, then queues **every** file at once —
+For a torrent, Fluxo waits while the service caches it, then queues **every** file at once —
 there is no file picker to work through. The files are saved into a folder mirroring the
 torrent's own layout, so nested folders come out the same shape they went in.
 

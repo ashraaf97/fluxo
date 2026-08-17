@@ -13,6 +13,7 @@ using Fluxo.GtkUI.Utils;
 using Fluxo.Core.Util;
 using TraceLog;
 using Fluxo.Core.BrowserMonitoring;
+using Fluxo.Core.Clients.Debrid;
 using Fluxo.GtkUI.Dialogs.ChromeIntegrator;
 
 namespace Fluxo.GtkUI.Dialogs.Settings
@@ -22,21 +23,23 @@ namespace Fluxo.GtkUI.Dialogs.Settings
         //private int[] minVidSize = new int[] { 128, 256, 512, 1024, 2048, 4096, 8192, 16384, 32768 };
         private WindowGroup group;
         [UI]
-        private Label TabHeader1, TabHeader2, TabHeader3, TabHeader4, TabHeader5;
+        private Label TabHeader1, TabHeader2, TabHeader3, TabHeader4, TabHeader5, TabHeader6;
         [UI]
-        private Label PageHeader1, PageHeader2, PageHeader3, PageHeader4, PageHeader5;
+        private Label PageHeader1, PageHeader2, PageHeader3, PageHeader4, PageHeader5, PageHeader6;
         [UI]
         private Label Label1, Label2, Label3, Label4, Label5, Label6, Label7,
             Label8, Label9, Label10, Label11, Label12, Label13, Label14, Label15,
             Label16, Label17, Label18, Label19, Label20, Label21,
             Label22, Label23, Label24, Label25, Label26, Label27,
-            Label28, Label29, Label30, LabelAllDebrid;
+            Label28, Label29, Label30, Label31, Label32,
+            LabelAllDebrid, LabelRealDebrid, LabelDebridOrder, LabelDebridOrderHint;
         [UI]
         private LinkButton VideoWikiLink;
         [UI]
         Button BtnChrome, BtnFirefox, BtnEdge, BtnOpera, BtnBrave, BtnVivaldi, BtnChromium, BtnYandex, BtnDefault1, BtnDefault2,
             BtnDefault3, CatAdd, CatEdit, CatDel, CatDef, AddPass, EditPass, DelPass, BtnUserAgentReset,
-            BtnCopy1, BtnCopy2, BtnCancel, BtnOK, BtnDownloadFolderBrowse, BtnTempFolderBrowse, BtnBrowse;
+            BtnCopy1, BtnCopy2, BtnCancel, BtnOK, BtnDownloadFolderBrowse, BtnTempFolderBrowse, BtnBrowse,
+            BtnDebridUp, BtnDebridDown;
         [UI]
         private CheckButton ChkMonitorClipboard, ChkTimestamp, ChkDarkTheme, ChkAutoCat, ChkShowPrg,
             ChkShowComplete, ChkStartAuto, ChkOverwrite, ChkEnableSpeedLimit, ChkHalt, ChkKeepAwake,
@@ -47,10 +50,11 @@ namespace Fluxo.GtkUI.Dialogs.Settings
         [UI]
         private Entry TxtChromeWebStoreUrl, TxtFirefoxAMOUrl, TxtTempFolder, TxtDownloadFolder,
             TxtMaxSpeedLimit, TxtProxyHost, TxtProxyPort, TxtProxyUser, TxtProxyPassword,
-            TxtCustomCmd, TxtAntiVirusCmd, TxtAntiVirusArgs, TxtDefaultUserAgent, TxtAllDebridApiKey,
+            TxtCustomCmd, TxtAntiVirusCmd, TxtAntiVirusArgs, TxtDefaultUserAgent,
+            TxtAllDebridApiKey, TxtRealDebridApiKey,
             TxtExceptions, TxtDefaultVideoFormats, TxtDefaultFileTypes;
         [UI]
-        private TreeView LvCategories, LvPasswords;
+        private TreeView LvCategories, LvPasswords, LvDebridProviders;
 
         [UI]
         private Notebook Tabs;
@@ -58,7 +62,7 @@ namespace Fluxo.GtkUI.Dialogs.Settings
         [UI]
         private ListBox SideList;
 
-        private ListStore categoryStore, passwordStore;
+        private ListStore categoryStore, passwordStore, debridProviderStore;
 
         private SettingsDialog(Builder builder,
             Window parent,
@@ -92,6 +96,8 @@ namespace Fluxo.GtkUI.Dialogs.Settings
             GtkHelper.PopulateComboBoxGeneric<int>(CmbMaxRetry, Enumerable.Range(1, 100).ToArray());
             GtkHelper.PopulateComboBox(CmbProxyType, TextResource.GetText("NET_SYSTEM_PROXY"),
                 TextResource.GetText("ND_NO_PROXY"), TextResource.GetText("ND_MANUAL_PROXY"));
+
+            CreateDebridProviderListView();
 
             CreatePasswordManagerListView();
 
@@ -130,6 +136,9 @@ namespace Fluxo.GtkUI.Dialogs.Settings
 
             BtnBrowse.Clicked += BtnBrowse_Clicked;
             BtnUserAgentReset.Clicked += BtnUserAgentReset_Clicked;
+
+            BtnDebridUp.Clicked += (s, e) => MoveDebridProvider(-1);
+            BtnDebridDown.Clicked += (s, e) => MoveDebridProvider(1);
         }
 
         private void SideList_RowSelected(object o, RowSelectedArgs args)
@@ -301,6 +310,7 @@ namespace Fluxo.GtkUI.Dialogs.Settings
             UpdateNetworkSettingsConfig();
             UpdatePasswordManagerConfig();
             UpdateAdvancedSettingsConfig();
+            UpdatePremiumHostersConfig();
             Config.SaveConfig();
             ApplicationContext.BroadcastConfigChange();
             Dispose();
@@ -458,6 +468,7 @@ namespace Fluxo.GtkUI.Dialogs.Settings
             PageHeader3.Text = TextResource.GetText("SETTINGS_NETWORK");
             PageHeader4.Text = TextResource.GetText("SETTINGS_CRED");
             PageHeader5.Text = TextResource.GetText("SETTINGS_ADV");
+            PageHeader6.Text = TextResource.GetText("SETTINGS_PREMIUM_HOSTERS");
 
             Label1.StyleContext.AddClass("medium-font");
 
@@ -539,7 +550,16 @@ namespace Fluxo.GtkUI.Dialogs.Settings
             Label28.Text = TextResource.GetText("ANTIVIR_CMD");
             Label29.Text = TextResource.GetText("ANTIVIR_ARGS");
             Label30.Text = TextResource.GetText("MSG_FALLBACK_UA");
+
+            Label31.Text = TextResource.GetText("SETTINGS_PREMIUM_HOSTERS");
+            Label31.StyleContext.AddClass("medium-font");
+            Label32.Text = TextResource.GetText("MSG_PREMIUM_HOSTERS_INTRO");
             LabelAllDebrid.Text = TextResource.GetText("LBL_ALLDEBRID_API_KEY");
+            LabelRealDebrid.Text = TextResource.GetText("LBL_REALDEBRID_API_KEY");
+            LabelDebridOrder.Text = TextResource.GetText("LBL_DEBRID_ORDER");
+            LabelDebridOrderHint.Text = TextResource.GetText("MSG_DEBRID_ORDER_HINT");
+            BtnDebridUp.Label = TextResource.GetText("Q_MOVE_UP");
+            BtnDebridDown.Label = TextResource.GetText("Q_MOVE_DN");
 
             BtnOK.Label = TextResource.GetText("DESC_SAVE_Q");
             BtnCancel.Label = TextResource.GetText("ND_CANCEL");
@@ -603,7 +623,74 @@ namespace Fluxo.GtkUI.Dialogs.Settings
             TxtAntiVirusCmd.Text = Config.Instance.AntiVirusExecutable;
             TxtAntiVirusArgs.Text = Config.Instance.AntiVirusArgs;
             TxtDefaultUserAgent.Text = Config.Instance.FallbackUserAgent;
+
+            //Premium hosters
             TxtAllDebridApiKey.Text = Config.Instance.AllDebridApiKey;
+            TxtRealDebridApiKey.Text = Config.Instance.RealDebridApiKey;
+
+            debridProviderStore.Clear();
+            foreach (var provider in DebridSupport.PreferredOrder())
+            {
+                debridProviderStore.AppendValues(DebridSupport.DisplayName(provider), (int)provider);
+            }
+            SelectDebridProviderRow(0);
+        }
+
+        private void CreateDebridProviderListView()
+        {
+            // Column 0 is the name shown, column 1 the DebridProvider value saved.
+            debridProviderStore = new ListStore(typeof(string), typeof(int));
+            LvDebridProviders.Model = debridProviderStore;
+            LvDebridProviders.AppendColumn(new TreeViewColumn(string.Empty, new CellRendererText(), "text", 0));
+            LvDebridProviders.Selection.Changed += (s, e) => UpdateDebridButtons();
+        }
+
+        /// <summary>
+        /// Moves the selected service one place up or down the list. The order is
+        /// the whole setting: the first entry with an API key is the one used.
+        /// </summary>
+        private void MoveDebridProvider(int offset)
+        {
+            if (!LvDebridProviders.Selection.GetSelected(out TreeIter iter))
+            {
+                return;
+            }
+
+            var path = debridProviderStore.GetPath(iter);
+            var from = path.Indices[0];
+            var to = from + offset;
+            if (to < 0 || to >= debridProviderStore.IterNChildren())
+            {
+                return;
+            }
+
+            if (debridProviderStore.GetIter(out TreeIter other, new TreePath(new[] { to })))
+            {
+                debridProviderStore.Swap(iter, other);
+                SelectDebridProviderRow(to);
+            }
+        }
+
+        private void SelectDebridProviderRow(int index)
+        {
+            if (index >= 0 && index < debridProviderStore.IterNChildren()
+                && debridProviderStore.GetIter(out TreeIter iter, new TreePath(new[] { index })))
+            {
+                LvDebridProviders.Selection.SelectIter(iter);
+            }
+            UpdateDebridButtons();
+        }
+
+        private void UpdateDebridButtons()
+        {
+            var index = -1;
+            if (LvDebridProviders.Selection.GetSelected(out TreeIter iter))
+            {
+                index = debridProviderStore.GetPath(iter).Indices[0];
+            }
+
+            BtnDebridUp.Sensitive = index > 0;
+            BtnDebridDown.Sensitive = index >= 0 && index < debridProviderStore.IterNChildren() - 1;
         }
 
         private void CreateCategoryListView()
@@ -725,7 +812,23 @@ namespace Fluxo.GtkUI.Dialogs.Settings
             Config.Instance.AntiVirusExecutable = TxtAntiVirusCmd.Text;
             Config.Instance.AntiVirusArgs = TxtAntiVirusArgs.Text;
             Config.Instance.FallbackUserAgent = TxtDefaultUserAgent.Text;
+        }
+
+        private void UpdatePremiumHostersConfig()
+        {
             Config.Instance.AllDebridApiKey = TxtAllDebridApiKey.Text.Trim();
+            Config.Instance.RealDebridApiKey = TxtRealDebridApiKey.Text.Trim();
+
+            var order = new List<int>();
+            if (debridProviderStore.GetIterFirst(out TreeIter iter))
+            {
+                do
+                {
+                    order.Add((int)debridProviderStore.GetValue(iter, 1));
+                }
+                while (debridProviderStore.IterNext(ref iter));
+            }
+            Config.Instance.DebridProviderOrder = order.ToArray();
         }
 
         public void SetActivePage(int page)

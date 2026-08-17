@@ -227,6 +227,37 @@
                             </child>
                           </object>
                         </child>
+                        <child>
+                          <object class="GtkListBoxRow">
+                            <property name="visible">True</property>
+                            <property name="can-focus">True</property>
+                            <child>
+                              <object class="GtkBox">
+                                <property name="visible">True</property>
+                                <property name="can-focus">False</property>
+                                <child>
+                                  <object class="GtkLabel" id="PageHeader6">
+                                    <property name="visible">True</property>
+                                    <property name="can-focus">False</property>
+                                    <property name="halign">start</property>
+                                    <property name="margin-left">10</property>
+                                    <property name="margin-right">10</property>
+                                    <property name="margin-start">10</property>
+                                    <property name="margin-end">10</property>
+                                    <property name="margin-top">5</property>
+                                    <property name="margin-bottom">5</property>
+                                    <property name="label" translatable="yes">label</property>
+                                  </object>
+                                  <packing>
+                                    <property name="expand">False</property>
+                                    <property name="fill">True</property>
+                                    <property name="position">0</property>
+                                  </packing>
+                                </child>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
                       </object>
                     </child>
                   </object>
@@ -1880,36 +1911,6 @@
                                 <property name="position">12</property>
                               </packing>
                             </child>
-                            <child>
-                              <object class="GtkLabel" id="LabelAllDebrid">
-                                <property name="visible">True</property>
-                                <property name="can-focus">False</property>
-                                <property name="xalign">0</property>
-                                <property name="margin-start">10</property>
-                                <property name="margin-top">10</property>
-                                <property name="label" translatable="yes">LabelAllDebrid</property>
-                              </object>
-                              <packing>
-                                <property name="expand">False</property>
-                                <property name="fill">True</property>
-                                <property name="position">13</property>
-                              </packing>
-                            </child>
-                            <child>
-                              <object class="GtkEntry" id="TxtAllDebridApiKey">
-                                <property name="visible">True</property>
-                                <property name="can-focus">True</property>
-                                <property name="hexpand">True</property>
-                                <property name="margin-start">10</property>
-                                <property name="margin-right">10</property>
-                                <property name="margin-end">10</property>
-                              </object>
-                              <packing>
-                                <property name="expand">False</property>
-                                <property name="fill">True</property>
-                                <property name="position">14</property>
-                              </packing>
-                            </child>
                           </object>
                         </child>
                       </object>
@@ -1927,6 +1928,236 @@
                   </object>
                   <packing>
                     <property name="position">4</property>
+                    <property name="tab-fill">False</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkScrolledWindow">
+                    <property name="visible">True</property>
+                    <property name="can-focus">True</property>
+                    <child>
+                      <object class="GtkViewport">
+                        <property name="visible">True</property>
+                        <property name="can-focus">False</property>
+                        <child>
+                          <object class="GtkBox">
+                            <property name="visible">True</property>
+                            <property name="can-focus">False</property>
+                            <property name="margin-left">10</property>
+                            <property name="margin-right">10</property>
+                            <property name="margin-start">10</property>
+                            <property name="margin-end">10</property>
+                            <property name="margin-top">10</property>
+                            <property name="margin-bottom">10</property>
+                            <property name="orientation">vertical</property>
+                            <property name="spacing">10</property>
+                            <child>
+                              <object class="GtkLabel" id="Label31">
+                                <property name="visible">True</property>
+                                <property name="can-focus">False</property>
+                                <property name="halign">start</property>
+                                <property name="margin-bottom">10</property>
+                                <property name="label" translatable="yes">Label31</property>
+                              </object>
+                              <packing>
+                                <property name="expand">False</property>
+                                <property name="fill">True</property>
+                                <property name="position">0</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkLabel" id="Label32">
+                                <property name="visible">True</property>
+                                <property name="can-focus">False</property>
+                                <property name="halign">start</property>
+                                <property name="hexpand">True</property>
+                                <property name="margin-bottom">10</property>
+                                <property name="label" translatable="yes">Label32</property>
+                                <property name="wrap">True</property>
+                              </object>
+                              <packing>
+                                <property name="expand">False</property>
+                                <property name="fill">True</property>
+                                <property name="position">1</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkLabel" id="LabelAllDebrid">
+                                <property name="visible">True</property>
+                                <property name="can-focus">False</property>
+                                <property name="halign">start</property>
+                                <property name="label" translatable="yes">LabelAllDebrid</property>
+                              </object>
+                              <packing>
+                                <property name="expand">False</property>
+                                <property name="fill">True</property>
+                                <property name="position">2</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkEntry" id="TxtAllDebridApiKey">
+                                <property name="visible">True</property>
+                                <property name="can-focus">True</property>
+                                <property name="hexpand">True</property>
+                                <property name="margin-right">10</property>
+                                <property name="margin-end">10</property>
+                              </object>
+                              <packing>
+                                <property name="expand">False</property>
+                                <property name="fill">True</property>
+                                <property name="position">3</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkLabel" id="LabelRealDebrid">
+                                <property name="visible">True</property>
+                                <property name="can-focus">False</property>
+                                <property name="halign">start</property>
+                                <property name="label" translatable="yes">LabelRealDebrid</property>
+                              </object>
+                              <packing>
+                                <property name="expand">False</property>
+                                <property name="fill">True</property>
+                                <property name="position">4</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkEntry" id="TxtRealDebridApiKey">
+                                <property name="visible">True</property>
+                                <property name="can-focus">True</property>
+                                <property name="hexpand">True</property>
+                                <property name="margin-right">10</property>
+                                <property name="margin-end">10</property>
+                              </object>
+                              <packing>
+                                <property name="expand">False</property>
+                                <property name="fill">True</property>
+                                <property name="position">5</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkLabel" id="LabelDebridOrder">
+                                <property name="visible">True</property>
+                                <property name="can-focus">False</property>
+                                <property name="halign">start</property>
+                                <property name="label" translatable="yes">LabelDebridOrder</property>
+                              </object>
+                              <packing>
+                                <property name="expand">False</property>
+                                <property name="fill">True</property>
+                                <property name="position">6</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkLabel" id="LabelDebridOrderHint">
+                                <property name="visible">True</property>
+                                <property name="can-focus">False</property>
+                                <property name="halign">start</property>
+                                <property name="hexpand">True</property>
+                                <property name="label" translatable="yes">LabelDebridOrderHint</property>
+                                <property name="wrap">True</property>
+                              </object>
+                              <packing>
+                                <property name="expand">False</property>
+                                <property name="fill">True</property>
+                                <property name="position">7</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkBox">
+                                <property name="visible">True</property>
+                                <property name="can-focus">False</property>
+                                <property name="margin-right">10</property>
+                                <property name="margin-end">10</property>
+                                <property name="spacing">10</property>
+                                <child>
+                                  <object class="GtkScrolledWindow">
+                                    <property name="visible">True</property>
+                                    <property name="can-focus">True</property>
+                                    <property name="hexpand">True</property>
+                                    <property name="shadow-type">in</property>
+                                    <property name="min-content-height">110</property>
+                                    <child>
+                                      <object class="GtkTreeView" id="LvDebridProviders">
+                                        <property name="visible">True</property>
+                                        <property name="can-focus">True</property>
+                                        <property name="headers-visible">False</property>
+                                        <child internal-child="selection">
+                                          <object class="GtkTreeSelection"/>
+                                        </child>
+                                      </object>
+                                    </child>
+                                  </object>
+                                  <packing>
+                                    <property name="expand">True</property>
+                                    <property name="fill">True</property>
+                                    <property name="position">0</property>
+                                  </packing>
+                                </child>
+                                <child>
+                                  <object class="GtkBox">
+                                    <property name="visible">True</property>
+                                    <property name="can-focus">False</property>
+                                    <property name="valign">start</property>
+                                    <property name="orientation">vertical</property>
+                                    <property name="spacing">5</property>
+                                    <child>
+                                      <object class="GtkButton" id="BtnDebridUp">
+                                        <property name="label" translatable="yes">...</property>
+                                        <property name="visible">True</property>
+                                        <property name="can-focus">True</property>
+                                        <property name="receives-default">True</property>
+                                      </object>
+                                      <packing>
+                                        <property name="expand">False</property>
+                                        <property name="fill">True</property>
+                                        <property name="position">0</property>
+                                      </packing>
+                                    </child>
+                                    <child>
+                                      <object class="GtkButton" id="BtnDebridDown">
+                                        <property name="label" translatable="yes">...</property>
+                                        <property name="visible">True</property>
+                                        <property name="can-focus">True</property>
+                                        <property name="receives-default">True</property>
+                                      </object>
+                                      <packing>
+                                        <property name="expand">False</property>
+                                        <property name="fill">True</property>
+                                        <property name="position">1</property>
+                                      </packing>
+                                    </child>
+                                  </object>
+                                  <packing>
+                                    <property name="expand">False</property>
+                                    <property name="fill">True</property>
+                                    <property name="position">1</property>
+                                  </packing>
+                                </child>
+                              </object>
+                              <packing>
+                                <property name="expand">False</property>
+                                <property name="fill">True</property>
+                                <property name="position">8</property>
+                              </packing>
+                            </child>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                  </object>
+                  <packing>
+                    <property name="position">5</property>
+                  </packing>
+                </child>
+                <child type="tab">
+                  <object class="GtkLabel" id="TabHeader6">
+                    <property name="visible">True</property>
+                    <property name="can-focus">False</property>
+                    <property name="label" translatable="yes">page 6</property>
+                  </object>
+                  <packing>
+                    <property name="position">5</property>
                     <property name="tab-fill">False</property>
                   </packing>
                 </child>

@@ -28,7 +28,7 @@ namespace Fluxo.Core.UI
         private bool running;
 
         public AddTorrentUIController(IAddTorrentView view)
-            : this(view, new AllDebridService())
+            : this(view, DebridSupport.Create())
         {
         }
 
@@ -74,7 +74,7 @@ namespace Fluxo.Core.UI
 
             if (!this.debrid.IsConfigured)
             {
-                ShowMessage(TextResource.GetText("MSG_ALLDEBRID_NO_KEY"));
+                ShowMessage(TextResource.GetText("MSG_DEBRID_NO_KEY"));
                 return;
             }
 
@@ -127,7 +127,7 @@ namespace Fluxo.Core.UI
             catch (Exception ex)
             {
                 Log.Debug(ex, "Debrid resolve failed");
-                ReportFailure(TextResource.GetText("MSG_ALLDEBRID_FAILED"));
+                ReportFailure(TextResource.GetText("MSG_DEBRID_FAILED"));
             }
         }
 
@@ -304,7 +304,7 @@ namespace Fluxo.Core.UI
 
             if (results.Count == 0)
             {
-                throw new DebridException(TextResource.GetText("MSG_ALLDEBRID_FAILED"));
+                throw new DebridException(TextResource.GetText("MSG_DEBRID_FAILED"));
             }
             return results;
         }

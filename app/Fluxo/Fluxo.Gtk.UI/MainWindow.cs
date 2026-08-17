@@ -1220,7 +1220,7 @@ namespace Fluxo.GtkUI
             menuAddTorrent.Sensitive = DebridSupport.IsConfigured;
             menuAddTorrent.TooltipText = menuAddTorrent.Sensitive
                 ? null
-                : TextResource.GetText("MSG_ALLDEBRID_NO_KEY");
+                : TextResource.GetText("MSG_DEBRID_NO_KEY");
 
             newDownloadMenu.PopupAtWidget(this.btnNew, Gdk.Gravity.SouthWest, Gdk.Gravity.NorthWest, null);
         }
