@@ -44,10 +44,23 @@ namespace Fluxo.Core
         public ApplicationCore()
         {
             ApplicationContext.Initialized += AppInstance_Initialized;
+            ApplicationContext.ApplicationEvent += ApplicationContext_ApplicationEvent;
 
             // One announcement per torrent, in place of the per-file ones that
             // DownloadFinished suppresses for grouped downloads.
             DownloadGroupManager.GroupCompleted += OnGroupCompleted;
+        }
+
+        private void ApplicationContext_ApplicationEvent(object? sender, ApplicationEvent e)
+        {
+            // Saving settings broadcasts ConfigChanged. RSS reads its interval and
+            // enabled flag at Start(), so re-applying here picks up a toggle or a
+            // refresh-rate change without a restart - and does nothing when RSS is
+            // off, since Start() returns early in that case.
+            if (e.EventType == "ConfigChanged")
+            {
+                Rss.ApplySettings();
+            }
         }
 
         private void OnGroupCompleted(object? sender, DownloadGroupEventArgs e)
@@ -910,5 +923,12 @@ namespace Fluxo.Core
             ImportExport.Import(path);
             ApplicationContext.Application.ShowMessageBox(null, TextResource.GetText("MSG_IMPORT_DONE"));
         }
+
+        /// <summary>
+        /// Hands the call to the RSS service, which is the only thing that knows
+        /// how a refresh works. Runs on the caller's thread; the service guards
+        /// itself against overlapping passes and exceptions.
+        /// </summary>
+        public void RefreshAllFeeds() => Rss.RefreshAll();
     }
 }

@@ -67,6 +67,7 @@ namespace Fluxo.GtkUI.Dialogs.Settings
         private ListStore categoryStore, passwordStore, debridProviderStore;
 
         private TorrentSettingsPage torrentPage;
+        private RssSettingsPage rssPage;
 
         private SettingsDialog(Builder builder,
             Window parent,
@@ -103,6 +104,7 @@ namespace Fluxo.GtkUI.Dialogs.Settings
 
             CreateDebridProviderListView();
             AppendTorrentPage();
+            AppendRssPage();
 
             CreatePasswordManagerListView();
 
@@ -317,6 +319,7 @@ namespace Fluxo.GtkUI.Dialogs.Settings
             UpdateAdvancedSettingsConfig();
             UpdatePremiumHostersConfig();
             this.torrentPage.UpdateConfig();
+            this.rssPage.UpdateConfig();
             Config.SaveConfig();
             ApplicationContext.BroadcastConfigChange();
             Dispose();
@@ -649,6 +652,7 @@ namespace Fluxo.GtkUI.Dialogs.Settings
             SelectDebridProviderRow(0);
 
             this.torrentPage.LoadConfig();
+            this.rssPage.LoadConfig();
         }
 
         /// <summary>
@@ -663,6 +667,32 @@ namespace Fluxo.GtkUI.Dialogs.Settings
             Tabs.AppendPage(this.torrentPage.Widget, new Label("page 7"));
 
             var label = new Label(TextResource.GetText("SETTINGS_TORRENT"))
+            {
+                Halign = Align.Start,
+                MarginStart = 10,
+                MarginEnd = 10,
+                MarginTop = 5,
+                MarginBottom = 5
+            };
+            var row = new ListBoxRow();
+            var rowBox = new Box(Orientation.Horizontal, 0);
+            rowBox.PackStart(label, false, true, 0);
+            row.Add(rowBox);
+            SideList.Add(row);
+            row.ShowAll();
+        }
+
+        /// <summary>
+        /// Adds the RSS page in the same shape as the Torrent page - appended to both
+        /// the notebook and the sidebar, so existing rows keep their index.
+        /// </summary>
+        private void AppendRssPage()
+        {
+            this.rssPage = new RssSettingsPage(this, this.group);
+
+            Tabs.AppendPage(this.rssPage.Widget, new Label("page 8"));
+
+            var label = new Label(TextResource.GetText("SETTINGS_RSS"))
             {
                 Halign = Align.Start,
                 MarginStart = 10,

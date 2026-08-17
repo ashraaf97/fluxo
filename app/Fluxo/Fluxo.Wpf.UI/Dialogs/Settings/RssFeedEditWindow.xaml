@@ -1,0 +1,36 @@
+<Window x:Class="Fluxo.Wpf.UI.Dialogs.Settings.RssFeedEditWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Fluxo.Wpf.UI.Dialogs.Settings"
+        mc:Ignorable="d"
+        Title="{StaticResource RSS_FEED_TITLE}" Height="240" Width="460"
+        ShowInTaskbar="False" WindowStartupLocation="CenterOwner">
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <TextBlock Grid.Row="0" Text="{StaticResource LBL_RSS_FEED_URL}" Margin="0,0,0,3"/>
+        <TextBox Name="TxtUrl" Grid.Row="1" Margin="0,0,0,8" VerticalContentAlignment="Center"
+                 AcceptsReturn="False" TextWrapping="NoWrap" Padding="5"/>
+        <TextBlock Grid.Row="2" Text="{StaticResource LBL_RSS_FEED_NAME}" Margin="0,0,0,3"/>
+        <TextBox Name="TxtName" Grid.Row="3" Margin="0,0,0,8" VerticalContentAlignment="Center"
+                 AcceptsReturn="False" TextWrapping="NoWrap" Padding="5"/>
+        <TextBlock Grid.Row="4" Text="{StaticResource MSG_RSS_FEED_NAME_HINT}" Opacity="0.75"
+                   TextWrapping="Wrap" Margin="0,0,0,8"/>
+        <CheckBox Name="ChkEnabled" Grid.Row="5" Content="{StaticResource CHK_RSS_FEED_ENABLED}"
+                  VerticalContentAlignment="Center" Padding="3" Margin="0,0,0,10"/>
+        <StackPanel Grid.Row="7" HorizontalAlignment="Right" Orientation="Horizontal">
+            <Button Name="BtnOk" Content="{StaticResource MSG_OK}" Padding="25,3" Click="BtnOk_Click"/>
+            <Button Name="BtnCancel" Content="{StaticResource ND_CANCEL}" Margin="10,0,0,0" Padding="15,3" Click="BtnCancel_Click"/>
+        </StackPanel>
+    </Grid>
+</Window>

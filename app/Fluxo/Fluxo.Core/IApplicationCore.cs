@@ -58,5 +58,12 @@ namespace Fluxo.Core
         public void Import(string path);
 
         void AddBatchLinks(List<Message> messages);
+
+        /// <summary>
+        /// Triggers an immediate refresh of every enabled RSS feed, regardless of
+        /// the timer. Does nothing when RSS is off, since the refresh path is
+        /// gated on <see cref="Config.RssEnabled"/> at <see cref="RssService.RefreshAll"/>.
+        /// </summary>
+        void RefreshAllFeeds();
     }
 }

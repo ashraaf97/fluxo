@@ -42,6 +42,9 @@
             <ListBoxItem>
                 <TextBlock Padding="10,10,20,10" Text="{StaticResource SETTINGS_TORRENT}"/>
             </ListBoxItem>
+            <ListBoxItem>
+                <TextBlock Padding="10,10,20,10" Text="{StaticResource SETTINGS_RSS}"/>
+            </ListBoxItem>
         </ListBox>
         <local:BrowserMonitoringView x:Name="BrowserMonitoringView" Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="3"/>
         <local:GeneralSettingsView x:Name="GeneralSettingsView" Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="3"/>
@@ -50,5 +53,6 @@
         <local:AdvancedSettingsView x:Name="AdvancedSettingsView" Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="3"/>
         <local:PremiumHostersView x:Name="PremiumHostersView" Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="3"/>
         <local:TorrentSettingsView x:Name="TorrentSettingsView" Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="3"/>
+        <local:RssSettingsView x:Name="RssSettingsView" Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="3"/>
     </Grid>
 </Window>
