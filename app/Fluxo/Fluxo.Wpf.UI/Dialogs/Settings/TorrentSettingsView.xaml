@@ -1,0 +1,110 @@
+<UserControl x:Class="Fluxo.Wpf.UI.Dialogs.Settings.TorrentSettingsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="clr-namespace:Fluxo.Wpf.UI.Dialogs.Settings"
+             mc:Ignorable="d"
+             d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <Style x:Key="FieldLabel" TargetType="TextBlock">
+            <Setter Property="Margin" Value="10,10,10,0"/>
+        </Style>
+        <Style x:Key="FieldBox" TargetType="TextBox">
+            <Setter Property="Margin" Value="10,4,10,0"/>
+            <Setter Property="Width" Value="120"/>
+            <Setter Property="HorizontalAlignment" Value="Left"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+        </Style>
+        <Style x:Key="SectionHead" TargetType="TextBlock">
+            <Setter Property="Margin" Value="10,18,10,4"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+        </Style>
+        <Style x:Key="Check" TargetType="CheckBox">
+            <Setter Property="Margin" Value="10,6,10,0"/>
+            <Setter Property="Padding" Value="3"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+        </Style>
+    </UserControl.Resources>
+    <DockPanel>
+        <TextBlock Padding="10" Text="{StaticResource SETTINGS_TORRENT}" FontSize="14" DockPanel.Dock="Top"/>
+        <ScrollViewer VerticalScrollBarVisibility="Auto">
+            <StackPanel>
+                <TextBlock Margin="10,5,10,0" TextWrapping="Wrap" Opacity="0.75"
+                           Text="{StaticResource MSG_TORRENT_INTRO}"/>
+
+                <!-- Connection -->
+                <TextBlock Style="{StaticResource SectionHead}" Text="{StaticResource LBL_TORRENT_CONNECTION}"/>
+
+                <TextBlock Style="{StaticResource FieldLabel}" Text="{StaticResource LBL_TORRENT_PORT}"/>
+                <TextBox Name="TxtPort" Style="{StaticResource FieldBox}"/>
+
+                <TextBlock Style="{StaticResource FieldLabel}" Text="{StaticResource LBL_TORRENT_MAX_DOWN}"/>
+                <TextBox Name="TxtMaxDownload" Style="{StaticResource FieldBox}"/>
+
+                <TextBlock Style="{StaticResource FieldLabel}" Text="{StaticResource LBL_TORRENT_MAX_UP}"/>
+                <TextBox Name="TxtMaxUpload" Style="{StaticResource FieldBox}"/>
+
+                <TextBlock Style="{StaticResource FieldLabel}" Text="{StaticResource LBL_TORRENT_MAX_CONN}"/>
+                <TextBox Name="TxtMaxConnections" Style="{StaticResource FieldBox}"/>
+
+                <TextBlock Style="{StaticResource FieldLabel}" Text="{StaticResource LBL_TORRENT_MAX_CONN_PER}"/>
+                <TextBox Name="TxtMaxConnectionsPerTorrent" Style="{StaticResource FieldBox}"/>
+
+                <TextBlock Style="{StaticResource FieldLabel}" Text="{StaticResource LBL_TORRENT_UPLOAD_SLOTS}"/>
+                <TextBox Name="TxtUploadSlots" Style="{StaticResource FieldBox}"/>
+
+                <TextBlock Style="{StaticResource FieldLabel}" Text="{StaticResource LBL_TORRENT_ENCRYPTION}"/>
+                <ComboBox Name="CmbEncryption" Margin="10,4,10,0" Width="200" HorizontalAlignment="Left"/>
+
+                <!-- Peer discovery -->
+                <TextBlock Style="{StaticResource SectionHead}" Text="{StaticResource LBL_TORRENT_DISCOVERY}"/>
+                <CheckBox Name="ChkDht" Style="{StaticResource Check}" Content="{StaticResource CHK_TORRENT_DHT}"/>
+                <CheckBox Name="ChkPex" Style="{StaticResource Check}" Content="{StaticResource CHK_TORRENT_PEX}"/>
+                <CheckBox Name="ChkLsd" Style="{StaticResource Check}" Content="{StaticResource CHK_TORRENT_LSD}"/>
+                <CheckBox Name="ChkPortForwarding" Style="{StaticResource Check}" Content="{StaticResource CHK_TORRENT_UPNP}"/>
+
+                <!-- Files -->
+                <TextBlock Style="{StaticResource SectionHead}" Text="{StaticResource LBL_TORRENT_FILES}"/>
+
+                <TextBlock Style="{StaticResource FieldLabel}" Text="{StaticResource LBL_TORRENT_SAVE_FOLDER}"/>
+                <Grid Margin="10,4,10,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBox Name="TxtSaveFolder" Grid.Column="0" VerticalContentAlignment="Center"/>
+                    <Button Name="BtnBrowseSaveFolder" Grid.Column="1" Margin="8,0,0,0" Padding="8,3"
+                            Content="..." Click="BtnBrowseSaveFolder_Click"/>
+                </Grid>
+                <CheckBox Name="ChkCreateSubfolder" Style="{StaticResource Check}" Content="{StaticResource CHK_TORRENT_SUBFOLDER}"/>
+                <CheckBox Name="ChkIncompleteExtension" Style="{StaticResource Check}" Content="{StaticResource CHK_TORRENT_INCOMPLETE_EXT}"/>
+
+                <!-- Seeding -->
+                <TextBlock Style="{StaticResource SectionHead}" Text="{StaticResource LBL_TORRENT_SEEDING}"/>
+                <TextBlock Margin="10,0,10,0" TextWrapping="Wrap" Opacity="0.75"
+                           Text="{StaticResource MSG_TORRENT_SEEDING_NOTE}"/>
+                <CheckBox Name="ChkSeeding" Style="{StaticResource Check}" Content="{StaticResource CHK_TORRENT_SEEDING}"/>
+                <CheckBox Name="ChkSuperSeeding" Style="{StaticResource Check}" Content="{StaticResource CHK_TORRENT_SUPERSEED}"/>
+
+                <TextBlock Style="{StaticResource FieldLabel}" Text="{StaticResource LBL_TORRENT_SEED_RATIO}"/>
+                <TextBox Name="TxtSeedRatio" Style="{StaticResource FieldBox}"/>
+
+                <TextBlock Style="{StaticResource FieldLabel}" Text="{StaticResource LBL_TORRENT_SEED_TIME}"/>
+                <TextBox Name="TxtSeedMinutes" Style="{StaticResource FieldBox}"/>
+
+                <!-- Advanced -->
+                <TextBlock Style="{StaticResource SectionHead}" Text="{StaticResource LBL_TORRENT_ADVANCED}"/>
+
+                <TextBlock Style="{StaticResource FieldLabel}" Text="{StaticResource LBL_TORRENT_HALF_OPEN}"/>
+                <TextBox Name="TxtHalfOpen" Style="{StaticResource FieldBox}"/>
+
+                <TextBlock Style="{StaticResource FieldLabel}" Text="{StaticResource LBL_TORRENT_OPEN_FILES}"/>
+                <TextBox Name="TxtOpenFiles" Style="{StaticResource FieldBox}"/>
+
+                <TextBlock Style="{StaticResource FieldLabel}" Text="{StaticResource LBL_TORRENT_DISK_CACHE}"/>
+                <TextBox Name="TxtDiskCache" Style="{StaticResource FieldBox}" Margin="10,4,10,16"/>
+            </StackPanel>
+        </ScrollViewer>
+    </DockPanel>
+</UserControl>

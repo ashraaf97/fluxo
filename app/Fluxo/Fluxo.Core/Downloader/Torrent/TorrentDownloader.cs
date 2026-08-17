@@ -184,9 +184,13 @@ namespace Fluxo.Core.Downloader.Torrent
 
         private string ResolveSaveDirectory(TorrentDownloadInfo request)
         {
+            // A torrent-specific folder wins when set, as in qBittorrent, otherwise
+            // torrents land wherever everything else does.
             var folder = TargetDir
                 ?? request.SaveDirectory
-                ?? Config.Instance.DefaultDownloadFolder;
+                ?? (string.IsNullOrWhiteSpace(Config.Instance.TorrentSaveFolder)
+                    ? Config.Instance.DefaultDownloadFolder
+                    : Config.Instance.TorrentSaveFolder);
 
             if (string.IsNullOrWhiteSpace(folder))
             {

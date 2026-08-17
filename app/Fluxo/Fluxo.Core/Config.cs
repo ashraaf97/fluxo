@@ -146,7 +146,53 @@ namespace Fluxo.Core
 
         public int TorrentMaxUploadRate { get; set; } = 0;
 
-        public int TorrentMaxConnections { get; set; } = 150;
+        /// <summary>Global connection ceiling. qBittorrent's default is 500.</summary>
+        public int TorrentMaxConnections { get; set; } = 500;
+
+        /// <summary>Per-torrent connection ceiling, so one swarm cannot eat the lot.</summary>
+        public int TorrentMaxConnectionsPerTorrent { get; set; } = 100;
+
+        /// <summary>How many peers a single torrent uploads to at once.</summary>
+        public int TorrentUploadSlotsPerTorrent { get; set; } = 4;
+
+        /// <summary>
+        /// Half-open connections, which Windows has historically been touchy about.
+        /// Mirrors qBittorrent's "connection speed" setting.
+        /// </summary>
+        public int TorrentMaxHalfOpenConnections { get; set; } = 30;
+
+        /// <summary>File handles the engine keeps open, mirroring qBittorrent's file pool.</summary>
+        public int TorrentMaxOpenFiles { get; set; } = 100;
+
+        /// <summary>Disk cache in MiB. 0 leaves MonoTorrent's own default alone.</summary>
+        public int TorrentDiskCacheMiB { get; set; } = 5;
+
+        /// <summary>
+        /// Where torrents are saved. Empty falls back to the normal download folder,
+        /// which is what most people want; qBittorrent keeps a separate one.
+        /// </summary>
+        public string TorrentSaveFolder { get; set; } = string.Empty;
+
+        /// <summary>
+        /// Keep the torrent's own top-level folder, as qBittorrent's "Original"
+        /// content layout does. Turning this off writes a multi-file torrent's files
+        /// straight into the save folder, which scatters them.
+        /// </summary>
+        public bool TorrentCreateSubfolder { get; set; } = true;
+
+        /// <summary>
+        /// Marks partially downloaded files while they are incomplete, the
+        /// equivalent of qBittorrent's ".!qB" extension.
+        /// </summary>
+        public bool TorrentAppendExtensionToIncompleteFiles { get; set; } = false;
+
+        /// <summary>
+        /// Super seeding: feeds distinct pieces to each peer so a new torrent
+        /// spreads faster. Only useful when seeding something nobody else has yet.
+        /// </summary>
+        public bool TorrentEnableSuperSeeding { get; set; } = false;
+
+        public TorrentEncryptionMode TorrentEncryption { get; set; } = TorrentEncryptionMode.Prefer;
 
         public bool TorrentEnableDht { get; set; } = true;
 
@@ -584,6 +630,22 @@ namespace Fluxo.Core
     /// <summary>
     /// Values are persisted as integers, so only append to this list.
     /// </summary>
+    /// <summary>
+    /// Mirrors qBittorrent's three-way encryption choice. Values are persisted as
+    /// integers, so only append to this list.
+    /// </summary>
+    public enum TorrentEncryptionMode
+    {
+        /// <summary>Encrypt where the peer supports it, fall back to plain text.</summary>
+        Prefer,
+
+        /// <summary>Refuse peers that will not encrypt.</summary>
+        Require,
+
+        /// <summary>Plain text only.</summary>
+        Disable
+    }
+
     public enum DebridProvider
     {
         AllDebrid,

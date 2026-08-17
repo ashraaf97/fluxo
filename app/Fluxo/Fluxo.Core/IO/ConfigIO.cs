@@ -217,6 +217,36 @@ namespace Fluxo.Core.IO
                     case "TorrentMaxConnections":
                         instance.TorrentMaxConnections = r.ReadInt32();
                         break;
+                    case "TorrentMaxConnectionsPerTorrent":
+                        instance.TorrentMaxConnectionsPerTorrent = r.ReadInt32();
+                        break;
+                    case "TorrentUploadSlotsPerTorrent":
+                        instance.TorrentUploadSlotsPerTorrent = r.ReadInt32();
+                        break;
+                    case "TorrentMaxHalfOpenConnections":
+                        instance.TorrentMaxHalfOpenConnections = r.ReadInt32();
+                        break;
+                    case "TorrentMaxOpenFiles":
+                        instance.TorrentMaxOpenFiles = r.ReadInt32();
+                        break;
+                    case "TorrentDiskCacheMiB":
+                        instance.TorrentDiskCacheMiB = r.ReadInt32();
+                        break;
+                    case "TorrentSaveFolder":
+                        instance.TorrentSaveFolder = r.ReadString();
+                        break;
+                    case "TorrentCreateSubfolder":
+                        instance.TorrentCreateSubfolder = r.ReadBoolean();
+                        break;
+                    case "TorrentAppendExtensionToIncompleteFiles":
+                        instance.TorrentAppendExtensionToIncompleteFiles = r.ReadBoolean();
+                        break;
+                    case "TorrentEnableSuperSeeding":
+                        instance.TorrentEnableSuperSeeding = r.ReadBoolean();
+                        break;
+                    case "TorrentEncryption":
+                        instance.TorrentEncryption = (TorrentEncryptionMode)r.ReadInt32();
+                        break;
                     case "TorrentEnableDht":
                         instance.TorrentEnableDht = r.ReadBoolean();
                         break;
@@ -487,6 +517,26 @@ namespace Fluxo.Core.IO
             WriteInt32(w, instance.TorrentMaxUploadRate, "TorrentMaxUploadRate");
             count++;
             WriteInt32(w, instance.TorrentMaxConnections, "TorrentMaxConnections");
+            count++;
+            WriteInt32(w, instance.TorrentMaxConnectionsPerTorrent, "TorrentMaxConnectionsPerTorrent");
+            count++;
+            WriteInt32(w, instance.TorrentUploadSlotsPerTorrent, "TorrentUploadSlotsPerTorrent");
+            count++;
+            WriteInt32(w, instance.TorrentMaxHalfOpenConnections, "TorrentMaxHalfOpenConnections");
+            count++;
+            WriteInt32(w, instance.TorrentMaxOpenFiles, "TorrentMaxOpenFiles");
+            count++;
+            WriteInt32(w, instance.TorrentDiskCacheMiB, "TorrentDiskCacheMiB");
+            count++;
+            WriteString(w, instance.TorrentSaveFolder, "TorrentSaveFolder");
+            count++;
+            WriteBoolean(w, instance.TorrentCreateSubfolder, "TorrentCreateSubfolder");
+            count++;
+            WriteBoolean(w, instance.TorrentAppendExtensionToIncompleteFiles, "TorrentAppendExtensionToIncompleteFiles");
+            count++;
+            WriteBoolean(w, instance.TorrentEnableSuperSeeding, "TorrentEnableSuperSeeding");
+            count++;
+            WriteInt32(w, (int)instance.TorrentEncryption, "TorrentEncryption");
             count++;
             WriteBoolean(w, instance.TorrentEnableDht, "TorrentEnableDht");
             count++;

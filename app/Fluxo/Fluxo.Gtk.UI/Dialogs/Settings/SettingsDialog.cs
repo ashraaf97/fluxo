@@ -66,6 +66,8 @@ namespace Fluxo.GtkUI.Dialogs.Settings
 
         private ListStore categoryStore, passwordStore, debridProviderStore;
 
+        private TorrentSettingsPage torrentPage;
+
         private SettingsDialog(Builder builder,
             Window parent,
             WindowGroup group) : base(builder.GetRawOwnedObject("dialog"))
@@ -100,6 +102,7 @@ namespace Fluxo.GtkUI.Dialogs.Settings
                 TextResource.GetText("ND_NO_PROXY"), TextResource.GetText("ND_MANUAL_PROXY"));
 
             CreateDebridProviderListView();
+            AppendTorrentPage();
 
             CreatePasswordManagerListView();
 
@@ -313,6 +316,7 @@ namespace Fluxo.GtkUI.Dialogs.Settings
             UpdatePasswordManagerConfig();
             UpdateAdvancedSettingsConfig();
             UpdatePremiumHostersConfig();
+            this.torrentPage.UpdateConfig();
             Config.SaveConfig();
             ApplicationContext.BroadcastConfigChange();
             Dispose();
@@ -643,6 +647,35 @@ namespace Fluxo.GtkUI.Dialogs.Settings
                 debridProviderStore.AppendValues(DebridSupport.DisplayName(provider), (int)provider);
             }
             SelectDebridProviderRow(0);
+
+            this.torrentPage.LoadConfig();
+        }
+
+        /// <summary>
+        /// Adds the Torrent page and its sidebar row at the end of both lists, so the
+        /// row index still lines up with the notebook page and every page that was
+        /// already there keeps its index.
+        /// </summary>
+        private void AppendTorrentPage()
+        {
+            this.torrentPage = new TorrentSettingsPage(this);
+
+            Tabs.AppendPage(this.torrentPage.Widget, new Label("page 7"));
+
+            var label = new Label(TextResource.GetText("SETTINGS_TORRENT"))
+            {
+                Halign = Align.Start,
+                MarginStart = 10,
+                MarginEnd = 10,
+                MarginTop = 5,
+                MarginBottom = 5
+            };
+            var row = new ListBoxRow();
+            var rowBox = new Box(Orientation.Horizontal, 0);
+            rowBox.PackStart(label, false, true, 0);
+            row.Add(rowBox);
+            SideList.Add(row);
+            row.ShowAll();
         }
 
         private void CreateDebridProviderListView()

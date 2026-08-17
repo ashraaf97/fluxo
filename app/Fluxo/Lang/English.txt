@@ -123,6 +123,38 @@ SETTINGS_NETWORK=Network settings
 SETTINGS_CRED=Password manager
 SETTINGS_ADV=Advanced settings
 SETTINGS_PREMIUM_HOSTERS=Premium hosters
+SETTINGS_TORRENT=Torrent
+MSG_TORRENT_INTRO=These apply when Fluxo downloads a torrent itself, rather than handing it to a premium hoster. Defaults follow qBittorrent's where there is an equivalent.
+LBL_TORRENT_CONNECTION=Connection
+LBL_TORRENT_DISCOVERY=Peer discovery
+LBL_TORRENT_FILES=Files
+LBL_TORRENT_SEEDING=Seeding
+LBL_TORRENT_ADVANCED=Advanced
+LBL_TORRENT_PORT=Listening port (0 lets the system choose)
+LBL_TORRENT_MAX_DOWN=Maximum download rate in KiB/s (0 = unlimited)
+LBL_TORRENT_MAX_UP=Maximum upload rate in KiB/s (0 = unlimited)
+LBL_TORRENT_MAX_CONN=Global maximum connections
+LBL_TORRENT_MAX_CONN_PER=Maximum connections per torrent
+LBL_TORRENT_UPLOAD_SLOTS=Upload slots per torrent
+LBL_TORRENT_ENCRYPTION=Encryption
+LBL_TORRENT_ENC_PREFER=Prefer encryption
+LBL_TORRENT_ENC_REQUIRE=Require encryption
+LBL_TORRENT_ENC_DISABLE=Disable encryption
+LBL_TORRENT_SAVE_FOLDER=Save torrents to (empty uses the download folder)
+LBL_TORRENT_SEED_RATIO=Stop seeding at ratio (0 = never stop)
+LBL_TORRENT_SEED_TIME=Stop seeding after minutes (0 = never stop)
+LBL_TORRENT_HALF_OPEN=Maximum half-open connections
+LBL_TORRENT_OPEN_FILES=Maximum open files
+LBL_TORRENT_DISK_CACHE=Disk cache in MiB (0 = automatic)
+CHK_TORRENT_DHT=Use DHT to find peers without a tracker
+CHK_TORRENT_PEX=Exchange peers with other clients
+CHK_TORRENT_LSD=Look for peers on the local network
+CHK_TORRENT_UPNP=Forward the port automatically with UPnP or NAT-PMP
+CHK_TORRENT_SUBFOLDER=Keep the folder the torrent carries
+CHK_TORRENT_INCOMPLETE_EXT=Mark files as incomplete while they download
+CHK_TORRENT_SEEDING=Keep seeding after a torrent finishes
+CHK_TORRENT_SUPERSEED=Super seeding (spread a new torrent faster)
+MSG_TORRENT_SEEDING_NOTE=Seeding uploads your bandwidth and shares what you downloaded with other peers.
 MSG_PREMIUM_HOSTERS_INTRO=Fluxo has no BitTorrent client of its own. Torrents, magnet links and premium hoster links are handed to a debrid service, which fetches them and serves the result over HTTP. Add a key for the service you subscribe to.
 DESC_MONITORING_1=Please make sure Fluxo extension is installed in your browser. To install the browser extension, please click on the buttons below or copy paste the link directly in the browser
 DESC_OTHER_BROWSERS=Fluxo can also be integrated into other Chromium based browser (Vivaldi, Brave browser etc) or Mozilla based (Icewasel, Waterfox etc) browsers using below links

@@ -36,7 +36,8 @@ namespace Fluxo.Wpf.UI.Dialogs.Settings
                 NetworkSettingsView,
                 PasswordManagerView,
                 AdvancedSettingsView,
-                PremiumHostersView
+                PremiumHostersView,
+                TorrentSettingsView
             };
             LbTitles.SelectedIndex = selectedPageIndex;
             foreach (var page in pages)

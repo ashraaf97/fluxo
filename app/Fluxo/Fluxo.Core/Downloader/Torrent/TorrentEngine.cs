@@ -7,6 +7,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using MonoTorrent;
 using MonoTorrent.Client;
+using MonoTorrent.Connections;
 using TraceLog;
 
 namespace Fluxo.Core.Downloader.Torrent
@@ -97,12 +98,27 @@ namespace Fluxo.Core.Downloader.Torrent
                 AutoSaveLoadMagnetLinkMetadata = true,
 
                 MaximumConnections = Math.Max(1, config.TorrentMaxConnections),
+                MaximumHalfOpenConnections = Math.Max(1, config.TorrentMaxHalfOpenConnections),
+                MaximumOpenFiles = Math.Max(1, config.TorrentMaxOpenFiles),
                 MaximumDownloadRate = ToBytesPerSecond(config.TorrentMaxDownloadRate),
                 MaximumUploadRate = ToBytesPerSecond(config.TorrentMaxUploadRate),
 
                 AllowLocalPeerDiscovery = config.TorrentEnableLocalPeerDiscovery,
-                AllowPortForwarding = config.TorrentEnablePortForwarding
+                AllowPortForwarding = config.TorrentEnablePortForwarding,
+
+                // Marks incomplete files while they are being written, the same idea
+                // as qBittorrent's ".!qB" suffix.
+                UsePartialFiles = config.TorrentAppendExtensionToIncompleteFiles,
+
+                AllowedEncryption = EncryptionFor(config.TorrentEncryption)
             };
+
+            // 0 means "leave MonoTorrent's own default alone" rather than "no cache",
+            // which would be a pathological setting rather than a useful one.
+            if (config.TorrentDiskCacheMiB > 0)
+            {
+                builder.DiskCacheBytes = config.TorrentDiskCacheMiB * 1024 * 1024;
+            }
 
             builder.ListenEndPoints["ipv4"] = new IPEndPoint(IPAddress.Any, port);
             builder.ListenEndPoints["ipv6"] = new IPEndPoint(IPAddress.IPv6Any, port);
@@ -120,6 +136,27 @@ namespace Fluxo.Core.Downloader.Torrent
 
         private static int ToBytesPerSecond(int kibPerSecond)
             => kibPerSecond <= 0 ? 0 : kibPerSecond * 1024;
+
+        /// <summary>
+        /// The three-way choice most clients offer. Order matters: MonoTorrent tries
+        /// the listed methods in turn, so putting the encrypted ones first is what
+        /// makes "prefer" prefer rather than merely permit.
+        /// </summary>
+        private static List<EncryptionType> EncryptionFor(TorrentEncryptionMode mode) => mode switch
+        {
+            TorrentEncryptionMode.Require => new List<EncryptionType>
+            {
+                EncryptionType.RC4Header, EncryptionType.RC4Full
+            },
+            TorrentEncryptionMode.Disable => new List<EncryptionType>
+            {
+                EncryptionType.PlainText
+            },
+            _ => new List<EncryptionType>
+            {
+                EncryptionType.RC4Header, EncryptionType.RC4Full, EncryptionType.PlainText
+            }
+        };
 
         /// <summary>
         /// Re-applies settings to the running engine. Does nothing when no torrent
@@ -187,11 +224,15 @@ namespace Fluxo.Core.Downloader.Torrent
             {
                 AllowDht = config.TorrentEnableDht,
                 AllowPeerExchange = config.TorrentEnablePeerExchange,
+                AllowInitialSeeding = config.TorrentEnableSuperSeeding,
 
-                // A multi-file torrent already carries its own folder structure, and
-                // Fluxo passes a save directory named for the torrent, so letting
-                // MonoTorrent add another one would nest it a level too deep.
-                CreateContainingDirectory = false
+                MaximumConnections = Math.Max(1, config.TorrentMaxConnectionsPerTorrent),
+                UploadSlots = Math.Max(1, config.TorrentUploadSlotsPerTorrent),
+
+                // Keeps the torrent's own top-level folder, matching qBittorrent's
+                // "Original" content layout. Without it a multi-file torrent writes
+                // its files straight into the save folder and scatters them.
+                CreateContainingDirectory = config.TorrentCreateSubfolder
             }.ToSettings();
         }
 
