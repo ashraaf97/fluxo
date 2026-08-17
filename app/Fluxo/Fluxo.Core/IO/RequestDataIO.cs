@@ -7,6 +7,7 @@ using Fluxo.Core.Downloader.Adaptive.Dash;
 using Fluxo.Core.Downloader.Adaptive.Hls;
 using Fluxo.Core.Downloader.Progressive.DualHttp;
 using Fluxo.Core.Downloader.Progressive.SingleHttp;
+using Fluxo.Core.Downloader.Torrent;
 using Fluxo.Messaging;
 
 namespace Fluxo.Core.IO
@@ -86,6 +87,55 @@ namespace Fluxo.Core.IO
                     w.Write(videoSegment.ToString());
                 }
             }
+        }
+
+        /// <summary>
+        /// A torrent is described by either a magnet URI or the bytes of a .torrent
+        /// file. The bytes are stored rather than a path to them, because the file
+        /// the user picked may well be gone by the time the download resumes.
+        /// </summary>
+        public static void SaveDownloadInfo(string id, TorrentDownloadInfo info)
+        {
+            using var s = new FileStream(Path.Combine(Config.DataDir, id + ".info"), FileMode.Create);
+            using var w = new BinaryWriter(s);
+            WriteStringSafe(info.MagnetUri, w);
+            WriteStringSafe(info.File, w);
+            WriteStringSafe(info.SaveDirectory, w);
+
+            var torrentFile = info.TorrentFile ?? Array.Empty<byte>();
+            w.Write(torrentFile.Length);
+            w.Write(torrentFile);
+        }
+
+        public static TorrentDownloadInfo? LoadTorrentDownloadInfo(string id)
+        {
+            try
+            {
+                using var s = new FileStream(Path.Combine(Config.DataDir, id + ".info"), FileMode.Open);
+                using var r = new BinaryReader(s);
+
+                var magnet = StreamHelper.ReadString(r);
+                var info = new TorrentDownloadInfo
+                {
+                    MagnetUri = string.IsNullOrEmpty(magnet) ? null : magnet,
+                    File = StreamHelper.ReadString(r) ?? string.Empty
+                };
+
+                var saveDirectory = StreamHelper.ReadString(r);
+                info.SaveDirectory = string.IsNullOrEmpty(saveDirectory) ? null : saveDirectory;
+
+                var length = r.ReadInt32();
+                if (length > 0)
+                {
+                    info.TorrentFile = r.ReadBytes(length);
+                }
+                return info;
+            }
+            catch (Exception ex)
+            {
+                Log.Debug(ex, ex.Message);
+            }
+            return null;
         }
 
         public static SingleSourceHTTPDownloadInfo? LoadSingleSourceHTTPDownloadInfo(string id)

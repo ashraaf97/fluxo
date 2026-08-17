@@ -133,6 +133,44 @@ namespace Fluxo.Core
 
         public string PremiumizeApiKey { get; set; } = string.Empty;
 
+        // ------------------------------------------------------------- torrents
+
+        /// <summary>
+        /// Port the BitTorrent engine listens on. 0 lets the OS pick, which avoids
+        /// a clash but makes the port unpredictable for firewall rules.
+        /// </summary>
+        public int TorrentListenPort { get; set; } = 6881;
+
+        /// <summary>Global torrent rate caps in KiB/s. 0 means unlimited.</summary>
+        public int TorrentMaxDownloadRate { get; set; } = 0;
+
+        public int TorrentMaxUploadRate { get; set; } = 0;
+
+        public int TorrentMaxConnections { get; set; } = 150;
+
+        public bool TorrentEnableDht { get; set; } = true;
+
+        public bool TorrentEnablePeerExchange { get; set; } = true;
+
+        public bool TorrentEnableLocalPeerDiscovery { get; set; } = true;
+
+        public bool TorrentEnablePortForwarding { get; set; } = true;
+
+        /// <summary>
+        /// Whether to keep seeding once a torrent completes. Seeding uploads the
+        /// user's bandwidth and data, so it is worth being explicit about.
+        /// </summary>
+        public bool TorrentEnableSeeding { get; set; } = true;
+
+        /// <summary>
+        /// Stop seeding at this share ratio. 0 means seed indefinitely. Persisted
+        /// as hundredths because the config format has no floating point type.
+        /// </summary>
+        public double TorrentSeedRatioLimit { get; set; } = 2.0;
+
+        /// <summary>Stop seeding after this many minutes. 0 means no time limit.</summary>
+        public int TorrentSeedTimeLimitMinutes { get; set; } = 0;
+
         /// <summary>
         /// Debrid services in the order they should be tried, held as
         /// <see cref="DebridProvider"/> values. The first one that has an API key

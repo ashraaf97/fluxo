@@ -205,6 +205,40 @@ namespace Fluxo.Core.IO
                     case "PremiumizeApiKey":
                         instance.PremiumizeApiKey = r.ReadString();
                         break;
+                    case "TorrentListenPort":
+                        instance.TorrentListenPort = r.ReadInt32();
+                        break;
+                    case "TorrentMaxDownloadRate":
+                        instance.TorrentMaxDownloadRate = r.ReadInt32();
+                        break;
+                    case "TorrentMaxUploadRate":
+                        instance.TorrentMaxUploadRate = r.ReadInt32();
+                        break;
+                    case "TorrentMaxConnections":
+                        instance.TorrentMaxConnections = r.ReadInt32();
+                        break;
+                    case "TorrentEnableDht":
+                        instance.TorrentEnableDht = r.ReadBoolean();
+                        break;
+                    case "TorrentEnablePeerExchange":
+                        instance.TorrentEnablePeerExchange = r.ReadBoolean();
+                        break;
+                    case "TorrentEnableLocalPeerDiscovery":
+                        instance.TorrentEnableLocalPeerDiscovery = r.ReadBoolean();
+                        break;
+                    case "TorrentEnablePortForwarding":
+                        instance.TorrentEnablePortForwarding = r.ReadBoolean();
+                        break;
+                    case "TorrentEnableSeeding":
+                        instance.TorrentEnableSeeding = r.ReadBoolean();
+                        break;
+                    // Stored in hundredths: the format has no floating point type.
+                    case "TorrentSeedRatioLimitX100":
+                        instance.TorrentSeedRatioLimit = r.ReadInt32() / 100.0;
+                        break;
+                    case "TorrentSeedTimeLimitMinutes":
+                        instance.TorrentSeedTimeLimitMinutes = r.ReadInt32();
+                        break;
                     case "DebridProviderOrder":
                         var debridProviderOrderLength = r.ReadInt16();
                         instance.DebridProviderOrder = new int[debridProviderOrderLength];
@@ -445,6 +479,28 @@ namespace Fluxo.Core.IO
             WriteString(w, instance.PremiumToApiKey, "PremiumToApiKey");
             count++;
             WriteString(w, instance.PremiumizeApiKey, "PremiumizeApiKey");
+            count++;
+            WriteInt32(w, instance.TorrentListenPort, "TorrentListenPort");
+            count++;
+            WriteInt32(w, instance.TorrentMaxDownloadRate, "TorrentMaxDownloadRate");
+            count++;
+            WriteInt32(w, instance.TorrentMaxUploadRate, "TorrentMaxUploadRate");
+            count++;
+            WriteInt32(w, instance.TorrentMaxConnections, "TorrentMaxConnections");
+            count++;
+            WriteBoolean(w, instance.TorrentEnableDht, "TorrentEnableDht");
+            count++;
+            WriteBoolean(w, instance.TorrentEnablePeerExchange, "TorrentEnablePeerExchange");
+            count++;
+            WriteBoolean(w, instance.TorrentEnableLocalPeerDiscovery, "TorrentEnableLocalPeerDiscovery");
+            count++;
+            WriteBoolean(w, instance.TorrentEnablePortForwarding, "TorrentEnablePortForwarding");
+            count++;
+            WriteBoolean(w, instance.TorrentEnableSeeding, "TorrentEnableSeeding");
+            count++;
+            WriteInt32(w, (int)Math.Round(instance.TorrentSeedRatioLimit * 100), "TorrentSeedRatioLimitX100");
+            count++;
+            WriteInt32(w, instance.TorrentSeedTimeLimitMinutes, "TorrentSeedTimeLimitMinutes");
             count++;
             WriteInt32Array(w, instance.DebridProviderOrder, "DebridProviderOrder", instance.DebridProviderOrder.Length);
             count++;
