@@ -8,91 +8,177 @@
              d:DesignHeight="600" d:DesignWidth="800">
     <UserControl.Resources>
         <Style x:Key="SectionHead" TargetType="TextBlock">
-            <Setter Property="Margin" Value="10,18,10,4"/>
             <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
         </Style>
-        <Style x:Key="FieldLabel" TargetType="TextBlock">
-            <Setter Property="Margin" Value="10,10,10,0"/>
+        <Style x:Key="Hint" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="{DynamicResource TextSecondary}"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
         </Style>
-        <Style x:Key="FieldBox" TargetType="TextBox">
-            <Setter Property="Margin" Value="10,4,10,0"/>
-            <Setter Property="Width" Value="100"/>
-            <Setter Property="HorizontalAlignment" Value="Left"/>
+        <Style x:Key="SmallNumberBox" TargetType="TextBox">
+            <Setter Property="Width" Value="52"/>
             <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="TextAlignment" Value="Right"/>
         </Style>
-        <Style x:Key="Check" TargetType="CheckBox">
-            <Setter Property="Margin" Value="10,6,10,0"/>
-            <Setter Property="Padding" Value="3"/>
-            <Setter Property="VerticalContentAlignment" Value="Center"/>
+        <Style x:Key="ListAction" TargetType="Button">
+            <Setter Property="Padding" Value="9,2"/>
+            <Setter Property="Margin" Value="4,0,0,0"/>
         </Style>
-    </UserControl.Resources>
-    <DockPanel>
-        <TextBlock Padding="10" Text="{StaticResource SETTINGS_RSS}" FontSize="14" DockPanel.Dock="Top"/>
-        <ScrollViewer VerticalScrollBarVisibility="Auto">
-            <StackPanel>
-                <TextBlock Margin="10,5,10,0" TextWrapping="Wrap" Opacity="0.75"
-                           Text="{StaticResource MSG_RSS_INTRO}"/>
 
-                <!-- General -->
-                <CheckBox Name="ChkEnabled" Style="{StaticResource Check}" Content="{StaticResource CHK_RSS_ENABLED}"/>
-                <TextBlock Style="{StaticResource FieldLabel}" Text="{StaticResource LBL_RSS_REFRESH}"/>
-                <TextBox Name="TxtRefreshMinutes" Style="{StaticResource FieldBox}"/>
-                <TextBlock Style="{StaticResource FieldLabel}" Text="{StaticResource LBL_RSS_MAX_ARTICLES}"/>
-                <TextBox Name="TxtMaxArticles" Style="{StaticResource FieldBox}" Margin="10,4,10,16"/>
-
-                <TextBlock Margin="10,0,10,8" TextWrapping="Wrap" Opacity="0.75"
-                           Text="{StaticResource MSG_RSS_NEEDS_DEBRID}"/>
-
-                <!-- Feeds -->
-                <TextBlock Style="{StaticResource SectionHead}" Text="{StaticResource LBL_RSS_FEEDS}"/>
-                <ListView Name="LvFeeds" Margin="10,4" Height="140" BorderThickness="1"
-                          BorderBrush="{DynamicResource ControlBordercolor}"
-                          SelectionChanged="LvFeeds_SelectionChanged">
-                    <ListView.View>
-                        <GridView>
-                            <GridViewColumn Header="{StaticResource LBL_RSS_FEED_NAME}" Width="160"
-                                            DisplayMemberBinding="{Binding DisplayName}"/>
-                            <GridViewColumn Header="{StaticResource LBL_RSS_FEED_URL}" Width="320"
-                                            DisplayMemberBinding="{Binding Url}"/>
-                        </GridView>
-                    </ListView.View>
-                </ListView>
-                <StackPanel Margin="10,0" Orientation="Horizontal" HorizontalAlignment="Left">
-                    <Button Name="BtnFeedAdd" Margin="0,0,5,0" Padding="10,3"
-                            Content="{StaticResource SETTINGS_CAT_ADD}" Click="BtnFeedAdd_Click"/>
-                    <Button Name="BtnFeedEdit" Margin="5,0,5,0" Padding="10,3"
-                            Content="{StaticResource SETTINGS_CAT_EDIT}" Click="BtnFeedEdit_Click"/>
-                    <Button Name="BtnFeedDelete" Margin="5,0,5,0" Padding="10,3"
-                            Content="{StaticResource DESC_DEL}" Click="BtnFeedDelete_Click"/>
-                    <Button Name="BtnFeedRefresh" Margin="5,0,0,0" Padding="10,3"
-                            Content="{StaticResource MSG_RSS_REFRESH_NOW}" Click="BtnFeedRefresh_Click"/>
-                </StackPanel>
-
-                <!-- Rules -->
-                <TextBlock Style="{StaticResource SectionHead}" Text="{StaticResource LBL_RSS_RULES}"/>
-                <ListView Name="LvRules" Margin="10,4" Height="140" BorderThickness="1"
-                          BorderBrush="{DynamicResource ControlBordercolor}"
-                          SelectionChanged="LvRules_SelectionChanged">
-                    <ListView.View>
-                        <GridView>
-                            <GridViewColumn Header="{StaticResource LBL_RSS_RULE_NAME}" Width="160"
-                                            DisplayMemberBinding="{Binding Name}"/>
-                            <GridViewColumn Header="{StaticResource LBL_RSS_MUST_CONTAIN}" Width="160"
-                                            DisplayMemberBinding="{Binding MustContain}"/>
-                            <GridViewColumn Header="{StaticResource LBL_RSS_PRIORITY}" Width="80"
-                                            DisplayMemberBinding="{Binding Priority}"/>
-                        </GridView>
-                    </ListView.View>
-                </ListView>
-                <StackPanel Margin="10,0,10,16" Orientation="Horizontal" HorizontalAlignment="Left">
-                    <Button Name="BtnRuleAdd" Margin="0,0,5,0" Padding="10,3"
-                            Content="{StaticResource SETTINGS_CAT_ADD}" Click="BtnRuleAdd_Click"/>
-                    <Button Name="BtnRuleEdit" Margin="5,0,5,0" Padding="10,3"
-                            Content="{StaticResource SETTINGS_CAT_EDIT}" Click="BtnRuleEdit_Click"/>
-                    <Button Name="BtnRuleDelete" Margin="5,0,0,0" Padding="10,3"
-                            Content="{StaticResource DESC_DEL}" Click="BtnRuleDelete_Click"/>
-                </StackPanel>
+        <!-- Two lines per row: the name reads first, the address stays available
+             but out of the way. A fixed-column grid could not do this without
+             clipping in a pane this narrow. -->
+        <DataTemplate x:Key="FeedRow">
+            <StackPanel Margin="2,3" ToolTip="{Binding Url}">
+                <TextBlock Text="{Binding DisplayName}" TextTrimming="CharacterEllipsis"/>
+                <TextBlock Text="{Binding Url}" TextTrimming="CharacterEllipsis"
+                           FontSize="11" Foreground="{DynamicResource TextSecondary}"/>
+                <!-- Only present on a feed that failed, so a broken subscription
+                     reads as broken rather than merely stale. Labelled rather than
+                     coloured: the theme carries no error colour, and inventing one
+                     here would be wrong in either light or dark. -->
+                <TextBlock TextTrimming="CharacterEllipsis" FontSize="11">
+                    <Run Text="{StaticResource MSG_RSS_FEED_ERROR}"/><Run Text=": "/><Run Text="{Binding LastError, Mode=OneWay}"/>
+                    <TextBlock.Style>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="Visibility" Value="Visible"/>
+                            <Setter Property="Foreground" Value="{DynamicResource TextSecondary}"/>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding LastError}" Value="{x:Null}">
+                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding LastError}" Value="">
+                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TextBlock.Style>
+                </TextBlock>
             </StackPanel>
-        </ScrollViewer>
-    </DockPanel>
+        </DataTemplate>
+
+        <DataTemplate x:Key="RuleRow">
+            <Grid Margin="2,3">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <StackPanel Grid.Column="0">
+                    <TextBlock Text="{Binding Name}" TextTrimming="CharacterEllipsis"/>
+                    <TextBlock Text="{Binding MustContain}" TextTrimming="CharacterEllipsis"
+                               FontSize="11" Foreground="{DynamicResource TextSecondary}"/>
+                </StackPanel>
+                <TextBlock Grid.Column="1" VerticalAlignment="Center" Margin="8,0,0,0"
+                           FontSize="11" Foreground="{DynamicResource TextSecondary}"
+                           Text="{Binding Priority, StringFormat=#{0}}"/>
+            </Grid>
+        </DataTemplate>
+    </UserControl.Resources>
+
+    <!-- A Grid rather than a ScrollViewer over a StackPanel: the two lists share
+         whatever height is left and grow with the dialog, instead of being pinned
+         at 140px inside a page that scrolls as a whole. -->
+    <Grid Margin="10,0,10,10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*" MinHeight="90"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*" MinHeight="90"/>
+        </Grid.RowDefinitions>
+
+        <TextBlock Grid.Row="0" Padding="0,10" FontSize="14" Text="{StaticResource SETTINGS_RSS}"/>
+
+        <TextBlock Grid.Row="1" Margin="0,0,0,10" TextWrapping="Wrap"
+                   Foreground="{DynamicResource TextSecondary}" Text="{StaticResource MSG_RSS_INTRO}"/>
+
+        <!-- One row rather than three stacked label/box pairs. -->
+        <WrapPanel Grid.Row="2" Margin="0,0,0,4">
+            <!-- The debrid note is a tooltip rather than a permanent paragraph: it
+                 is read once, and the two lists need the height more. -->
+            <CheckBox Name="ChkEnabled" VerticalContentAlignment="Center" Padding="3"
+                      Margin="0,0,18,6" Content="{StaticResource CHK_RSS_ENABLED}"
+                      ToolTip="{StaticResource MSG_RSS_NEEDS_DEBRID}"/>
+            <StackPanel Orientation="Horizontal" Margin="0,0,18,6">
+                <TextBlock Style="{StaticResource Hint}" Margin="0,0,6,0"
+                           Text="{StaticResource LBL_RSS_REFRESH}"/>
+                <TextBox Name="TxtRefreshMinutes" Style="{StaticResource SmallNumberBox}"/>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" Margin="0,0,0,6">
+                <TextBlock Style="{StaticResource Hint}" Margin="0,0,6,0"
+                           Text="{StaticResource LBL_RSS_MAX_ARTICLES}"/>
+                <TextBox Name="TxtMaxArticles" Style="{StaticResource SmallNumberBox}"/>
+            </StackPanel>
+        </WrapPanel>
+
+        <!-- Feeds: title and its actions on one line, so the list keeps the height
+             a separate button row would have taken. -->
+        <Grid Grid.Row="3" Margin="0,8,0,4">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <TextBlock Grid.Column="0" Style="{StaticResource SectionHead}"
+                       Text="{StaticResource LBL_RSS_FEEDS}"/>
+            <StackPanel Grid.Column="1" Orientation="Horizontal">
+                <Button Name="BtnFeedAdd" Style="{StaticResource ListAction}"
+                        Content="{StaticResource SETTINGS_CAT_ADD}" Click="BtnFeedAdd_Click"/>
+                <Button Name="BtnFeedEdit" Style="{StaticResource ListAction}"
+                        Content="{StaticResource SETTINGS_CAT_EDIT}" Click="BtnFeedEdit_Click"/>
+                <Button Name="BtnFeedDelete" Style="{StaticResource ListAction}"
+                        Content="{StaticResource DESC_DEL}" Click="BtnFeedDelete_Click"/>
+                <Button Name="BtnFeedRefresh" Style="{StaticResource ListAction}"
+                        Content="{StaticResource MSG_RSS_REFRESH_NOW}" Click="BtnFeedRefresh_Click"/>
+            </StackPanel>
+        </Grid>
+
+        <Grid Grid.Row="4">
+            <ListBox Name="LvFeeds" BorderThickness="1"
+                     BorderBrush="{DynamicResource ControlBordercolor}"
+                     HorizontalContentAlignment="Stretch"
+                     ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                     ItemTemplate="{StaticResource FeedRow}"
+                     SelectionChanged="LvFeeds_SelectionChanged"
+                     MouseDoubleClick="LvFeeds_MouseDoubleClick"/>
+            <TextBlock Name="TxtNoFeeds" IsHitTestVisible="False"
+                       HorizontalAlignment="Center" VerticalAlignment="Center"
+                       TextWrapping="Wrap" TextAlignment="Center" Margin="20,0"
+                       Foreground="{DynamicResource TextSecondary}"
+                       Text="{StaticResource MSG_RSS_NO_FEEDS}"/>
+        </Grid>
+
+        <Grid Grid.Row="5" Margin="0,12,0,4">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <TextBlock Grid.Column="0" Style="{StaticResource SectionHead}"
+                       Text="{StaticResource LBL_RSS_RULES}"/>
+            <StackPanel Grid.Column="1" Orientation="Horizontal">
+                <Button Name="BtnRuleAdd" Style="{StaticResource ListAction}"
+                        Content="{StaticResource SETTINGS_CAT_ADD}" Click="BtnRuleAdd_Click"/>
+                <Button Name="BtnRuleEdit" Style="{StaticResource ListAction}"
+                        Content="{StaticResource SETTINGS_CAT_EDIT}" Click="BtnRuleEdit_Click"/>
+                <Button Name="BtnRuleDelete" Style="{StaticResource ListAction}"
+                        Content="{StaticResource DESC_DEL}" Click="BtnRuleDelete_Click"/>
+            </StackPanel>
+        </Grid>
+
+        <Grid Grid.Row="6">
+            <ListBox Name="LvRules" BorderThickness="1"
+                     BorderBrush="{DynamicResource ControlBordercolor}"
+                     HorizontalContentAlignment="Stretch"
+                     ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                     ItemTemplate="{StaticResource RuleRow}"
+                     SelectionChanged="LvRules_SelectionChanged"
+                     MouseDoubleClick="LvRules_MouseDoubleClick"/>
+            <TextBlock Name="TxtNoRules" IsHitTestVisible="False"
+                       HorizontalAlignment="Center" VerticalAlignment="Center"
+                       TextWrapping="Wrap" TextAlignment="Center" Margin="20,0"
+                       Foreground="{DynamicResource TextSecondary}"
+                       Text="{StaticResource MSG_RSS_NO_RULES}"/>
+        </Grid>
+    </Grid>
 </UserControl>

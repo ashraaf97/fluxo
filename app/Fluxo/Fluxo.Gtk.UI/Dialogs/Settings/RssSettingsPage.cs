@@ -82,36 +82,34 @@ namespace Fluxo.GtkUI.Dialogs.Settings
             box.PackStart(heading, false, true, 0);
             box.PackStart(Wrapped(TextResource.GetText("MSG_RSS_INTRO")), false, true, 0);
 
+            // One row rather than three stacked label/field pairs, which spent most
+            // of the page's height on labels before either list got any.
+            var settingsRow = new Box(Orientation.Horizontal, 12);
             chkEnabled.Label = TextResource.GetText("CHK_RSS_ENABLED");
-            box.PackStart(chkEnabled, false, true, 0);
 
-            box.PackStart(Caption("LBL_RSS_REFRESH"), false, true, 0);
-            txtRefreshMinutes.WidthChars = 8;
-            txtRefreshMinutes.Halign = Align.Start;
-            box.PackStart(txtRefreshMinutes, false, true, 0);
+            // The debrid note is a tooltip rather than a permanent paragraph: it is
+            // read once, and the two lists need the height more.
+            chkEnabled.TooltipText = TextResource.GetText("MSG_RSS_NEEDS_DEBRID");
+            settingsRow.PackStart(chkEnabled, false, true, 0);
 
-            box.PackStart(Caption("LBL_RSS_MAX_ARTICLES"), false, true, 0);
-            txtMaxArticles.WidthChars = 8;
-            txtMaxArticles.Halign = Align.Start;
-            box.PackStart(txtMaxArticles, false, true, 0);
+            txtRefreshMinutes.WidthChars = 5;
+            settingsRow.PackStart(Caption("LBL_RSS_REFRESH"), false, true, 0);
+            settingsRow.PackStart(txtRefreshMinutes, false, true, 0);
 
-            box.PackStart(Wrapped(TextResource.GetText("MSG_RSS_NEEDS_DEBRID")), false, true, 0);
+            txtMaxArticles.WidthChars = 5;
+            settingsRow.PackStart(Caption("LBL_RSS_MAX_ARTICLES"), false, true, 0);
+            settingsRow.PackStart(txtMaxArticles, false, true, 0);
+            box.PackStart(settingsRow, false, true, 0);
 
             // Feeds
-            Section(box, "LBL_RSS_FEEDS");
-            lvFeeds = new TreeView { HeadersVisible = true, HeightRequest = 140 };
-            box.PackStart(lvFeeds, true, true, 0);
-
-            var feedButtons = new Box(Orientation.Horizontal, 5);
             btnFeedAdd = new Button(TextResource.GetText("SETTINGS_CAT_ADD"));
             btnFeedEdit = new Button(TextResource.GetText("SETTINGS_CAT_EDIT"));
             btnFeedDelete = new Button(TextResource.GetText("DESC_DEL"));
             btnFeedRefresh = new Button(TextResource.GetText("MSG_RSS_REFRESH_NOW"));
-            feedButtons.PackStart(btnFeedAdd, false, true, 0);
-            feedButtons.PackStart(btnFeedEdit, false, true, 0);
-            feedButtons.PackStart(btnFeedDelete, false, true, 0);
-            feedButtons.PackStart(btnFeedRefresh, false, true, 0);
-            box.PackStart(feedButtons, false, true, 0);
+            Section(box, "LBL_RSS_FEEDS", btnFeedAdd, btnFeedEdit, btnFeedDelete, btnFeedRefresh);
+
+            lvFeeds = new TreeView { HeadersVisible = true };
+            box.PackStart(Scrolled(lvFeeds), true, true, 0);
 
             btnFeedAdd.Clicked += (_, _) => AddFeed();
             btnFeedEdit.Clicked += (_, _) => EditFeed();
@@ -119,36 +117,62 @@ namespace Fluxo.GtkUI.Dialogs.Settings
             btnFeedRefresh.Clicked += (_, _) => ApplicationContext.CoreService.RefreshAllFeeds();
 
             // Rules
-            Section(box, "LBL_RSS_RULES");
-            lvRules = new TreeView { HeadersVisible = true, HeightRequest = 140 };
-            box.PackStart(lvRules, true, true, 0);
-
-            var ruleButtons = new Box(Orientation.Horizontal, 5);
             btnRuleAdd = new Button(TextResource.GetText("SETTINGS_CAT_ADD"));
             btnRuleEdit = new Button(TextResource.GetText("SETTINGS_CAT_EDIT"));
             btnRuleDelete = new Button(TextResource.GetText("DESC_DEL"));
-            ruleButtons.PackStart(btnRuleAdd, false, true, 0);
-            ruleButtons.PackStart(btnRuleEdit, false, true, 0);
-            ruleButtons.PackStart(btnRuleDelete, false, true, 0);
-            box.PackStart(ruleButtons, false, true, 0);
+            Section(box, "LBL_RSS_RULES", btnRuleAdd, btnRuleEdit, btnRuleDelete);
+
+            lvRules = new TreeView { HeadersVisible = true };
+            box.PackStart(Scrolled(lvRules), true, true, 0);
 
             btnRuleAdd.Clicked += (_, _) => AddRule();
             btnRuleEdit.Clicked += (_, _) => EditRule();
             btnRuleDelete.Clicked += (_, _) => DeleteRule();
 
-            var scroller = new ScrolledWindow { Hexpand = true, Vexpand = true };
-            scroller.Add(new Viewport { Child = box });
-            scroller.ShowAll();
-            return scroller;
+            // The page itself no longer scrolls: each list scrolls inside its own
+            // frame and the two share whatever height is left, so the page cannot
+            // end up scrolling a scrolling list.
+            box.ShowAll();
+            return box;
         }
 
         // ------------------------------------------------------------ builders
 
-        private static void Section(Box box, string key)
+        /// <summary>
+        /// A list in its own scrolling frame, sized by the space available rather
+        /// than by a fixed request.
+        /// </summary>
+        private static Widget Scrolled(Widget child)
         {
-            var label = new Label(TextResource.GetText(key)) { Halign = Align.Start, MarginTop = 8 };
+            var scroller = new ScrolledWindow
+            {
+                Hexpand = true,
+                Vexpand = true,
+                ShadowType = ShadowType.In,
+                MinContentHeight = 90
+            };
+            scroller.Add(child);
+            return scroller;
+        }
+
+        /// <summary>
+        /// A section heading with its actions on the same line, which saves the row
+        /// a separate button strip would have taken from the list.
+        /// </summary>
+        private static void Section(Box box, string key, params Widget[] actions)
+        {
+            var row = new Box(Orientation.Horizontal, 5) { MarginTop = 8 };
+
+            var label = new Label(TextResource.GetText(key)) { Halign = Align.Start };
             label.StyleContext.AddClass("medium-font");
-            box.PackStart(label, false, true, 0);
+            row.PackStart(label, false, true, 0);
+
+            foreach (var action in actions)
+            {
+                row.PackEnd(action, false, true, 0);
+            }
+
+            box.PackStart(row, false, true, 0);
         }
 
         private static Label Caption(string key)
@@ -160,11 +184,13 @@ namespace Fluxo.GtkUI.Dialogs.Settings
         private static void AddTextColumn(TreeView view, string labelKey, int column)
         {
             var renderer = new CellRendererText();
+            // Autosize rather than a fixed 160px: three fixed columns overflowed the
+            // settings pane and clipped the last one out of sight.
             view.AppendColumn(new TreeViewColumn(TextResource.GetText(labelKey), renderer, "text", column)
             {
                 Resizable = true,
-                Sizing = TreeViewColumnSizing.Fixed,
-                FixedWidth = 160
+                Expand = true,
+                Sizing = TreeViewColumnSizing.Autosize
             });
         }
 

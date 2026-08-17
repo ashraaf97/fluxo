@@ -342,3 +342,5 @@ MSG_RSS_FEED_NEVER=never
 MSG_RSS_FEED_ERROR=Error
 MSG_RSS_REFRESH_NOW=Refresh now
 MSG_RSS_FEED_URL_INVALID=The feed URL does not look like a URL
+MSG_RSS_NO_FEEDS=No feeds yet. Add one to start watching it.
+MSG_RSS_NO_RULES=No rules yet. Without one, feeds are fetched but nothing downloads.

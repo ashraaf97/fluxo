@@ -4,6 +4,7 @@ using System.Globalization;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using Fluxo.Core;
 using Fluxo.Core.Rss;
 using Fluxo.Core.UI;
@@ -53,6 +54,18 @@ namespace Fluxo.Wpf.UI.Dialogs.Settings
 
             UpdateFeedButtons();
             UpdateRuleButtons();
+            UpdateEmptyStates();
+        }
+
+        /// <summary>
+        /// An empty list otherwise reads as a broken page rather than a starting
+        /// point, and "no rules" in particular has a consequence worth stating:
+        /// feeds still refresh, but nothing downloads.
+        /// </summary>
+        private void UpdateEmptyStates()
+        {
+            TxtNoFeeds.Visibility = this.feeds.Count == 0 ? Visibility.Visible : Visibility.Collapsed;
+            TxtNoRules.Visibility = this.rules.Count == 0 ? Visibility.Visible : Visibility.Collapsed;
         }
 
         public void UpdateConfig()
@@ -76,6 +89,24 @@ namespace Fluxo.Wpf.UI.Dialogs.Settings
             if (dlg.ShowDialog() == true)
             {
                 this.feeds.Add(dlg.GetFeed(null));
+                UpdateEmptyStates();
+            }
+        }
+
+        /// <summary>Double-click opens the row, as it does elsewhere in the app.</summary>
+        private void LvFeeds_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            if (LvFeeds.SelectedIndex >= 0)
+            {
+                BtnFeedEdit_Click(sender, e);
+            }
+        }
+
+        private void LvRules_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            if (LvRules.SelectedIndex >= 0)
+            {
+                BtnRuleEdit_Click(sender, e);
             }
         }
 
@@ -107,6 +138,7 @@ namespace Fluxo.Wpf.UI.Dialogs.Settings
             var feed = this.feeds[index];
             this.feeds.RemoveAt(index);
             this.store.DeleteArticles(feed.Id);
+            UpdateEmptyStates();
         }
 
         private void BtnFeedRefresh_Click(object sender, RoutedEventArgs e)
@@ -134,6 +166,7 @@ namespace Fluxo.Wpf.UI.Dialogs.Settings
             if (dlg.ShowDialog() == true)
             {
                 this.rules.Add(dlg.GetRule(null));
+                UpdateEmptyStates();
             }
         }
 
@@ -160,6 +193,7 @@ namespace Fluxo.Wpf.UI.Dialogs.Settings
             if (index >= 0)
             {
                 this.rules.RemoveAt(index);
+                UpdateEmptyStates();
             }
         }
 
