@@ -166,9 +166,6 @@ namespace Fluxo.Core.IO
                     case "KeepPCAwake":
                         instance.KeepPCAwake = r.ReadBoolean();
                         break;
-                    case "Language":
-                        instance.Language = r.ReadString();
-                        break;
                     case "MaxParallelDownloads":
                         instance.MaxParallelDownloads = r.ReadInt32();
                         break;
@@ -330,14 +327,13 @@ namespace Fluxo.Core.IO
             using var ms = new MemoryStream();
             using var w = new BinaryWriter(ms);
 
-            w.Write((short)(instance.Proxy.HasValue ? 36 : 35)); //total fields
+            w.Write((short)(instance.Proxy.HasValue ? 35 : 34)); //total fields
 
             WriteString(w, instance.AfterCompletionCommand, "AfterCompletionCommand");
             WriteString(w, instance.UserSelectedDownloadFolder, "UserSelectedDownloadFolder");
             WriteString(w, instance.AntiVirusArgs, "AntiVirusArgs");
             WriteString(w, instance.AntiVirusExecutable, "AntiVirusExecutable");
             WriteString(w, instance.DefaultDownloadFolder, "DefaultDownloadFolder");
-            WriteString(w, instance.Language, "Language");
             WriteString(w, instance.TempDir, "TempDir");
 
             WriteBoolean(w, instance.EnableSpeedLimit, "EnableSpeedLimit");

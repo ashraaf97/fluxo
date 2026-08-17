@@ -76,8 +76,6 @@ namespace Fluxo.Core
 
         public string[] BlockedHosts { get; set; }
 
-        public string Language { get; set; } = "English";
-
         public bool AllowSystemDarkTheme { get; set; } = true;
 
         private Config()

@@ -23,7 +23,6 @@
             <MenuItem Name="menuClearFinished" Header="{StaticResource MENU_DELETE_COMPLETED}" Click="menuClearFinished_Click"/>
             <MenuItem Name="menuExport" Header="{StaticResource MENU_EXPORT}" Click="menuExport_Click"/>
             <MenuItem Name="menuImport" Header="{StaticResource MENU_IMPORT}" Click="menuImport_Click"/>
-            <MenuItem Name="menuLanguage" Header="{StaticResource MENU_LANG}" Click="menuLanguage_Click"/>
             <Separator/>
             <MenuItem Name="menuHelpAndSupport" Header="{StaticResource LBL_SUPPORT_PAGE}" Click="menuHelpAndSupport_Click"/>
             <MenuItem Name="menuReportProblem" Header="{StaticResource LBL_REPORT_PROBLEM}" Click="menuReportProblem_Click"/>

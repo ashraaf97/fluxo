@@ -1,7 +1,6 @@
 ﻿using System;
 using Gtk;
 using TraceLog;
-using Translations;
 using Fluxo.Core;
 using Fluxo.Core.DataAccess;
 using FluxoApp = Fluxo.Core.Application;
@@ -36,10 +35,6 @@ namespace Fluxo.GtkUI
             AppContext.SetSwitch(DisableCachingName, true);
             // Must stay false: setting this to true opts out of the strong crypto defaults.
             AppContext.SetSwitch(DontEnableSchUseStrongCryptoName, false);
-
-            Log.Debug("Loading languages...");
-
-            LoadLanguageTexts();
 
             // Only ask for the dark variant of whatever theme is in use. This used
             // to also force ThemeName = "Adwaita", which overrode the user's chosen
@@ -122,42 +117,6 @@ namespace Fluxo.GtkUI
         {
             Log.Debug("GLib ExceptionManager_UnhandledException: " + args.ExceptionObject);
             args.ExitApplication = false;
-        }
-
-        private static void LoadLanguageTexts()
-        {
-            Log.Debug("Language loading ...");
-            try
-            {
-                // Path.Combine with a literal "Lang\index.txt" produced "Lang\index.txt"
-                // as a single segment on Linux, so the file was never found and the
-                // user's language selection silently fell back to English.
-                var indexFile = System.IO.Path.Combine(
-                    AppDomain.CurrentDomain.BaseDirectory, "Lang", "index.txt");
-                if (System.IO.File.Exists(indexFile))
-                {
-                    var lines = System.IO.File.ReadAllLines(indexFile);
-                    foreach (var line in lines)
-                    {
-                        var index = line.IndexOf("=");
-                        if (index > 0)
-                        {
-                            var name = line.Substring(0, index);
-                            var value = line.Substring(index + 1);
-                            if (name == Config.Instance.Language)
-                            {
-                                TextResource.Load(value);
-                                break;
-                            }
-                        }
-                    }
-                }
-                Log.Debug("Language loaded.");
-            }
-            catch (Exception ex)
-            {
-                Log.Debug(ex, ex.Message);
-            }
         }
     }
 }

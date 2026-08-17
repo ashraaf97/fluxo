@@ -10,12 +10,9 @@ namespace Translations
 
         static TextResource()
         {
-            Load("English.txt");
-        }
-
-        public static void Load(string language)
-        {
-            var file = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, Path.Combine("Lang", $"{language}"));
+            // Fluxo ships English only, so there is no language index to consult -
+            // the single resource file is loaded directly.
+            var file = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Lang", "English.txt");
             if (File.Exists(file))
             {
                 LoadTexts(file);

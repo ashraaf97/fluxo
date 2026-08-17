@@ -172,9 +172,6 @@ namespace Fluxo.Core.IO
                     case "KeepPCAwake":
                         instance.KeepPCAwake = r.ReadBoolean();
                         break;
-                    case "Language":
-                        instance.Language = r.ReadString();
-                        break;
                     case "MaxParallelDownloads":
                         instance.MaxParallelDownloads = r.ReadInt32();
                         break;
@@ -357,8 +354,6 @@ namespace Fluxo.Core.IO
             WriteString(w, instance.AntiVirusExecutable, "AntiVirusExecutable");
             count++;
             WriteString(w, instance.DefaultDownloadFolder, "DefaultDownloadFolder");
-            count++;
-            WriteString(w, instance.Language, "Language");
             count++;
             WriteString(w, instance.TempDir, "TempDir");
             count++;

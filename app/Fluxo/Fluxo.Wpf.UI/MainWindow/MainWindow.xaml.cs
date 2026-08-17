@@ -26,7 +26,6 @@ using Fluxo.Wpf.UI.Dialogs.CompletedDialog;
 using Fluxo.Wpf.UI.Dialogs.CredentialDialog;
 using Fluxo.Wpf.UI.Dialogs.DeleteConfirm;
 using Fluxo.Wpf.UI.Dialogs.DownloadSelection;
-using Fluxo.Wpf.UI.Dialogs.LanguageSettings;
 using Fluxo.Wpf.UI.Dialogs.NewDownload;
 using Fluxo.Wpf.UI.Dialogs.NewVideoDownload;
 using Fluxo.Wpf.UI.Dialogs.ProgressWindow;
@@ -568,15 +567,6 @@ namespace Fluxo.Wpf.UI
         private void menuExit_Click(object sender, RoutedEventArgs e)
         {
             Environment.Exit(0);
-        }
-
-        private void menuLanguage_Click(object sender, RoutedEventArgs e)
-        {
-            var langDlg = new LanguageSettingsWindow
-            {
-                Owner = this
-            };
-            langDlg.ShowDialog(this);
         }
 
         private void BtnQueue_Click(object sender, RoutedEventArgs e)

@@ -11,7 +11,6 @@ using Menu = Gtk.Menu;
 using MenuItem = Gtk.MenuItem;
 using Fluxo.GtkUI.Utils;
 using Fluxo.GtkUI.Dialogs.DeleteConfirm;
-using Fluxo.GtkUI.Dialogs.Language;
 using Fluxo.Core.Clients.Debrid;
 
 namespace Fluxo.GtkUI
@@ -225,7 +224,6 @@ namespace Fluxo.GtkUI
             var menuClearFinished = new MenuItem(TextResource.GetText("MENU_DELETE_COMPLETED"));
             var menuExport = new MenuItem(TextResource.GetText("MENU_EXPORT"));
             var menuImport = new MenuItem(TextResource.GetText("MENU_IMPORT"));
-            var menuLanguage = new MenuItem(TextResource.GetText("MENU_LANG"));
             var menuHelpAndSupport = new MenuItem(TextResource.GetText("LBL_SUPPORT_PAGE"));
             var menuReportProblem = new MenuItem(TextResource.GetText("LBL_REPORT_PROBLEM"));
             var menuCheckForUpdate = new MenuItem(TextResource.GetText("MENU_UPDATE"));
@@ -235,7 +233,6 @@ namespace Fluxo.GtkUI
             menuClearFinished.Activated += MenuClearFinished_Activated;
             menuExport.Activated += MenuExport_Activated;
             menuImport.Activated += MenuImport_Activated;
-            menuLanguage.Activated += MenuLanguage_Activated;
             menuBrowserMonitor.Activated += MenuBrowserMonitor_Activated;
             menuHelpAndSupport.Activated += MenuHelpAndSupport_Activated;
             menuReportProblem.Activated += MenuReportProblem_Activated;
@@ -249,7 +246,6 @@ namespace Fluxo.GtkUI
             mainMenu.Append(menuClearFinished);
             mainMenu.Append(menuExport);
             mainMenu.Append(menuImport);
-            mainMenu.Append(menuLanguage);
             mainMenu.Append(menuHelpAndSupport);
             mainMenu.Append(menuReportProblem);
             mainMenu.Append(menuCheckForUpdate);
@@ -294,13 +290,6 @@ namespace Fluxo.GtkUI
         private void MenuBrowserMonitor_Activated(object? sender, EventArgs e)
         {
             this.BrowserMonitoringSettingsClicked?.Invoke(this, e);
-        }
-
-        private void MenuLanguage_Activated(object? sender, EventArgs e)
-        {
-            using var win = LanguageDialog.CreateFromGladeFile(this, windowGroup);
-            win.Run();
-            win.Destroy();
         }
 
         private void MenuImport_Activated(object? sender, EventArgs e)
