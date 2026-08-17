@@ -374,5 +374,7 @@ app/Fluxo/Fluxo.Linux.Installer/*.tar.xz
 app/Fluxo/Fluxo.Linux.Installer/*.deb
 app/Fluxo/Fluxo.Linux.Installer/*.tar.xz
 # Per-release checksums, generated at package time and attached to the
-# GitHub release rather than committed.
+# GitHub release rather than committed. make-msi.bat writes its copy beside the
+# installer, which the path below did not cover.
 app/Fluxo/SHA256SUMS.txt
+app/Fluxo/Fluxo.Win.Installer/SHA256SUMS.txt
