@@ -36,6 +36,8 @@ namespace Fluxo.Core.Clients.Debrid
 
         public bool IsConfigured => !string.IsNullOrWhiteSpace(Config.Instance.RealDebridApiKey);
 
+        public bool SupportsTorrents => true;
+
         public DebridTorrent ResolveMagnet(string magnet, Action<string>? progress, CancelFlag cancelFlag)
         {
             EnsureConfigured();

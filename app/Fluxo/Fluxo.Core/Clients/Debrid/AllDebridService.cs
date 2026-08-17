@@ -32,6 +32,8 @@ namespace Fluxo.Core.Clients.Debrid
 
         public bool IsConfigured => !string.IsNullOrWhiteSpace(Config.Instance.AllDebridApiKey);
 
+        public bool SupportsTorrents => true;
+
         public DebridTorrent ResolveMagnet(string magnet, Action<string>? progress, CancelFlag cancelFlag)
         {
             EnsureConfigured();
@@ -57,10 +59,10 @@ namespace Fluxo.Core.Clients.Debrid
             }
 
             progress?.Invoke("Uploading torrent...");
-            var boundary = "----FluxoBoundary" + Guid.NewGuid().ToString("N");
-            var body = BuildMultipartBody(boundary, "files[]", fileName, torrentFile);
+            var boundary = MultipartFormData.NewBoundary();
+            var body = MultipartFormData.Build(boundary, "files[]", fileName, torrentFile);
             var data = Post($"{BaseUrl}/magnet/upload/file", body,
-                "multipart/form-data; boundary=" + boundary, cancelFlag);
+                MultipartFormData.ContentTypeFor(boundary), cancelFlag);
 
             var id = FirstMagnetId(data);
             return WaitAndListFiles(id, progress, cancelFlag);
@@ -269,24 +271,6 @@ namespace Fluxo.Core.Clients.Debrid
                 RestrictedLink = link!
             });
         }
-
-        private static byte[] BuildMultipartBody(string boundary, string fieldName, string fileName, byte[] content)
-        {
-            var header = Encoding.UTF8.GetBytes(
-                $"--{boundary}\r\n" +
-                $"Content-Disposition: form-data; name=\"{fieldName}\"; filename=\"{SanitizeFileName(fileName)}\"\r\n" +
-                "Content-Type: application/x-bittorrent\r\n\r\n");
-            var footer = Encoding.UTF8.GetBytes($"\r\n--{boundary}--\r\n");
-
-            var body = new byte[header.Length + content.Length + footer.Length];
-            Buffer.BlockCopy(header, 0, body, 0, header.Length);
-            Buffer.BlockCopy(content, 0, body, header.Length, content.Length);
-            Buffer.BlockCopy(footer, 0, body, header.Length + content.Length, footer.Length);
-            return body;
-        }
-
-        private static string SanitizeFileName(string name)
-            => string.IsNullOrEmpty(name) ? "upload.torrent" : name.Replace("\"", string.Empty).Replace("\r", string.Empty).Replace("\n", string.Empty);
 
         private JToken Get(string url, CancelFlag cancelFlag) => Send(url, null, null, cancelFlag);
 

@@ -23,16 +23,23 @@ namespace Fluxo.Core.UI
     public class AddTorrentUIController
     {
         private readonly IAddTorrentView view;
-        private readonly IDebridService debrid;
+
+        /// <summary>
+        /// Set only when a caller supplied a service outright, which the tests do.
+        /// Otherwise the service is chosen per input, because a torrent and a hoster
+        /// link do not necessarily go to the same place - see <see cref="ServiceFor"/>.
+        /// </summary>
+        private readonly IDebridService? debrid;
+
         private readonly CancelFlag cancelFlag = new();
         private bool running;
 
         public AddTorrentUIController(IAddTorrentView view)
-            : this(view, DebridSupport.Create())
+            : this(view, null)
         {
         }
 
-        public AddTorrentUIController(IAddTorrentView view, IDebridService debrid)
+        public AddTorrentUIController(IAddTorrentView view, IDebridService? debrid)
         {
             this.view = view;
             this.debrid = debrid;
@@ -72,9 +79,15 @@ namespace Fluxo.Core.UI
                 return;
             }
 
-            if (!this.debrid.IsConfigured)
+            var service = ServiceFor(input);
+            if (!service.IsConfigured)
             {
-                ShowMessage(TextResource.GetText("MSG_DEBRID_NO_KEY"));
+                // A torrent with only a link-only service set up is a different
+                // problem from nothing being set up at all, and says so.
+                ShowMessage(TextResource.GetText(
+                    IsTorrentInput(input) && DebridSupport.IsConfigured
+                        ? "MSG_DEBRID_NO_TORRENT_SERVICE"
+                        : "MSG_DEBRID_NO_KEY"));
                 return;
             }
 
@@ -168,29 +181,51 @@ namespace Fluxo.Core.UI
         {
             void Progress(string text) => this.view.RunOnUiThread(() => this.view.StatusText = text);
 
+            var service = ServiceFor(input);
+
             if (IsTorrentFilePath(input))
             {
                 var bytes = File.ReadAllBytes(input);
-                return FromTorrent(this.debrid.ResolveTorrentFile(bytes, Path.GetFileName(input), Progress, this.cancelFlag), Progress);
+                return FromTorrent(service, service.ResolveTorrentFile(bytes, Path.GetFileName(input), Progress, this.cancelFlag), Progress);
             }
 
-            if (input.StartsWith("magnet:", StringComparison.OrdinalIgnoreCase))
+            if (IsMagnet(input))
             {
-                return FromTorrent(this.debrid.ResolveMagnet(input, Progress, this.cancelFlag), Progress);
+                return FromTorrent(service, service.ResolveMagnet(input, Progress, this.cancelFlag), Progress);
             }
 
             // Anything else is treated as a premium hoster link. Nothing to pick
             // from, so it unlocks straight to a single download.
-            var link = this.debrid.UnlockLink(input);
+            var link = service.UnlockLink(input);
             return new ResolveResult
             {
                 Requests = new List<IRequestData> { ToRequest(link.Url, link.FileName, link.Size) }
             };
         }
 
-        private ResolveResult FromTorrent(DebridTorrent torrent, Action<string> progress)
+        /// <summary>
+        /// The service this particular input should go to. Torrents need one that
+        /// can actually take a torrent; a hoster link can go to any of them.
+        /// </summary>
+        private IDebridService ServiceFor(string input)
         {
-            var requests = Unlock(torrent.Files, progress);
+            if (this.debrid != null)
+            {
+                return this.debrid;
+            }
+
+            return IsTorrentInput(input) ? DebridSupport.CreateForTorrents() : DebridSupport.Create();
+        }
+
+        private static bool IsTorrentInput(string input)
+            => IsMagnet(input) || IsTorrentFilePath(input);
+
+        private static bool IsMagnet(string input)
+            => input.StartsWith("magnet:", StringComparison.OrdinalIgnoreCase);
+
+        private ResolveResult FromTorrent(IDebridService service, DebridTorrent torrent, Action<string> progress)
+        {
+            var requests = Unlock(service, torrent.Files, progress);
 
             // One file behaves as it always has, so the picker still offers a
             // destination for the common "grab this one file" case. The picker has
@@ -270,7 +305,7 @@ namespace Fluxo.Core.UI
         /// modifying the shared selection controller. Direct URLs are time limited,
         /// but comfortably outlive the few seconds between here and the picker.
         /// </summary>
-        private IList<IRequestData> Unlock(IList<DebridFile> files, Action<string> progress)
+        private IList<IRequestData> Unlock(IDebridService service, IList<DebridFile> files, Action<string> progress)
         {
             var results = new List<IRequestData>(files.Count);
             var index = 0;
@@ -282,7 +317,7 @@ namespace Fluxo.Core.UI
 
                 try
                 {
-                    var link = this.debrid.UnlockLink(file.RestrictedLink);
+                    var link = service.UnlockLink(file.RestrictedLink);
 
                     // Carry the torrent-relative path, not just the file name, so the
                     // caller can rebuild the folder structure. The single-file path

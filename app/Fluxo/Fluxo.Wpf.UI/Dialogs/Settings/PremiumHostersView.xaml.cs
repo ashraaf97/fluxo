@@ -39,6 +39,9 @@ namespace Fluxo.Wpf.UI.Dialogs.Settings
         {
             TxtAllDebridApiKey.Text = Config.Instance.AllDebridApiKey;
             TxtRealDebridApiKey.Text = Config.Instance.RealDebridApiKey;
+            TxtPremiumizeApiKey.Text = Config.Instance.PremiumizeApiKey;
+            TxtPremiumToUserId.Text = Config.Instance.PremiumToUserId;
+            TxtPremiumToApiKey.Text = Config.Instance.PremiumToApiKey;
 
             this.order.Clear();
             foreach (var provider in DebridSupport.PreferredOrder())
@@ -58,6 +61,9 @@ namespace Fluxo.Wpf.UI.Dialogs.Settings
         {
             Config.Instance.AllDebridApiKey = TxtAllDebridApiKey.Text.Trim();
             Config.Instance.RealDebridApiKey = TxtRealDebridApiKey.Text.Trim();
+            Config.Instance.PremiumizeApiKey = TxtPremiumizeApiKey.Text.Trim();
+            Config.Instance.PremiumToUserId = TxtPremiumToUserId.Text.Trim();
+            Config.Instance.PremiumToApiKey = TxtPremiumToApiKey.Text.Trim();
             Config.Instance.DebridProviderOrder = this.order.Select(r => (int)r.Provider).ToArray();
         }
 

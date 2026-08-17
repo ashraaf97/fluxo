@@ -2036,16 +2036,113 @@
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkLabel" id="LabelDebridOrder">
+                              <object class="GtkLabel" id="LabelPremiumize">
                                 <property name="visible">True</property>
                                 <property name="can-focus">False</property>
                                 <property name="halign">start</property>
-                                <property name="label" translatable="yes">LabelDebridOrder</property>
+                                <property name="label" translatable="yes">LabelPremiumize</property>
                               </object>
                               <packing>
                                 <property name="expand">False</property>
                                 <property name="fill">True</property>
                                 <property name="position">6</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkEntry" id="TxtPremiumizeApiKey">
+                                <property name="visible">True</property>
+                                <property name="can-focus">True</property>
+                                <property name="hexpand">True</property>
+                                <property name="margin-right">10</property>
+                                <property name="margin-end">10</property>
+                              </object>
+                              <packing>
+                                <property name="expand">False</property>
+                                <property name="fill">True</property>
+                                <property name="position">7</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkLabel" id="LabelPremiumToUserId">
+                                <property name="visible">True</property>
+                                <property name="can-focus">False</property>
+                                <property name="halign">start</property>
+                                <property name="label" translatable="yes">LabelPremiumToUserId</property>
+                              </object>
+                              <packing>
+                                <property name="expand">False</property>
+                                <property name="fill">True</property>
+                                <property name="position">8</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkEntry" id="TxtPremiumToUserId">
+                                <property name="visible">True</property>
+                                <property name="can-focus">True</property>
+                                <property name="hexpand">True</property>
+                                <property name="margin-right">10</property>
+                                <property name="margin-end">10</property>
+                              </object>
+                              <packing>
+                                <property name="expand">False</property>
+                                <property name="fill">True</property>
+                                <property name="position">9</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkLabel" id="LabelPremiumToApiKey">
+                                <property name="visible">True</property>
+                                <property name="can-focus">False</property>
+                                <property name="halign">start</property>
+                                <property name="label" translatable="yes">LabelPremiumToApiKey</property>
+                              </object>
+                              <packing>
+                                <property name="expand">False</property>
+                                <property name="fill">True</property>
+                                <property name="position">10</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkEntry" id="TxtPremiumToApiKey">
+                                <property name="visible">True</property>
+                                <property name="can-focus">True</property>
+                                <property name="hexpand">True</property>
+                                <property name="margin-right">10</property>
+                                <property name="margin-end">10</property>
+                              </object>
+                              <packing>
+                                <property name="expand">False</property>
+                                <property name="fill">True</property>
+                                <property name="position">11</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkLabel" id="LabelPremiumToNote">
+                                <property name="visible">True</property>
+                                <property name="can-focus">False</property>
+                                <property name="halign">start</property>
+                                <property name="hexpand">True</property>
+                                <property name="label" translatable="yes">LabelPremiumToNote</property>
+                                <property name="wrap">True</property>
+                              </object>
+                              <packing>
+                                <property name="expand">False</property>
+                                <property name="fill">True</property>
+                                <property name="position">12</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkLabel" id="LabelDebridOrder">
+                                <property name="visible">True</property>
+                                <property name="can-focus">False</property>
+                                <property name="halign">start</property>
+                                <property name="margin-top">10</property>
+                                <property name="label" translatable="yes">LabelDebridOrder</property>
+                              </object>
+                              <packing>
+                                <property name="expand">False</property>
+                                <property name="fill">True</property>
+                                <property name="position">13</property>
                               </packing>
                             </child>
                             <child>
@@ -2060,7 +2157,7 @@
                               <packing>
                                 <property name="expand">False</property>
                                 <property name="fill">True</property>
-                                <property name="position">7</property>
+                                <property name="position">14</property>
                               </packing>
                             </child>
                             <child>
@@ -2138,7 +2235,7 @@
                               <packing>
                                 <property name="expand">False</property>
                                 <property name="fill">True</property>
-                                <property name="position">8</property>
+                                <property name="position">15</property>
                               </packing>
                             </child>
                           </object>

@@ -22,7 +22,9 @@ namespace Fluxo.Core.Clients.Debrid
         public static readonly DebridProvider[] DefaultOrder =
         {
             DebridProvider.AllDebrid,
-            DebridProvider.RealDebrid
+            DebridProvider.RealDebrid,
+            DebridProvider.Premiumize,
+            DebridProvider.PremiumTo
         };
 
         /// <summary>
@@ -68,8 +70,15 @@ namespace Fluxo.Core.Clients.Debrid
         public static bool IsConfigured => All().Any(s => s.IsConfigured);
 
         /// <summary>
-        /// The service to use right now: the first one in the user's order that has
-        /// an API key.
+        /// True when at least one *torrent capable* service has a key. A link-only
+        /// service such as premium.to does not count here, though it still handles
+        /// hoster links perfectly well.
+        /// </summary>
+        public static bool IsTorrentCapable => All().Any(s => s.IsConfigured && s.SupportsTorrents);
+
+        /// <summary>
+        /// The service to unlock a hoster link with: the first one in the user's
+        /// order that has an API key.
         ///
         /// Returns an unconfigured service rather than null when nothing is set up,
         /// so callers still get the usual "no API key" error instead of a crash.
@@ -80,12 +89,29 @@ namespace Fluxo.Core.Clients.Debrid
             return services.FirstOrDefault(s => s.IsConfigured) ?? services[0];
         }
 
+        /// <summary>
+        /// The service to hand a torrent or magnet to: the first one in the user's
+        /// order that has an API key *and* can take a torrent.
+        ///
+        /// Ranking a link-only service at the top therefore costs nothing - torrents
+        /// simply skip past it - which is what makes one shared order workable.
+        /// </summary>
+        public static IDebridService CreateForTorrents()
+        {
+            var services = All();
+            return services.FirstOrDefault(s => s.IsConfigured && s.SupportsTorrents)
+                ?? services.FirstOrDefault(s => s.SupportsTorrents)
+                ?? services[0];
+        }
+
         /// <summary>The name to show for a provider, taken from the service itself.</summary>
         public static string DisplayName(DebridProvider provider) => Create(provider).Name;
 
         private static IDebridService Create(DebridProvider provider) => provider switch
         {
             DebridProvider.RealDebrid => new RealDebridService(),
+            DebridProvider.Premiumize => new PremiumizeService(),
+            DebridProvider.PremiumTo => new PremiumToService(),
             _ => new AllDebridService()
         };
     }

@@ -196,6 +196,15 @@ namespace Fluxo.Core.IO
                     case "RealDebridApiKey":
                         instance.RealDebridApiKey = r.ReadString();
                         break;
+                    case "PremiumToUserId":
+                        instance.PremiumToUserId = r.ReadString();
+                        break;
+                    case "PremiumToApiKey":
+                        instance.PremiumToApiKey = r.ReadString();
+                        break;
+                    case "PremiumizeApiKey":
+                        instance.PremiumizeApiKey = r.ReadString();
+                        break;
                     case "DebridProviderOrder":
                         var debridProviderOrderLength = r.ReadInt16();
                         instance.DebridProviderOrder = new int[debridProviderOrderLength];
@@ -430,6 +439,12 @@ namespace Fluxo.Core.IO
             WriteString(w, instance.AllDebridApiKey, "AllDebridApiKey");
             count++;
             WriteString(w, instance.RealDebridApiKey, "RealDebridApiKey");
+            count++;
+            WriteString(w, instance.PremiumToUserId, "PremiumToUserId");
+            count++;
+            WriteString(w, instance.PremiumToApiKey, "PremiumToApiKey");
+            count++;
+            WriteString(w, instance.PremiumizeApiKey, "PremiumizeApiKey");
             count++;
             WriteInt32Array(w, instance.DebridProviderOrder, "DebridProviderOrder", instance.DebridProviderOrder.Length);
             count++;

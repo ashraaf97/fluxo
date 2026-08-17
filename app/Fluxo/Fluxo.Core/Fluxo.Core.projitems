@@ -187,6 +187,9 @@
     <Compile Include="$(MSBuildThisFileDirectory)Clients\Debrid\IDebridService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Clients\Debrid\AllDebridService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Clients\Debrid\RealDebridService.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Clients\Debrid\PremiumToService.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Clients\Debrid\PremiumizeService.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Clients\Debrid\MultipartFormData.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Clients\Debrid\DebridFile.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Clients\Debrid\DebridTorrent.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DownloadGroup.cs" />

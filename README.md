@@ -47,19 +47,31 @@ over HTTPS. Fluxo then downloads those links normally, so torrent files get the 
 segmented speed, resume and queueing as any other download — and your machine never joins
 the swarm.
 
-[AllDebrid](https://alldebrid.com) and [Real-Debrid](https://real-debrid.com) are both
-supported, and an active subscription to one of them is required.
+Four services are supported, and an active subscription to one of them is required.
 
-**Setup** — paste your API key into **Settings → Premium hosters**:
+**Setup** — paste your credentials into **Settings → Premium hosters**:
 
-| Service | Where to get the key |
-| --- | --- |
-| AllDebrid | [alldebrid.com/apikeys](https://alldebrid.com/apikeys/) |
-| Real-Debrid | [real-debrid.com/apitoken](https://real-debrid.com/apitoken) |
+| Service | Credentials | Torrents |
+| --- | --- | --- |
+| [AllDebrid](https://alldebrid.com) | API key from [alldebrid.com/apikeys](https://alldebrid.com/apikeys/) | Yes |
+| [Real-Debrid](https://real-debrid.com) | API token from [real-debrid.com/apitoken](https://real-debrid.com/apitoken) | Yes |
+| [Premiumize](https://www.premiumize.me) | API key from [premiumize.me/account](https://www.premiumize.me/account) | Yes |
+| [premium.to](https://premium.to) | User ID and API key, both from the site's Account page | No — hoster links only |
 
-Filling in one key is enough. With both filled in, the **Order to try services in** list
-on the same page decides: the first service that has a key is the one used, and **Move
-up** / **Move down** reorder it.
+Filling in one is enough. With more than one, the **Order to try services in** list on the
+same page decides: the first service that has credentials is the one used, and **Move up** /
+**Move down** reorder it.
+
+premium.to unlocks hoster links but has no torrent support in its API, so torrents skip
+past it to the next service in your order that can take one. Ranking it first therefore
+costs nothing. Note that its downloads carry your credentials in the URL — that is how its
+API works, and the URL is stored with the download.
+
+Premiumize resolves magnets and hoster links in a single request. A `.torrent` file takes
+a slower path, since its API accepts uploads only on the endpoint that fetches into your
+Premiumize cloud storage: Fluxo uploads it, waits for the transfer, then reads the links
+back out of the resulting folder. The transfer is left in your account afterwards, because
+deleting it would invalidate the links being downloaded.
 
 **Use** — toolbar **New → Add torrent / magnet**, then supply any of:
 

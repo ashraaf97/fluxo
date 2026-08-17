@@ -4,10 +4,9 @@ using System.Collections.Generic;
 namespace Fluxo.Core.Clients.Debrid
 {
     /// <summary>
-    /// A debrid service turns a torrent into ordinary HTTP downloads: it fetches
-    /// the torrent on its own infrastructure and exposes the result over HTTPS.
-    /// Only AllDebrid implements this today; the interface exists so another
-    /// provider can be added without reworking the callers.
+    /// A debrid service turns a premium hoster link - and, where supported, a
+    /// torrent - into an ordinary HTTP download: it fetches the file on its own
+    /// infrastructure and exposes the result over HTTPS.
     /// </summary>
     public interface IDebridService
     {
@@ -16,6 +15,13 @@ namespace Fluxo.Core.Clients.Debrid
 
         /// <summary>False when the user has not supplied credentials yet.</summary>
         bool IsConfigured { get; }
+
+        /// <summary>
+        /// False for a service that only unlocks hoster links. Torrents are routed
+        /// past those to the first service that can actually take one, so ranking
+        /// a link-only service first costs nothing.
+        /// </summary>
+        bool SupportsTorrents { get; }
 
         /// <summary>
         /// Submits a magnet URI, waits for the service to finish fetching it, and

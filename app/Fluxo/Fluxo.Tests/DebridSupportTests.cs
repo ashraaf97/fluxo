@@ -14,6 +14,9 @@ namespace Fluxo.Tests
     {
         private string allDebrid = string.Empty;
         private string realDebrid = string.Empty;
+        private string premiumToUserId = string.Empty;
+        private string premiumToApiKey = string.Empty;
+        private string premiumize = string.Empty;
         private int[] order = System.Array.Empty<int>();
 
         [SetUp]
@@ -21,6 +24,9 @@ namespace Fluxo.Tests
         {
             this.allDebrid = Config.Instance.AllDebridApiKey;
             this.realDebrid = Config.Instance.RealDebridApiKey;
+            this.premiumToUserId = Config.Instance.PremiumToUserId;
+            this.premiumToApiKey = Config.Instance.PremiumToApiKey;
+            this.premiumize = Config.Instance.PremiumizeApiKey;
             this.order = Config.Instance.DebridProviderOrder;
         }
 
@@ -29,13 +35,28 @@ namespace Fluxo.Tests
         {
             Config.Instance.AllDebridApiKey = this.allDebrid;
             Config.Instance.RealDebridApiKey = this.realDebrid;
+            Config.Instance.PremiumToUserId = this.premiumToUserId;
+            Config.Instance.PremiumToApiKey = this.premiumToApiKey;
+            Config.Instance.PremiumizeApiKey = this.premiumize;
             Config.Instance.DebridProviderOrder = this.order;
         }
 
         private static void Configure(string? allDebrid, string? realDebrid, params DebridProvider[] order)
+            => Configure(allDebrid, realDebrid, null, order);
+
+        private static void Configure(string? allDebrid, string? realDebrid, string? premiumTo, params DebridProvider[] order)
         {
             Config.Instance.AllDebridApiKey = allDebrid ?? string.Empty;
             Config.Instance.RealDebridApiKey = realDebrid ?? string.Empty;
+
+            // premium.to needs both halves before it counts as configured.
+            Config.Instance.PremiumToUserId = premiumTo ?? string.Empty;
+            Config.Instance.PremiumToApiKey = premiumTo ?? string.Empty;
+
+            // Left unconfigured unless a test says otherwise; it is not the subject
+            // of any of the orderings below.
+            Config.Instance.PremiumizeApiKey = string.Empty;
+
             Config.Instance.DebridProviderOrder = order.Select(p => (int)p).ToArray();
         }
 
@@ -44,25 +65,31 @@ namespace Fluxo.Tests
         [Test]
         public void PreferredOrder_KeepsWhatWasSaved()
         {
-            Configure(null, null, DebridProvider.RealDebrid, DebridProvider.AllDebrid);
+            Configure(null, null, null,
+                DebridProvider.PremiumTo, DebridProvider.RealDebrid, DebridProvider.AllDebrid);
 
             Assert.That(DebridSupport.PreferredOrder(), Is.EqualTo(new[]
             {
+                DebridProvider.PremiumTo,
                 DebridProvider.RealDebrid,
-                DebridProvider.AllDebrid
+                DebridProvider.AllDebrid,
+                DebridProvider.Premiumize
             }));
         }
 
         [Test]
         public void PreferredOrder_AppendsProvidersTheSavedOrderDoesNotMention()
         {
-            // Settings written before a provider existed must not hide it.
-            Configure(null, null, DebridProvider.RealDebrid);
+            // Settings written before a provider existed must not hide it. This is
+            // exactly the case of an order saved before premium.to was added.
+            Configure(null, null, null, DebridProvider.RealDebrid, DebridProvider.AllDebrid);
 
             Assert.That(DebridSupport.PreferredOrder(), Is.EqualTo(new[]
             {
                 DebridProvider.RealDebrid,
-                DebridProvider.AllDebrid
+                DebridProvider.AllDebrid,
+                DebridProvider.Premiumize,
+                DebridProvider.PremiumTo
             }));
         }
 
@@ -79,7 +106,9 @@ namespace Fluxo.Tests
             Assert.That(DebridSupport.PreferredOrder(), Is.EqualTo(new[]
             {
                 DebridProvider.RealDebrid,
-                DebridProvider.AllDebrid
+                DebridProvider.AllDebrid,
+                DebridProvider.Premiumize,
+                DebridProvider.PremiumTo
             }));
         }
 
@@ -151,6 +180,55 @@ namespace Fluxo.Tests
         {
             Assert.That(DebridSupport.DisplayName(DebridProvider.AllDebrid), Is.EqualTo("AllDebrid"));
             Assert.That(DebridSupport.DisplayName(DebridProvider.RealDebrid), Is.EqualTo("Real-Debrid"));
+            Assert.That(DebridSupport.DisplayName(DebridProvider.PremiumTo), Is.EqualTo("premium.to"));
+            Assert.That(DebridSupport.DisplayName(DebridProvider.Premiumize), Is.EqualTo("Premiumize"));
+        }
+
+        // --------------------------------------------------- torrent capability
+
+        [Test]
+        public void IsTorrentCapable_IsFalseWithOnlyALinkOnlyService()
+        {
+            // premium.to unlocks hoster links but cannot take a torrent, so the app
+            // is configured without being able to handle one.
+            Configure(null, null, "premium-to-key", DebridSupport.DefaultOrder);
+
+            Assert.That(DebridSupport.IsConfigured, Is.True);
+            Assert.That(DebridSupport.IsTorrentCapable, Is.False);
+        }
+
+        [Test]
+        public void CreateForTorrents_SkipsPastALinkOnlyServiceRankedFirst()
+        {
+            // Ranking premium.to top must not break torrents: they carry on to the
+            // first service in the order that can actually take one.
+            Configure(null, "rd-key", "premium-to-key",
+                DebridProvider.PremiumTo, DebridProvider.RealDebrid, DebridProvider.AllDebrid);
+
+            Assert.That(DebridSupport.CreateForTorrents(), Is.TypeOf<RealDebridService>());
+        }
+
+        [Test]
+        public void Create_StillUsesTheLinkOnlyServiceForHosterLinks()
+        {
+            // The same ranking that torrents skip is honoured for a plain link.
+            Configure(null, "rd-key", "premium-to-key",
+                DebridProvider.PremiumTo, DebridProvider.RealDebrid, DebridProvider.AllDebrid);
+
+            Assert.That(DebridSupport.Create(), Is.TypeOf<PremiumToService>());
+        }
+
+        [Test]
+        public void CreateForTorrents_ReturnsATorrentCapableServiceEvenWhenNothingIsConfigured()
+        {
+            // Whatever comes back must be able to explain itself with the usual
+            // "no API key" error, not "torrents are not supported".
+            Configure(null, null, null, DebridSupport.DefaultOrder);
+
+            var service = DebridSupport.CreateForTorrents();
+
+            Assert.That(service.SupportsTorrents, Is.True);
+            Assert.That(service.IsConfigured, Is.False);
         }
     }
 }

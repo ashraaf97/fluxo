@@ -32,7 +32,8 @@ namespace Fluxo.GtkUI.Dialogs.Settings
             Label16, Label17, Label18, Label19, Label20, Label21,
             Label22, Label23, Label24, Label25, Label26, Label27,
             Label28, Label29, Label30, Label31, Label32,
-            LabelAllDebrid, LabelRealDebrid, LabelDebridOrder, LabelDebridOrderHint;
+            LabelAllDebrid, LabelRealDebrid, LabelDebridOrder, LabelDebridOrderHint,
+            LabelPremiumToUserId, LabelPremiumToApiKey, LabelPremiumToNote, LabelPremiumize;
         [UI]
         private LinkButton VideoWikiLink;
         [UI]
@@ -51,7 +52,8 @@ namespace Fluxo.GtkUI.Dialogs.Settings
         private Entry TxtChromeWebStoreUrl, TxtFirefoxAMOUrl, TxtTempFolder, TxtDownloadFolder,
             TxtMaxSpeedLimit, TxtProxyHost, TxtProxyPort, TxtProxyUser, TxtProxyPassword,
             TxtCustomCmd, TxtAntiVirusCmd, TxtAntiVirusArgs, TxtDefaultUserAgent,
-            TxtAllDebridApiKey, TxtRealDebridApiKey,
+            TxtAllDebridApiKey, TxtRealDebridApiKey, TxtPremiumizeApiKey,
+            TxtPremiumToUserId, TxtPremiumToApiKey,
             TxtExceptions, TxtDefaultVideoFormats, TxtDefaultFileTypes;
         [UI]
         private TreeView LvCategories, LvPasswords, LvDebridProviders;
@@ -556,6 +558,10 @@ namespace Fluxo.GtkUI.Dialogs.Settings
             Label32.Text = TextResource.GetText("MSG_PREMIUM_HOSTERS_INTRO");
             LabelAllDebrid.Text = TextResource.GetText("LBL_ALLDEBRID_API_KEY");
             LabelRealDebrid.Text = TextResource.GetText("LBL_REALDEBRID_API_KEY");
+            LabelPremiumize.Text = TextResource.GetText("LBL_PREMIUMIZE_API_KEY");
+            LabelPremiumToUserId.Text = TextResource.GetText("LBL_PREMIUMTO_USER_ID");
+            LabelPremiumToApiKey.Text = TextResource.GetText("LBL_PREMIUMTO_API_KEY");
+            LabelPremiumToNote.Text = TextResource.GetText("MSG_PREMIUMTO_NOTE");
             LabelDebridOrder.Text = TextResource.GetText("LBL_DEBRID_ORDER");
             LabelDebridOrderHint.Text = TextResource.GetText("MSG_DEBRID_ORDER_HINT");
             BtnDebridUp.Label = TextResource.GetText("Q_MOVE_UP");
@@ -627,6 +633,9 @@ namespace Fluxo.GtkUI.Dialogs.Settings
             //Premium hosters
             TxtAllDebridApiKey.Text = Config.Instance.AllDebridApiKey;
             TxtRealDebridApiKey.Text = Config.Instance.RealDebridApiKey;
+            TxtPremiumizeApiKey.Text = Config.Instance.PremiumizeApiKey;
+            TxtPremiumToUserId.Text = Config.Instance.PremiumToUserId;
+            TxtPremiumToApiKey.Text = Config.Instance.PremiumToApiKey;
 
             debridProviderStore.Clear();
             foreach (var provider in DebridSupport.PreferredOrder())
@@ -818,6 +827,9 @@ namespace Fluxo.GtkUI.Dialogs.Settings
         {
             Config.Instance.AllDebridApiKey = TxtAllDebridApiKey.Text.Trim();
             Config.Instance.RealDebridApiKey = TxtRealDebridApiKey.Text.Trim();
+            Config.Instance.PremiumizeApiKey = TxtPremiumizeApiKey.Text.Trim();
+            Config.Instance.PremiumToUserId = TxtPremiumToUserId.Text.Trim();
+            Config.Instance.PremiumToApiKey = TxtPremiumToApiKey.Text.Trim();
 
             var order = new List<int>();
             if (debridProviderStore.GetIterFirst(out TreeIter iter))

@@ -124,6 +124,16 @@ namespace Fluxo.Core
         public string RealDebridApiKey { get; set; } = string.Empty;
 
         /// <summary>
+        /// premium.to authenticates with a user ID alongside the key, unlike the
+        /// other services. Both are needed before it counts as configured.
+        /// </summary>
+        public string PremiumToUserId { get; set; } = string.Empty;
+
+        public string PremiumToApiKey { get; set; } = string.Empty;
+
+        public string PremiumizeApiKey { get; set; } = string.Empty;
+
+        /// <summary>
         /// Debrid services in the order they should be tried, held as
         /// <see cref="DebridProvider"/> values. The first one that has an API key
         /// wins, so this only decides anything when more than one key is filled in.
@@ -131,7 +141,13 @@ namespace Fluxo.Core
         /// <see cref="Clients.Debrid.DebridSupport"/>.
         /// </summary>
         public int[] DebridProviderOrder { get; set; } =
-            new[] { (int)DebridProvider.AllDebrid, (int)DebridProvider.RealDebrid };
+            new[]
+            {
+                (int)DebridProvider.AllDebrid,
+                (int)DebridProvider.RealDebrid,
+                (int)DebridProvider.Premiumize,
+                (int)DebridProvider.PremiumTo
+            };
 
         public int MaxSegments { get; set; } = 8;
 
@@ -533,6 +549,8 @@ namespace Fluxo.Core
     public enum DebridProvider
     {
         AllDebrid,
-        RealDebrid
+        RealDebrid,
+        PremiumTo,
+        Premiumize
     }
 }
